@@ -15,6 +15,7 @@ include "lib.lua"
 include "ScionEditor"
 include "ScionUtilities"
 include "ScionWindows"
+include "ScionRendering"
 
 group "Dependencies"
 include "vendor/Glad"
