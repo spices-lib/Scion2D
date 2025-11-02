@@ -14,6 +14,8 @@ project "ScionEditor"
 		"src/**.h",
 		"src/**.hpp",
 		"src/**.cpp",
+		
+		"%{IncludeDir.SOIL}/SOIL.h",
 	}
 
 	defines
@@ -28,6 +30,7 @@ project "ScionEditor"
 		"%{IncludeDir.ScionWindows}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.SDL2}",
+		"%{IncludeDir.SOIL}",
 	}
 
 	links

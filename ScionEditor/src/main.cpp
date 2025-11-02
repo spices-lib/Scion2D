@@ -4,6 +4,54 @@
 #include <SDL.h>
 #include <glad/glad.h>
 #include <iostream>
+#include <SOIL.h>
+
+bool LoadTexture(const std::string& filePath, int& width, int& height, bool blended)
+{
+	int channels = 0;
+
+	unsigned char* image = SOIL_load_image(
+		filePath.c_str(),
+		&width,
+		&height,
+		&channels,
+		SOIL_LOAD_AUTO
+	);
+
+	if (!image)
+	{
+		std::cout << "SOLT failed to load image [" << filePath << "] --" << SOIL_last_result();
+		return false;
+	}
+
+	GLint format = GL_RGBA;
+
+	switch (channels)
+	{
+	case 3: format = GL_RGB; break;
+	case 4: format = GL_RGBA; break;
+	}
+
+	glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	if (!blended)
+	{
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	}
+	else
+	{
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+
+	SOIL_free_image_data(image);
+
+	return true;
+}
 
 int main(int argc, char* argv[])
 {
@@ -62,6 +110,18 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Failed to LoadGL -> GLAD" << std::endl;
 		running = false;
+		return -1;
+	}
+
+	GLuint texID;
+	glGenTextures(1, &texID);
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	int width = 0;
+	int height = 0;
+	if (!LoadTexture("path/to/image", width, height, false))
+	{
+		std::cout << "failed." << std::endl;
 		return -1;
 	}
 
