@@ -4,32 +4,78 @@
 #include <SDL.h>
 #include <glad/glad.h>
 #include <iostream>
-#include <SOIL.h>
+#include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+class Camera2D
+{
+private:
+	int m_Width;
+	int m_Height;
+	float m_Scale;
+
+	glm::vec2 m_Position;
+	glm::mat4 m_CameraMatrix, m_OrthoProjection;
+
+	bool m_bNeedsUpdate;
+
+public:
+
+	Camera2D()
+		: Camera2D(640, 480)
+	{}
+
+	Camera2D(int width, int height)
+		: m_Width(width), m_Height(height), m_Scale(1.0f)
+		, m_Position(glm::vec2(0.0f))
+		, m_CameraMatrix(1.0f)
+		, m_OrthoProjection(1.0f)
+		, m_bNeedsUpdate(true)
+	{
+		m_OrthoProjection = glm::ortho(0.0f, static_cast<float>(m_Width), 0.0f, static_cast<float>(m_Height), -1.0f, 1.0f);
+	}
+
+	inline glm::mat4 GetCameraMatrix() { return m_CameraMatrix; }
+	void Update()
+	{
+		if (!m_bNeedsUpdate)
+			return;
+
+		glm::vec3 translate(-m_Position.x, -m_Position.y, 0.0f);
+		m_CameraMatrix = glm::translate(m_OrthoProjection, translate);
+
+		glm::vec3 scale(m_Scale, m_Scale, 0.0f);
+		m_CameraMatrix *= glm::scale(glm::mat4(1.0f), scale);
+
+		m_bNeedsUpdate = false;
+	}
+};
+
+struct UVs
+{
+	float u = 0.0f;
+	float v = 0.0f;
+	float width = 0.0f;
+	float height = 0.0f;
+};
 
 bool LoadTexture(const std::string& filePath, int& width, int& height, bool blended)
 {
 	int channels = 0;
 
-	unsigned char* image = SOIL_load_image(
+	auto* image = stbi_load(
 		filePath.c_str(),
 		&width,
 		&height,
 		&channels,
-		SOIL_LOAD_AUTO
+		4
 	);
 
 	if (!image)
 	{
-		std::cout << "SOLT failed to load image [" << filePath << "] --" << SOIL_last_result();
+		std::cout << "SOLT failed to load image [" << filePath << "]";
 		return false;
-	}
-
-	GLint format = GL_RGBA;
-
-	switch (channels)
-	{
-	case 3: format = GL_RGB; break;
-	case 4: format = GL_RGBA; break;
 	}
 
 	glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -46,9 +92,9 @@ bool LoadTexture(const std::string& filePath, int& width, int& height, bool blen
 		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
-	SOIL_free_image_data(image);
+	stbi_image_free(image);
 
 	return true;
 }

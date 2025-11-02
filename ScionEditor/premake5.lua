@@ -15,11 +15,12 @@ project "ScionEditor"
 		"src/**.hpp",
 		"src/**.cpp",
 		
-		"%{IncludeDir.SOIL}/SOIL.h",
+		"%{IncludeDir.stb_image}/stb_image.h",
 	}
 
 	defines
 	{
+		"STB_IMAGE_IMPLEMENTATION"
 	}
 	
 
@@ -30,7 +31,8 @@ project "ScionEditor"
 		"%{IncludeDir.ScionWindows}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.SOIL}",
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.glm}",
 	}
 
 	links

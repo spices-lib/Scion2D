@@ -3,7 +3,8 @@ IncludeDir["Glad"]                        = "%{wks.location}/vendor/Glad/include
 IncludeDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/include"
 IncludeDir["ScionUtilities"]              = "%{wks.location}/ScionUtilities/src"
 IncludeDir["ScionWindows"]                = "%{wks.location}/ScionWindows/src"
-IncludeDir["SOIL"]                        = "%{wks.location}/vendor/SOIL"
+IncludeDir["stb_image"]                   = "%{wks.location}/vendor/stb_image"
+IncludeDir["glm"]                         = "%{wks.location}/vendor/glm"  
 
 LibraryDir                                = {}
 LibraryDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/lib/x64"
