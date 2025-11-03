@@ -20,6 +20,35 @@ struct UVs
 	float height = 0.0f;
 };
 
+struct UVs
+{
+	float u{ 0.0f }, v{ 0.0f }, uv_width{ 0.0f }, uv_height{ 0.0f };
+};
+
+struct TransformComponent
+{
+	glm::vec2 position{glm::vec2{0.0f}}, scale{ glm::vec2{1.0f} };
+	float rotation{ 0.0f };
+};
+
+struct SproteComponent
+{
+	float width{ 0.0f }, height{ 0.0f };
+	UVs uvs{ 0.0f, 0.0f, 0.0f, 0.0f };
+
+	SCION_RENDERING::Color color{ 255, 255, 255, 255 };
+	int start_x{ 0 }, start_y{ 0 };
+
+	void generate_uvs(int textureWidth, int textureHeight)
+	{
+		uvs.uv_width = width / textureWidth;
+		uvs.uv_height = height / textureHeight;
+
+		uvs.u = start_x * uvs.uv_width;
+		uvs.v = start_y * uvs.uv_height;
+	}
+};
+
 int main(int argc, char* argv[])
 {
 	SCION_INIT_LOGS(true, true);
