@@ -4,10 +4,10 @@
 #include <SDL.h>
 #include <glad/glad.h>
 #include <iostream>
-#include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <Rendering/Essentials/ShaderLoader.h>
+#include <Rendering/Essentials/TextureLoader.h>
 #include <Logger.h>
 
 class Camera2D
@@ -61,45 +61,6 @@ struct UVs
 	float width = 0.0f;
 	float height = 0.0f;
 };
-
-bool LoadTexture(const std::string& filePath, int& width, int& height, bool blended)
-{
-	int channels = 0;
-
-	auto* image = stbi_load(
-		filePath.c_str(),
-		&width,
-		&height,
-		&channels,
-		4
-	);
-
-	if (!image)
-	{
-		std::cout << "SOLT failed to load image [" << filePath << "]";
-		return false;
-	}
-
-	glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	if (!blended)
-	{
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	}
-	else
-	{
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	}
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-
-	stbi_image_free(image);
-
-	return true;
-}
 
 int main(int argc, char* argv[])
 {
@@ -163,13 +124,10 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	GLuint texID;
-	glGenTextures(1, &texID);
-	glBindTexture(GL_TEXTURE_2D, texID);
-
 	int width = 0;
 	int height = 0;
-	if (!LoadTexture("path/to/image", width, height, false))
+	auto texture = SCION_RENDERING::TextureLoader::Create(SCION_RENDERING::Texture::TextureType::BLENDED, "path/to/image");
+	if (!texture)
 	{
 		std::cout << "failed." << std::endl;
 		return -1;
@@ -260,10 +218,9 @@ int main(int argc, char* argv[])
 		shader->SetUniformMat4("uProjection", projection);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texID);
+		glBindTexture(GL_TEXTURE_2D, texture->GetID());
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-
 
 		SDL_GL_SwapWindow(window.GetWindow().get());
 

@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Logger.h"
 
 namespace SCION_RENDERING {
 
@@ -13,7 +14,7 @@ namespace SCION_RENDERING {
 		
 		if (location == GL_INVALID_INDEX)
 		{
-			std::cout << "Uniform: " << uniformName << " not found in shader" << std::endl;
+			SCION_ERROR("Uniform: {0} not found in shader", uniformName);
 			return -1;
 		}
 
