@@ -8,51 +8,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Rendering/Essentials/ShaderLoader.h>
 #include <Rendering/Essentials/TextureLoader.h>
+#include <Rendering/Essentials/Vertex.h>
 #include <Logger.h>
-
-class Camera2D
-{
-private:
-	int m_Width;
-	int m_Height;
-	float m_Scale;
-
-	glm::vec2 m_Position;
-	glm::mat4 m_CameraMatrix, m_OrthoProjection;
-
-	bool m_bNeedsUpdate;
-
-public:
-
-	Camera2D()
-		: Camera2D(640, 480)
-	{}
-
-	Camera2D(int width, int height)
-		: m_Width(width), m_Height(height), m_Scale(1.0f)
-		, m_Position(glm::vec2(0.0f))
-		, m_CameraMatrix(1.0f)
-		, m_OrthoProjection(1.0f)
-		, m_bNeedsUpdate(true)
-	{
-		m_OrthoProjection = glm::ortho(0.0f, static_cast<float>(m_Width), 0.0f, static_cast<float>(m_Height), -1.0f, 1.0f);
-	}
-
-	inline glm::mat4 GetCameraMatrix() { return m_CameraMatrix; }
-	void Update()
-	{
-		if (!m_bNeedsUpdate)
-			return;
-
-		glm::vec3 translate(-m_Position.x, -m_Position.y, 0.0f);
-		m_CameraMatrix = glm::translate(m_OrthoProjection, translate);
-
-		glm::vec3 scale(m_Scale, m_Scale, 0.0f);
-		m_CameraMatrix *= glm::scale(glm::mat4(1.0f), scale);
-
-		m_bNeedsUpdate = false;
-	}
-};
+#include <Rendering/Core/Camera.h>
 
 struct UVs
 {
@@ -133,12 +91,11 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	float vertices[] =
-	{
-		 0.0f,  0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f
-	};
+	std::vector<SCION_RENDERING::Vertex> vertices{};
+	SCION_RENDERING::Vertex vTL{}, vTR{}, vBL{}, vBR{};
+
+	vTL.position = glm::vec2{ 10.0f, 26.0f };
+	vTL.uvs = glm::vec2{};
 
 	auto shader = SCION_RENDERING::ShaderLoader::Create("assets/shaders/basicShader.vert", "assets/shaders/basicShader.frag");
 	if (!shader)
@@ -158,8 +115,8 @@ int main(int argc, char* argv[])
 
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		sizeof(vertices) * 3 * sizeof(float),
-		vertices,
+		sizeof(SCION_RENDERING::Vertex) * vertices.size(),
+		vertices.data(),
 		GL_STATIC_DRAW
 	);
 
@@ -168,18 +125,40 @@ int main(int argc, char* argv[])
 		3,
 		GL_FLOAT,
 		GL_FALSE,
-		3 * sizeof(float),
-		(void*)0
+		sizeof(SCION_RENDERING::Vertex),
+		(void*)offsetof(SCION_RENDERING::Vertex, position)
 	);
 
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(
+		1,
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(SCION_RENDERING::Vertex),
+		(void*)offsetof(SCION_RENDERING::Vertex, uvs)
+	);
+
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(
+		2,
+		4,
+		GL_UNSIGNED_BYTE,
+		GL_TRUE,
+		sizeof(SCION_RENDERING::Vertex),
+		(void*)offsetof(SCION_RENDERING::Vertex, color)
+	);
+
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	SDL_Event event{};
 
-	Camera2D camera;
+	SCION_RENDERING::Camera2D camera;
 
 	while (running)
 	{
