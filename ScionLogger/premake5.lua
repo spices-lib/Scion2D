@@ -1,4 +1,4 @@
-project "ScionRendering"
+project "ScionLogger"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
@@ -12,36 +12,20 @@ project "ScionRendering"
 	files
 	{
 		"src/**.h",
-		"src/**.hpp",
 		"src/**.cpp",
-		
-		"%{IncludeDir.stb_image}/stb_image.h",
 	}
 
 	defines
 	{
-		"STB_IMAGE_IMPLEMENTATION"
 	}
 	
-
 	includedirs
 	{
-		"src",
-		"%{IncludeDir.ScionUtilities}",
-		"%{IncludeDir.ScionWindows}",
-		"%{IncludeDir.ScionLogger}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.glm}",
+		"src"
 	}
 
 	links
 	{
-		"Glad",
-		"ScionUtilities",
-		"ScionWindows",
-		"ScionLogger"
 	}
 
 	filter "system:windows"

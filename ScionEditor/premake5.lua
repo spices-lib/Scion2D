@@ -29,6 +29,8 @@ project "ScionEditor"
 		"src",
 		"%{IncludeDir.ScionUtilities}",
 		"%{IncludeDir.ScionWindows}",
+		"%{IncludeDir.ScionRendering}",
+		"%{IncludeDir.ScionLogger}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.stb_image}",
@@ -39,7 +41,9 @@ project "ScionEditor"
 	{
 		"Glad",
 		"ScionUtilities",
-		"ScionWindows"
+		"ScionWindows",
+		"ScionRendering",
+		"ScionLogger"
 	}
 
 	filter "system:windows"

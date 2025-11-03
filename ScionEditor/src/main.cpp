@@ -7,6 +7,8 @@
 #include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <Rendering/Essentials/ShaderLoader.h>
+#include <Logger.h>
 
 class Camera2D
 {
@@ -101,6 +103,8 @@ bool LoadTexture(const std::string& filePath, int& width, int& height, bool blen
 
 int main(int argc, char* argv[])
 {
+	SCION_INIT_LOGS(true, true);
+
 	bool running = true;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -178,45 +182,12 @@ int main(int argc, char* argv[])
 		 0.5f, -0.5f, 0.0f
 	};
 
-	const char* vertexSource = "";
-
-	GLuint vertexShader{};
-	glShaderSource(vertexShader, 1, &vertexSource, NULL);
-	glCompileShader(vertexShader);
-
-	int status;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
-
-	if (!status)
+	auto shader = SCION_RENDERING::ShaderLoader::Create("assets/shaders/basicShader.vert", "assets/shaders/basicShader.frag");
+	if (!shader)
 	{
-		char infoLog[512];
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "Failed to compile vertex shader!" << infoLog << std::endl;
+		std::cout << "Create failed" << std::endl;
 		return -1;
 	}
-		
-	GLuint shaderProgram;
-	shaderProgram = glCreateProgram();
-
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, vertexShader);
-
-	glLinkProgram(shaderProgram);
-
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
-
-	if (!status)
-	{
-		char infoLog[512];
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "Failed to link shader program" << infoLog << std::endl;
-		return -1;
-	}
-
-	glUseProgram(shaderProgram);
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(vertexShader);
 
 	GLuint VAO, VBO;
 
@@ -250,6 +221,8 @@ int main(int argc, char* argv[])
 
 	SDL_Event event{};
 
+	Camera2D camera;
+
 	while (running)
 	{
 		while (SDL_PollEvent(&event))
@@ -279,13 +252,23 @@ int main(int argc, char* argv[])
 
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glUseProgram(shaderProgram);
+		shader->Enable();
 		glBindVertexArray(VAO);
+
+		auto projection = camera.GetCameraMatrix();
+
+		shader->SetUniformMat4("uProjection", projection);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texID);
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
 		SDL_GL_SwapWindow(window.GetWindow().get());
+
+		camera.Update();
+		shader->Disable();
 	}
 
 	std::cout << "Closing!" << std::endl;

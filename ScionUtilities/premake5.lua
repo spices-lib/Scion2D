@@ -23,11 +23,13 @@ project "ScionUtilities"
 	{
 		"src",
 		"%{IncludeDir.SDL2}",
+		"%{IncludeDir.ScionLogger}",
 	}
 
 	links
 	{
 		"%{Library.SDL2}",
+		"ScionLogger",
 	}
 
 

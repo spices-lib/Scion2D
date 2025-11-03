@@ -24,11 +24,13 @@ project "ScionWindows"
 		"src",
 		"%{IncludeDir.ScionUtilities}",
 		"%{IncludeDir.SDL2}",
+		"%{IncludeDir.ScionLogger}",
 	}
 
 	links
 	{
-		"ScionUtilities"
+		"ScionUtilities",
+		"ScionLogger"
 	}
 
 
