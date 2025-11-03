@@ -1,5 +1,5 @@
-project "ScionEditor"
-	kind "ConsoleApp"
+project "ScionCore"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
 	staticruntime "On"
@@ -12,40 +12,27 @@ project "ScionEditor"
 	files
 	{
 		"src/**.h",
-		"src/**.hpp",
 		"src/**.cpp",
-		
-		"%{IncludeDir.stb_image}/stb_image.h",
 	}
 
 	defines
 	{
-		"STB_IMAGE_IMPLEMENTATION"
 	}
 	
 
 	includedirs
 	{
 		"src",
-		"%{IncludeDir.ScionUtilities}",
-		"%{IncludeDir.ScionWindows}",
-		"%{IncludeDir.ScionRendering}",
 		"%{IncludeDir.ScionLogger}",
-		"%{IncludeDir.ScionCore}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.ScionRendering}",
+		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
 	}
 
 	links
 	{
-		"Glad",
-		"ScionUtilities",
-		"ScionWindows",
-		"ScionRendering",
 		"ScionLogger",
-		"ScionCore"
+		"ScionRendering"
 	}
 
 	filter "system:windows"
