@@ -27,6 +27,7 @@ project "ScionCore"
 		"%{IncludeDir.ScionRendering}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.Glad}",
 	}
 
 	links

@@ -15,6 +15,7 @@
 #include <Core/ECS/Components/SpriteComponent.h>
 #include <Core/ECS/Components/TransformComponent.h>
 #include <Core/ECS/Components/Identification.h>
+#include <Core/Resources/AssetManager.h>
 
 int main(int argc, char* argv[])
 {
@@ -78,14 +79,10 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	int width = 0;
-	int height = 0;
-	auto texture = SCION_RENDERING::TextureLoader::Create(SCION_RENDERING::Texture::TextureType::BLENDED, "path/to/image");
-	if (!texture)
-	{
-		std::cout << "failed." << std::endl;
-		return -1;
-	}
+	auto assetManager = std::make_shared<SCION_RESOURCE::AssetManager>();
+
+	assetManager->AddTexture("castle", "path/to/image", true);
+	auto& texture = assetManager->GetTexture("castle");
 
 	auto pRegistry = std::make_unique<SCION_CORE::ECS::Registry>();
 
@@ -104,7 +101,7 @@ int main(int argc, char* argv[])
 		.start_y = 28
 	});
 
-	sprite.generate_uvs(texture->GetWidth(), texture->GetHeight());
+	sprite.generate_uvs(texture.GetWidth(), texture.GetHeight());
 
 	auto&id = entity.GetComponent<SCION_CORE::ECS::Identification>();
 
@@ -214,7 +211,7 @@ int main(int argc, char* argv[])
 		shader->SetUniformMat4("uProjection", projection);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture->GetID());
+		glBindTexture(GL_TEXTURE_2D, texture.GetID());
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
