@@ -23,7 +23,7 @@ namespace SCION_RENDERING {
 		~Shader();
 
 		void SetUniformInt(const std::string& name, int value);
-		void SetUniformMat4(const std::string& name, glm::mat4& mat);
+		void SetUniformMat4(const std::string& name, const glm::mat4& mat);
 
 
 		void Enable();

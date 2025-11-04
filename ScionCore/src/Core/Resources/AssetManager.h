@@ -24,6 +24,6 @@ namespace SCION_RESOURCE {
 		const SCION_RENDERING::Texture& GetTexture(const std::string& textureName);
 
 		bool AddShader(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath);
-		const SCION_RENDERING::Shader& GetShader(const std::string& shaderName);
+		SCION_RENDERING::Shader& GetShader(const std::string& shaderName);
 	};
 }

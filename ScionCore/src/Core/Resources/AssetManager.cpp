@@ -59,7 +59,7 @@ namespace SCION_RESOURCE {
 		return true;
 	}
 
-	const SCION_RENDERING::Shader& AssetManager::GetShader(const std::string& shaderName)
+	SCION_RENDERING::Shader& AssetManager::GetShader(const std::string& shaderName)
 	{
 		if (m_mapShaders.contains(shaderName))
 		{
@@ -67,7 +67,9 @@ namespace SCION_RESOURCE {
 		}
 
 		SCION_ERROR("Failed to get Shader {0}", shaderName);
-		return SCION_RENDERING::Shader();
+
+		SCION_RENDERING::Shader s;
+		return s;
 	}
 
 }
