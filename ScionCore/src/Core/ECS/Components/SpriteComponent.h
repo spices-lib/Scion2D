@@ -9,7 +9,7 @@ namespace SCION_CORE::ECS {
 	};
 
 
-	struct SproteComponent
+	struct SpriteComponent
 	{
 		float width{ 0.0f }, height{ 0.0f };
 		UVs uvs{ 0.0f, 0.0f, 0.0f, 0.0f };

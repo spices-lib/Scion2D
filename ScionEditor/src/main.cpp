@@ -11,6 +11,10 @@
 #include <Rendering/Essentials/Vertex.h>
 #include <Logger.h>
 #include <Rendering/Core/Camera.h>
+#include <Core/ECS/Entity.h>
+#include <Core/ECS/Components/SpriteComponent.h>
+#include <Core/ECS/Components/TransformComponent.h>
+#include <Core/ECS/Components/Identification.h>
 
 int main(int argc, char* argv[])
 {
@@ -82,6 +86,27 @@ int main(int argc, char* argv[])
 		std::cout << "failed." << std::endl;
 		return -1;
 	}
+
+	auto pRegistry = std::make_unique<SCION_CORE::ECS::Registry>();
+
+	SCION_CORE::ECS::Entity entity{ *pRegistry, "Ent1", "Test" };
+	auto& transform = entity.AddComponent<SCION_CORE::ECS::TransformComponent>(SCION_CORE::ECS::TransformComponent{
+		.position = glm::vec2{10.0f, 10.0f},
+		.scale = glm::vec2{1.0f, 1.0f},
+		.rotation = 0.0f
+	});
+
+	auto& sprite = entity.AddComponent<SCION_CORE::ECS::SpriteComponent>(SCION_CORE::ECS::SpriteComponent{
+		.width = 16.0f,
+		.height = 16.0f,
+		.color = SCION_RENDERING::Color{ .r = 255, .g = 0, .b = 255, .a = 255 },
+		.start_x = 0,
+		.start_y = 28
+	});
+
+	sprite.generate_uvs(texture->GetWidth(), texture->GetHeight());
+
+	auto&id = entity.GetComponent<SCION_CORE::ECS::Identification>();
 
 	std::vector<SCION_RENDERING::Vertex> vertices{};
 	SCION_RENDERING::Vertex vTL{}, vTR{}, vBL{}, vBR{};

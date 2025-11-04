@@ -36,6 +36,7 @@ project "ScionEditor"
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}",
 	}
 
 	links
