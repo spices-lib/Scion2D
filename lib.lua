@@ -9,6 +9,8 @@ IncludeDir["ScionCore"]                   = "%{wks.location}/ScionCore/src"
 IncludeDir["stb_image"]                   = "%{wks.location}/vendor/stb_image"
 IncludeDir["glm"]                         = "%{wks.location}/vendor/glm"  
 IncludeDir["entt"]                        = "%{wks.location}/vendor/entt/include"
+IncludeDir["sol2"]                        = "%{wks.location}/vendor/sol2/include"
+IncludeDir["Lua"]                         = "%{wks.location}/vendor/Lua/src"
 
 LibraryDir                                = {}
 LibraryDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/lib/x64"

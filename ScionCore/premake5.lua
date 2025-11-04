@@ -28,12 +28,15 @@ project "ScionCore"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
+		"%{IncludeDir.sol2}",
+		"%{IncludeDir.Lua}", 
 	}
 
 	links
 	{
 		"ScionLogger",
-		"ScionRendering"
+		"ScionRendering",
+		"LuaLibrary"
 	}
 
 	filter "system:windows"

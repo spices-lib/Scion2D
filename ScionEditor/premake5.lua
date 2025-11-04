@@ -37,6 +37,8 @@ project "ScionEditor"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.sol2}",
+		"%{IncludeDir.Lua}", 
 	}
 
 	links

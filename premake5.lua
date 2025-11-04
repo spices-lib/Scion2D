@@ -21,4 +21,5 @@ include "ScionCore"
 
 group "Dependencies"
 include "vendor/Glad"
+include "vendor/Lua"
 group ""

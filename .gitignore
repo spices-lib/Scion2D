@@ -10,3 +10,6 @@
 *.vcxproj.filters
 
 *.log
+
+/vendor/Lua/bin
+/vendor/Lua/bin-int
