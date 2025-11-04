@@ -15,6 +15,8 @@ namespace SCION_CORE::ECS {
 
 		Entity(Registry& registry);
 		Entity(Registry& registry, const std::string& name = "", const std::string& group = "");
+
+		Entity(Registry& registry, const entt::entity& entity);
 		~Entity() = default;
 
 		inline std::uint32_t kill() { return m_Registry.GetRegistry().destroy(m_Entity); }

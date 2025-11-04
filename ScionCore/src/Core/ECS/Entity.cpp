@@ -20,4 +20,18 @@ namespace SCION_CORE::ECS {
 		});
 	}
 
+	Entity::Entity(Registry& registry, const entt::entity& entity)
+		: m_Registry(registry)
+		, m_Entity{ entity }
+		, m_sName{ ""}
+		, m_sGroup{ "" }
+	{
+		if (HasComponent<Identification>())
+		{
+			auto& id = GetComponent<Identification>();
+			m_sName = id.name;
+			m_sGroup = id.group;
+		}
+	}
+
 }

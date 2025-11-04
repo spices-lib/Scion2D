@@ -1,7 +1,7 @@
 #pragma once
 #include <sol/sol.hpp>
 
-namespace SCION_CORE_ECS {
+namespace SCION_CORE::ECS {
 
 	struct ScriptComponent
 	{
