@@ -65,7 +65,17 @@ namespace SCION_CORE::Systems {
 		for (const auto& e : view)
 		{
 			SCION_CORE::ECS::Entity entity{ m_Registry, e };
+			if (entity.GetName() != "main_script")
+				continue;
 
+			auto& script = entity.GetComponent<SCION_CORE::ECS::ScriptComponent>();
+			auto error = script.update(entity);
+
+			if (!error.valid())
+			{
+				sol::error err = error;
+				SCION_ERROR("Error running Update script: {0}", err.what());
+			}
 		}
 	}
 
@@ -73,6 +83,24 @@ namespace SCION_CORE::Systems {
 	{
 		if (!m_bMainLoaded)
 			return;
+
+		auto view = m_Registry.GetRegistry().view<SCION_CORE::ECS::ScriptComponent>();
+
+		for (const auto& e : view)
+		{
+			SCION_CORE::ECS::Entity entity{ m_Registry, e };
+			if (entity.GetName() != "main_script")
+				continue;
+
+			auto& script = entity.GetComponent<SCION_CORE::ECS::ScriptComponent>();
+			auto error = script.render(entity);
+
+			if (!error.valid())
+			{
+				sol::error err = error;
+				SCION_ERROR("Error running Render script: {0}", err.what());
+			}
+		}
 	}
 
 }

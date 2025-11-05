@@ -14,6 +14,8 @@
 #include <Core/ECS/Components/TransformComponent.h>
 #include <Core/ECS/Components/Identification.h>
 #include <Core/Resources/AssetManager.h>
+#include <Core/Systems/ScriptingSystem.h>
+#include <sol/sol.hpp>
 
 namespace SCION_EDITOR {
 
@@ -111,16 +113,36 @@ namespace SCION_EDITOR {
 		vTL.position = glm::vec2{ 10.0f, 26.0f };
 		vTL.uvs = glm::vec2{};
 
+		auto lua = std::make_shared<sol::state>();
+		lua->open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::string);
+		if (!m_pRegistry->AddToContext(lua))
+		{
+			SCION_ERROR("Failed to add lua state to registry context!");
+			return false;
+		}
+
+		auto scriptSystem = std::make_shared<SCION_CORE::Systems::ScriptingSystem>(*m_pRegistry);
+		if (!scriptSystem->LoadMainScript(*lua))
+		{
+			SCION_ERROR("Failed to load main lua script.")
+			return false;
+		}
+		if (!m_pRegistry->AddToContext(scriptSystem))
+		{
+			SCION_ERROR("Failed to add script system to registry context!");
+			return false;
+		}
+
 		auto camera = std::make_shared<SCION_RENDERING::Camera2D>();
 		camera->SetScale(15.0f);
 
-		if (!m_pRegistry->AddToContext<decltype(assetManager)>(assetManager))
+		if (!m_pRegistry->AddToContext(assetManager))
 		{
 			SCION_ERROR("Failed to add asset mananger to registry context!");
 			return false;
 		}
 
-		if (!m_pRegistry->AddToContext<decltype(camera)>(camera))
+		if (!m_pRegistry->AddToContext(camera))
 		{
 			SCION_ERROR("Failed to add camera to registry context!");
 			return false;
@@ -233,6 +255,9 @@ namespace SCION_EDITOR {
 		}
 
 		camera->Update();
+
+		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
+		scriptSystem->Update();
 	}
 
 	void Application::Render()
@@ -280,6 +305,9 @@ namespace SCION_EDITOR {
 		auto& texture = assetMananger->GetTexture("castle");
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.GetID());
+
+		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
+		scriptSystem->Render();
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
