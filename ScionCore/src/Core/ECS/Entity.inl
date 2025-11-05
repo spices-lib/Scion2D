@@ -44,4 +44,24 @@ namespace SCION_CORE::ECS {
 		return registry.remove<TComponent>(m_Entity);
 	}
 
+	template<typename TComponent>
+	static void Entity::RegisterMetaComponent()
+	{
+		using namespace entt::literals;
+
+		entt::meta<TComponent>()
+			.type(entt::type_hash<TComponent>::value())
+			.template func<&add_component>>("add_component"_hs);
+	}
+
+	template<typename TComponent>
+	auto add_component(Entity& entity, const sol::table& comp, sol::this_state s)
+	{
+		auto& component = entity.AddComponent<TComponent>(
+			comp.valid() ? comp.as<TComponent>() : TComponent{}
+		);
+
+		return sol::make_reference(s, std::ref(component));
+	}
+
 }
