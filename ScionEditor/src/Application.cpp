@@ -149,60 +149,6 @@ namespace SCION_EDITOR {
 		}
 
 		LoadShaders();
-
-		GLuint VAO, VBO;
-
-		glGenVertexArrays(1, &VAO);
-
-		glGenBuffers(1, &VBO);
-
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-		glBufferData(
-			GL_ARRAY_BUFFER,
-			sizeof(SCION_RENDERING::Vertex) * vertices.size(),
-			vertices.data(),
-			GL_STATIC_DRAW
-		);
-
-		glVertexAttribPointer(
-			0,
-			3,
-			GL_FLOAT,
-			GL_FALSE,
-			sizeof(SCION_RENDERING::Vertex),
-			(void*)offsetof(SCION_RENDERING::Vertex, position)
-		);
-
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(
-			1,
-			2,
-			GL_FLOAT,
-			GL_FALSE,
-			sizeof(SCION_RENDERING::Vertex),
-			(void*)offsetof(SCION_RENDERING::Vertex, uvs)
-		);
-
-		glEnableVertexAttribArray(1);
-
-		glVertexAttribPointer(
-			2,
-			4,
-			GL_UNSIGNED_BYTE,
-			GL_TRUE,
-			sizeof(SCION_RENDERING::Vertex),
-			(void*)offsetof(SCION_RENDERING::Vertex, color)
-		);
-
-		glEnableVertexAttribArray(2);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-
-		
 	}
 
 	bool Application::LoadShaders()
