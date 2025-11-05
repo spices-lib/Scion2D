@@ -16,6 +16,7 @@
 #include <Core/Resources/AssetManager.h>
 #include <Core/Systems/ScriptingSystem.h>
 #include <sol/sol.hpp>
+#include <Core/Systems/RenderSystem.h>
 
 namespace SCION_EDITOR {
 
@@ -100,18 +101,12 @@ namespace SCION_EDITOR {
 			.height = 16.0f,
 			.color = SCION_RENDERING::Color{ .r = 255, .g = 0, .b = 255, .a = 255 },
 			.start_x = 0,
-			.start_y = 28
+			.start_y = 28,
+			.layer = 0,
+			.texture_name = "castle"
 		});
 
 		sprite.generate_uvs(texture.GetWidth(), texture.GetHeight());
-
-		auto& id = entity.GetComponent<SCION_CORE::ECS::Identification>();
-
-		std::vector<SCION_RENDERING::Vertex> vertices{};
-		SCION_RENDERING::Vertex vTL{}, vTR{}, vBL{}, vBR{};
-
-		vTL.position = glm::vec2{ 10.0f, 26.0f };
-		vTL.uvs = glm::vec2{};
 
 		auto lua = std::make_shared<sol::state>();
 		lua->open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::string);
@@ -130,6 +125,13 @@ namespace SCION_EDITOR {
 		if (!m_pRegistry->AddToContext(scriptSystem))
 		{
 			SCION_ERROR("Failed to add script system to registry context!");
+			return false;
+		}
+
+		auto renderSystem = std::make_shared<SCION_CORE::Systems::RenderSystem>(*m_pRegistry);
+		if (!m_pRegistry->AddToContext(renderSystem))
+		{
+			SCION_ERROR("Failed to add render system to registry context!");
 			return false;
 		}
 
@@ -208,29 +210,8 @@ namespace SCION_EDITOR {
 
 	void Application::Render()
 	{
-		auto& assetMananger = m_pRegistry->GetContext<std::shared_ptr<SCION_RESOURCE::AssetManager>>();
-
-		if (!assetMananger)
-		{
-			SCION_ERROR("Failed to get asset mananger from registry context!");
-			return;
-		}
-
-		auto& camera = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
-
-		if (!camera)
-		{
-			SCION_ERROR("Failed to get camera from registry context!");
-			return;
-		}
-
-		auto& shader = assetMananger->GetShader("basic");
-		
-		if (shader.ShaderProgramID() == 0)
-		{
-			SCION_ERROR("Shader not valid");
-			return;
-		}
+		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
+		auto& renderSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderSystem>>();
 
 		glViewport(
 			0,
@@ -241,25 +222,11 @@ namespace SCION_EDITOR {
 
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		shader.Enable();
-		glBindVertexArray(VAO);
 
-		auto& projection = camera->GetCameraMatrix();
-
-		shader.SetUniformMat4("uProjection", projection);
-
-		auto& texture = assetMananger->GetTexture("castle");
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture.GetID());
-
-		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
 		scriptSystem->Render();
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		renderSystem->Update();
 
 		SDL_GL_SwapWindow(m_pWindow->GetWindow().get());
-
-		shader.Disable();
 	}
 
 	void Application::ClearUp()

@@ -15,7 +15,9 @@ namespace SCION_CORE::ECS {
 		UVs uvs{ 0.0f, 0.0f, 0.0f, 0.0f };
 
 		SCION_RENDERING::Color color{ 255, 255, 255, 255 };
-		int start_x{ 0 }, start_y{ 0 };
+		int start_x{ 0 }, start_y{ 0 }, layer{ 0 };
+
+		std::string texture_name{""};
 
 		void generate_uvs(int textureWidth, int textureHeight)
 		{
