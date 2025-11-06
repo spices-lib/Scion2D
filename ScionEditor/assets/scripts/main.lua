@@ -2,7 +2,7 @@ gEntity = Entity("TestEntity", "Group")
 gEntity2 = Entity("BigTesty", "Group")
 
 local transform = gEntity.add_component(
-	Transform(100, 100, 10, 10, 0)
+	Transform(vec2(100, 100), vwc2(10, 10), 0)
 )
 
 gEntity2.add_component(
@@ -50,10 +50,8 @@ main = {
 				move_right = true
 			end
 
-			local pox_x, pos_y = transform:position()
-			pox_x = x_pos
 			transform.rotation = rotation
-			transform:set_pos(pos_x, pos_y)
+			transform.position.x = x_pos
 
 			if move_right then
 				rotation = rotation + 9
@@ -75,7 +73,7 @@ main = {
 				value = 0
 			end
 
-			transform:set_scale(scale, scale)
+			transform.scale = vec2(scale, scale)
 
 			local sprite2 = gEntity:get_component(Sprite)
 			print("Name: " ..sprite2.texture_name)
