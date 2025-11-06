@@ -2,6 +2,7 @@
 #include "Core/ECS/Components/ScriptComponent.h"
 #include "Core/ECS/Components/TransformComponent.h"
 #include "Core/ECS/Components/SpriteComponent.h"
+#include "Core/ECS/Components/AnimationComponent.h"
 #include "Core/ECS/Entity.h"
 #include "Logger.h"
 #include "Core/Scripting/GlmLuaBindings.h"
@@ -116,12 +117,15 @@ namespace SCION_CORE::Systems {
 		Entity::CreateLuaEntityBind(lua, regisry);
 		TransformComponent::CreateLuaTransformBind(lua);
 		SpriteComponent::CreateSpriteLuaBind(lua, regisry);
+		AnimationComponent::CreateAnimationLuaBind(lua);
 
 		Entity::RegisterMetaComponent<TransformComponent>();
 		Entity::RegisterMetaComponent<SpriteComponent>();
+		Entity::RegisterMetaComponent<AnimationComponent>();
 
 		Registry::RegisterMetaComponent<TransformComponent>();
 		Registry::RegisterMetaComponent<SpriteComponent>();
+		Registry::RegisterMetaComponent<AnimationComponent>();
 	}
 
 }
