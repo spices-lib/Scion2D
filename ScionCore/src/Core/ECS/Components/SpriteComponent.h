@@ -1,5 +1,7 @@
 #pragma once
 #include <Rendering/Essentials/Vertex.h>
+#include "Core/ECS/Registry.h"
+#include <sol/sol.hpp>
 
 namespace SCION_CORE::ECS {
 
@@ -27,5 +29,7 @@ namespace SCION_CORE::ECS {
 			uvs.u = start_x * uvs.uv_width;
 			uvs.v = start_y * uvs.uv_height;
 		}
+
+		static void CreateSpriteLuaBind(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <sol/sol.hpp>
 
 namespace SCION_CORE::ECS {
 
@@ -7,6 +8,8 @@ namespace SCION_CORE::ECS {
 	{
 		glm::vec2 position{glm::vec2{0.0f}}, scale{ glm::vec2{1.0f} };
 		float rotation{ 0.0f };
+
+		static void CreateLuaTransformBind(sol::state& lua);
 	};
 
 }

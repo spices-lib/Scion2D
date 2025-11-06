@@ -51,7 +51,7 @@ namespace SCION_CORE::ECS {
 
 		entt::meta<TComponent>()
 			.type(entt::type_hash<TComponent>::value())
-			.template func<&add_component>>("add_component"_hs);
+			.template func<&add_component<TComponent>>("add_component"_hs);
 	}
 
 	template<typename TComponent>

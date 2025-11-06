@@ -89,42 +89,11 @@ namespace SCION_EDITOR {
 
 		m_pRegistry = std::make_unique<SCION_CORE::ECS::Registry>();
 
-		SCION_CORE::ECS::Entity entity{ *m_pRegistry, "Ent1", "Test" };
-		auto& transform = entity.AddComponent<SCION_CORE::ECS::TransformComponent>(SCION_CORE::ECS::TransformComponent{
-			.position = glm::vec2{ 10.0f, 10.0f },
-			.scale = glm::vec2{ 1.0f, 1.0f },
-			.rotation = 0.0f
-		});
-
-		auto& sprite = entity.AddComponent<SCION_CORE::ECS::SpriteComponent>(SCION_CORE::ECS::SpriteComponent{
-			.width = 16.0f,
-			.height = 16.0f,
-			.color = SCION_RENDERING::Color{ .r = 255, .g = 0, .b = 255, .a = 255 },
-			.start_x = 0,
-			.start_y = 28,
-			.layer = 0,
-			.texture_name = "castle"
-		});
-
-		sprite.generate_uvs(texture.GetWidth(), texture.GetHeight());
-
 		auto lua = std::make_shared<sol::state>();
 		lua->open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::string);
 		if (!m_pRegistry->AddToContext(lua))
 		{
 			SCION_ERROR("Failed to add lua state to registry context!");
-			return false;
-		}
-
-		auto scriptSystem = std::make_shared<SCION_CORE::Systems::ScriptingSystem>(*m_pRegistry);
-		if (!scriptSystem->LoadMainScript(*lua))
-		{
-			SCION_ERROR("Failed to load main lua script.")
-			return false;
-		}
-		if (!m_pRegistry->AddToContext(scriptSystem))
-		{
-			SCION_ERROR("Failed to add script system to registry context!");
 			return false;
 		}
 
@@ -147,6 +116,20 @@ namespace SCION_EDITOR {
 		if (!m_pRegistry->AddToContext(camera))
 		{
 			SCION_ERROR("Failed to add camera to registry context!");
+			return false;
+		}
+
+		SCION_CORE::Systems::ScriptingSystem::RegisterLuaBindings(*lua, *m_pRegistry);
+
+		auto scriptSystem = std::make_shared<SCION_CORE::Systems::ScriptingSystem>(*m_pRegistry);
+		if (!scriptSystem->LoadMainScript(*lua))
+		{
+			SCION_ERROR("Failed to load main lua script.")
+				return false;
+		}
+		if (!m_pRegistry->AddToContext(scriptSystem))
+		{
+			SCION_ERROR("Failed to add script system to registry context!");
 			return false;
 		}
 
