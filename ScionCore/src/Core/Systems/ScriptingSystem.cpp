@@ -109,12 +109,16 @@ namespace SCION_CORE::Systems {
 
 	void ScriptingSystem::RegisterLuaBindings(sol::state& lua, SCION_CORE::ECS::Registry& regisry)
 	{
+		Registry::CreateLuaRegistryBind(lua, regisry);
 		Entity::CreateLuaEntityBind(lua, regisry);
 		TransformComponent::CreateLuaTransformBind(lua);
 		SpriteComponent::CreateSpriteLuaBind(lua, regisry);
 
 		Entity::RegisterMetaComponent<TransformComponent>();
 		Entity::RegisterMetaComponent<SpriteComponent>();
+
+		Registry::RegisterMetaComponent<TransformComponent>();
+		Registry::RegisterMetaComponent<SpriteComponent>();
 	}
 
 }

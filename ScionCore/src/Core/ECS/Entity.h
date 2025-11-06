@@ -46,12 +46,20 @@ namespace SCION_CORE::ECS {
 		bool HasComponent();
 
 		template<typename TComponent>
-		bool RemoveComponent();
+		auto RemoveComponent();
 	};
 	
 	template<typename TComponent>
 	auto add_component(Entity& entity, const sol::table& comp, sol::this_state s);
 
+	template<typename TComponent>
+	bool has_component(Entity& entity);
+
+	template<typename TComponent>
+	auto get_component(Entity& entity, sol::this_state s);
+
+	template<typename TComponent>
+	auto remove_component(Entity& entity);
 }
 
 #include "Entity.inl"

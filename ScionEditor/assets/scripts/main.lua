@@ -1,7 +1,12 @@
 gEntity = Entity("TestEntity", "Group")
+gEntity2 = Entity("BigTesty", "Group")
 
 local transform = gEntity.add_component(
 	Transform(100, 100, 10, 10, 0)
+)
+
+gEntity2.add_component(
+	Transform(200, 100, 10, 10, 0)
 )
 
 local sprite = gEntity.add_component(
@@ -14,6 +19,15 @@ local x_pos = 10.0
 local scale = 1.0
 local move_right = true
 local value = 0
+
+local view = Registry.get_entities(Transform)
+view:exclude(Sprite)
+
+view:for_each(
+	function(entity)
+		print(entity:name())
+	end
+)
 
 main = {
 	[1] = {
@@ -62,6 +76,9 @@ main = {
 			end
 
 			transform:set_scale(scale, scale)
+
+			local sprite2 = gEntity:get_component(Sprite)
+			print("Name: " ..sprite2.texture_name)
 
 		end
 	},
