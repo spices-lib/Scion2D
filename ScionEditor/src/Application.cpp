@@ -17,6 +17,7 @@
 #include <Core/Systems/ScriptingSystem.h>
 #include <sol/sol.hpp>
 #include <Core/Systems/RenderSystem.h>
+#include <Core/Systems/AnimationSystem.h>
 
 namespace SCION_EDITOR {
 
@@ -101,6 +102,13 @@ namespace SCION_EDITOR {
 		if (!m_pRegistry->AddToContext(renderSystem))
 		{
 			SCION_ERROR("Failed to add render system to registry context!");
+			return false;
+		}
+
+		auto animationSystem = std::make_shared<SCION_CORE::Systems::AnimationSystem>(*m_pRegistry);
+		if (!m_pRegistry->AddToContext(animationSystem))
+		{
+			SCION_ERROR("Failed to add animation system to registry context!");
 			return false;
 		}
 
@@ -189,6 +197,9 @@ namespace SCION_EDITOR {
 
 		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
 		scriptSystem->Update();
+
+		auto& animationSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::AnimationSystem>>();
+		animationSystem->Update();
 	}
 
 	void Application::Render()

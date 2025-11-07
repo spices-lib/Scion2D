@@ -30,10 +30,12 @@ project "ScionCore"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.Lua}", 
+		"%{IncludeDir.SDL2}",
 	}
 
 	links
 	{
+		"%{Library.SDL2}",
 		"ScionLogger",
 		"ScionRendering",
 		"LuaLibrary"
