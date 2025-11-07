@@ -84,6 +84,16 @@ main = {
 			local sprite2 = gEntity:get_component(Sprite)
 			print("Name: " ..sprite2.texture_name)
 
+			if Keyboard.just_pressed(KEY_W) then
+				print("Key W pressed")
+			elseif Keyboard.just_pressed(KEY_A) then
+				print("Key A pressed")
+			elseif Keyboard.just_pressed(KEY_S) then
+				print("Key S pressed")
+			elseif Keyboard.just_pressed(KEY_D) then
+				print("Key D pressed")
+			end
+
 		end
 	},
 	[2] = {

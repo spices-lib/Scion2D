@@ -25,6 +25,7 @@ project "ScionCore"
 		"src",
 		"%{IncludeDir.ScionLogger}",
 		"%{IncludeDir.ScionRendering}",
+		"%{IncludeDir.ScionWindows}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
@@ -38,6 +39,7 @@ project "ScionCore"
 		"%{Library.SDL2}",
 		"ScionLogger",
 		"ScionRendering",
+		"ScionWindows",
 		"LuaLibrary"
 	}
 
