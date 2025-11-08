@@ -1,6 +1,7 @@
 #pragma once
 #include <Windowing/Inputs/Keyboard.h>
 #include <Windowing/Inputs/Mouse.h>
+#include <Windowing/Inputs/Gamepad.h>
 #include <memory>
 #include <sol/sol.hpp>
 
@@ -8,11 +9,14 @@ using namespace SCION_WINDOWING::Inputs;
 
 namespace SCION_CORE {
 
+	constexpr int MAX_CONTROLLERS = 4;
+
 	class InputManager
 	{
 	private:
 		std::unique_ptr<Keyboard> m_pKeyboard;
 		std::unique_ptr<Mouse> m_pMouse;
+		std::map<int, std::shared_ptr<Gamepad>> m_mapGameControllers;
 
 	private:
 
@@ -25,6 +29,7 @@ namespace SCION_CORE {
 
 		static void RegisterLuaKeyNames(sol::state& lua);
 		static void RegisterLuaMouseButtonNames(sol::state& lua);
+		static void RegisterLuaGamepadButtonNames(sol::state& lua);
 
 	public:
 
@@ -33,5 +38,15 @@ namespace SCION_CORE {
 
 		inline Keyboard& GetKeyboard() { return *m_pKeyboard; }
 		inline Mouse& GetMouse() { return *m_pMouse; }
+
+		std::shared_ptr<Gamepad> GetController(int index);
+
+		bool AddGamepad(Sint32 gamepadIndex);
+		bool RemoveGamepad(Sint32 gamepadID);
+		bool GamepadButtonPressed(const SDL_Event& event);
+		bool GamepadButtonReleased(const SDL_Event& event);
+		bool GamepadAxisValues(const SDL_Event& event);
+		bool GamepadHatValues(const SDL_Event& event);
+		bool UpdateGamepads();
 	};
 }

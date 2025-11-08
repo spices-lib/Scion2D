@@ -98,7 +98,7 @@ namespace SCION_WINDOWING::Inputs {
 			return false;
 		}
 
-		return m_mapButtons.at(btn).bJusyReleased;
+		return m_mapButtons.at(btn).bJustReleased;
 	}
 
 	std::tuple<int, int> Mouse::GetMouseScreenPosition()

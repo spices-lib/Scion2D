@@ -204,6 +204,24 @@ namespace SCION_EDITOR {
 			case SDL_MOUSEMOTION:
 				mouse.SetMouseMoving(true);
 				break;
+			case SDL_CONTROLLERBUTTONDOWN:
+				inputManager.GamepadButtonPressed(m_Event);
+				break;
+			case SDL_CONTROLLERBUTTONUP:
+				inputManager.GamepadButtonReleased(m_Event);
+				break;
+			case SDL_CONTROLLERDEVICEADDED:
+				inputManager.AddGamepad(m_Event.jdevice.which);
+				break;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				inputManager.RemoveGamepad(m_Event.jdevice.which);
+				break;
+			case SDL_JOYAXISMOTION:
+				inputManager.GamepadAxisValues(m_Event);
+				break;
+			case SDL_JOYHATMOTION:
+				inputManager.GamepadHatValues(m_Event);
+				break;
 			default:
 				break;
 			}
@@ -233,6 +251,8 @@ namespace SCION_EDITOR {
 
 		auto& mouse = inputManager.GetMouse();
 		mouse.Update();
+
+		inputManager.UpdateGamepads();
 	}
 
 	void Application::Render()

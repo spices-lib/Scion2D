@@ -214,6 +214,6 @@ namespace SCION_WINDOWING::Inputs {
 			return false;
 		}
 
-		return m_mapButtons.at(key).bJusyReleased;
+		return m_mapButtons.at(key).bJustReleased;
 	}
 }
