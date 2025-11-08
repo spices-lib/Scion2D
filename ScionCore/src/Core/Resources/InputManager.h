@@ -1,5 +1,6 @@
 #pragma once
 #include <Windowing/Inputs/Keyboard.h>
+#include <Windowing/Inputs/Mouse.h>
 #include <memory>
 #include <sol/sol.hpp>
 
@@ -11,6 +12,7 @@ namespace SCION_CORE {
 	{
 	private:
 		std::unique_ptr<Keyboard> m_pKeyboard;
+		std::unique_ptr<Mouse> m_pMouse;
 
 	private:
 
@@ -22,6 +24,7 @@ namespace SCION_CORE {
 	private:
 
 		static void RegisterLuaKeyNames(sol::state& lua);
+		static void RegisterLuaMouseButtonNames(sol::state& lua);
 
 	public:
 
@@ -29,5 +32,6 @@ namespace SCION_CORE {
 		static void CreateLuaInputBindings(sol::state& lua);
 
 		inline Keyboard& GetKeyboard() { return *m_pKeyboard; }
+		inline Mouse& GetMouse() { return *m_pMouse; }
 	};
 }

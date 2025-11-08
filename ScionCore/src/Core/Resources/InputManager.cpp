@@ -4,6 +4,7 @@ namespace SCION_CORE {
 
 	InputManager::InputManager()
 		: m_pKeyboard{ std::make_unique<Keyboard>() }
+		, m_pMouse{ std::make_unique<Mouse>() }
 	{}
 
 	void InputManager::RegisterLuaKeyNames(sol::state& lua)
@@ -138,6 +139,13 @@ namespace SCION_CORE {
 #endif
 	}
 
+	void InputManager::RegisterLuaMouseButtonNames(sol::state& lua)
+	{
+		lua.set("LEFT_BTN", SCION_MOUSE_LEFT);
+		lua.set("MIDDLE_BTN", SCION_MOUSE_MIDDLE);
+		lua.set("RIGHT_BTN", SCION_MOUSE_RIGHT);
+	}
+
 	InputManager& InputManager::GetInstance()
 	{
 		static InputManager instance{};
@@ -148,6 +156,7 @@ namespace SCION_CORE {
 	void InputManager::CreateLuaInputBindings(sol::state& lua)
 	{
 		RegisterLuaKeyNames(lua);
+		RegisterLuaMouseButtonNames(lua);
 
 		auto& inputManager = GetInstance();
 		auto& keyboard = inputManager.GetKeyboard();
@@ -158,6 +167,19 @@ namespace SCION_CORE {
 			"just_pressed", [&](int key) { return keyboard.IsKeyJustPressed(key); },
 			"just_released", [&](int key) { return keyboard.IsKeyJustReleased(key); },
 			"pressed", [&](int key) { return keyboard.IsKeyPressed(key); }
+		);
+
+		auto& mouse = inputManager.GetMouse();
+
+		lua.new_usertype<Mouse>(
+			"Mouse",
+			sol::no_constructor,
+			"just_pressed", [&](int key) { return mouse.IsButtonJustPressed(key); },
+			"just_released", [&](int key) { return mouse.IsButtonJustReleased(key); },
+			"pressed", [&](int key) { return mouse.IsButtonPressed(key); },
+			"screen_position", [&]() { return mouse.GetMouseScreenPosition(); },
+			"wheel_x", [&]() { return mouse.GetMouseWheelX(); },
+			"wheel_y", [&]() { return mouse.GetMouseWheelY(); }
 		);
 	}
 

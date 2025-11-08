@@ -168,6 +168,7 @@ namespace SCION_EDITOR {
 	{
 		auto& inputManager = SCION_CORE::InputManager::GetInstance();
 		auto& keyboard = inputManager.GetKeyboard();
+		auto& mouse = inputManager.GetMouse();
 
 		while (SDL_PollEvent(&m_Event))
 		{
@@ -189,6 +190,19 @@ namespace SCION_EDITOR {
 					m_bIsRunning = false;
 				}
 				keyboard.OnKeyReleased(m_Event.key.keysym.sym);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				mouse.OnButtonPressed(m_Event.button.button);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				mouse.OnButtonReleased(m_Event.button.button);
+				break;
+			case SDL_MOUSEWHEEL:
+				mouse.SetMouseWheelX(m_Event.wheel.x);
+				mouse.SetMouseWheelY(m_Event.wheel.y);
+				break;
+			case SDL_MOUSEMOTION:
+				mouse.SetMouseMoving(true);
 				break;
 			default:
 				break;
@@ -216,6 +230,9 @@ namespace SCION_EDITOR {
 		auto& inputManager = SCION_CORE::InputManager::GetInstance();
 		auto& keyboard = inputManager.GetKeyboard();
 		keyboard.Update();
+
+		auto& mouse = inputManager.GetMouse();
+		mouse.Update();
 	}
 
 	void Application::Render()
