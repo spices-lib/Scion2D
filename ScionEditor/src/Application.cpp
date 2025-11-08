@@ -129,6 +129,7 @@ namespace SCION_EDITOR {
 		}
 
 		SCION_CORE::Systems::ScriptingSystem::RegisterLuaBindings(*lua, *m_pRegistry);
+		SCION_CORE::Systems::ScriptingSystem::RegisterLuaFunctions(*lua);
 
 		auto scriptSystem = std::make_shared<SCION_CORE::Systems::ScriptingSystem>(*m_pRegistry);
 		if (!scriptSystem->LoadMainScript(*lua))

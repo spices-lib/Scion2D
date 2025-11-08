@@ -72,4 +72,17 @@ namespace SCION_RESOURCE {
 		return s;
 	}
 
+	void AssetManager::CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry)
+	{
+		auto& assetManager = registry.GetContext<std::shared_ptr<AssetManager>>();
+
+		lua.new_usertype<AssetManager>(
+			"AssetManager",
+			sol::no_constructor,
+			"add_texture", [&](const std::string& assetName, const std::string& filePath, bool pixel_art) {
+				return assetManager->AddTexture(assetName, filePath, pixel_art);
+			}
+		);
+	}
+
 }

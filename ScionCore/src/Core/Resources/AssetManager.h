@@ -5,6 +5,8 @@
 
 #include <Rendering/Essentials/Shader.h>
 #include <Rendering/Essentials/Texture.h>
+#include <sol/sol.hpp>
+#include "Core/ECS/Registry.h"
 
 namespace SCION_RESOURCE {
 
@@ -25,5 +27,7 @@ namespace SCION_RESOURCE {
 
 		bool AddShader(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath);
 		SCION_RENDERING::Shader& GetShader(const std::string& shaderName);
+
+		static void CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};
 }

@@ -7,6 +7,8 @@
 #include "Logger.h"
 #include "Core/Scripting/GlmLuaBindings.h"
 #include "Core/Resources/InputManager.h"
+#include "Core/Resources/AssetManager.h"
+#include "Timer.h"
 
 namespace SCION_CORE::Systems {
 
@@ -110,10 +112,38 @@ namespace SCION_CORE::Systems {
 		}
 	}
 
+	auto create_timer = [](sol::state& lua) {
+		using namespace SCION_UTL;
+		lua.new_usertype<Timer>(
+			"Timer",
+			sol::call_constructor,
+			sol::factories([]() { return Timer{}; }),
+			"start", &Timer::Start,
+			"stop", &Timer::Stop,
+			"pause", &Timer::Pause,
+			"resume", &Timer::Resume,
+			"is_paused", &Timer::IsPause,
+			"is_running", &Timer::IsRunning,
+			"elapsed_ms", &Timer::ElapsedMS,
+			"elasped_sec", &Timer::ELapsedSec,
+			"restart", [](Timer& timer) {
+				if (timer.IsRunning())
+				{
+					timer.Stop();
+				}
+
+				timer.Start();
+			}
+		);
+	};
+
 	void ScriptingSystem::RegisterLuaBindings(sol::state& lua, SCION_CORE::ECS::Registry& regisry)
 	{
 		SCION_CORE::Scripting::CreateGLMBindings(lua);
 		SCION_CORE::InputManager::CreateLuaInputBindings(lua);
+		SCION_RESOURCE::AssetManager::CreateLuaAssetManager(lua, regisry);
+
+		create_timer(lua);
 
 		Registry::CreateLuaRegistryBind(lua, regisry);
 		Entity::CreateLuaEntityBind(lua, regisry);
@@ -128,6 +158,25 @@ namespace SCION_CORE::Systems {
 		Registry::RegisterMetaComponent<TransformComponent>();
 		Registry::RegisterMetaComponent<SpriteComponent>();
 		Registry::RegisterMetaComponent<AnimationComponent>();
+	}
+
+	void ScriptingSystem::RegisterLuaFunctions(sol::state& lua)
+	{
+		lua.set_function(
+			"run_script", [&](const std::string& path) {
+				try
+				{
+					lua.safe_script_file(path);
+				}
+				catch (const sol::error& error)
+				{
+					SCION_ERROR("Error loading Lua Script: {0}", error.what());
+					return false;
+				}
+
+				return true;
+			}
+		);
 	}
 
 }
