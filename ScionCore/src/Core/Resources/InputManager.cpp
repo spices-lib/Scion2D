@@ -1,6 +1,7 @@
 #include "InputManager.h"
 #include <Logger.h>
 #include <SDL2_Wrappers.h>
+#include <SDL.h>
 
 namespace SCION_CORE {
 
@@ -279,7 +280,7 @@ namespace SCION_CORE {
 		return m_mapGameControllers.at(index);
 	}
 
-	bool InputManager::AddGamepad(Sint32 gamepadIndex)
+	int InputManager::AddGamepad(Sint32 gamepadIndex)
 	{
 		if (m_mapGameControllers.size() >= MAX_CONTROLLERS)
 		{
@@ -289,8 +290,7 @@ namespace SCION_CORE {
 		std::shared_ptr<Gamepad> gamepad{ nullptr };
 		try
 		{
-			gamepad = std::make_shared<Gamepad>(
-				std::move(make_shared_controller(SDL_GameControllerOpen(gamepadIndex))));
+			gamepad = std::make_shared<Gamepad>(make_shared_controller(SDL_GameControllerOpen(gamepadIndex)));
 		}
 		catch (...)
 		{
@@ -313,7 +313,7 @@ namespace SCION_CORE {
 		return -1;
 	}
 
-	bool InputManager::RemoveGamepad(Sint32 gamepadID)
+	int InputManager::RemoveGamepad(Sint32 gamepadID)
 	{
 		auto gamepadItr = std::ranges::find_if(
 			m_mapGameControllers, [&](const auto& gamepad) { return gamepad.second->CheckJoystickID(gamepadID); });
@@ -331,7 +331,7 @@ namespace SCION_CORE {
 		return index;
 	}
 
-	bool InputManager::GamepadButtonPressed(const SDL_Event& event)
+	void InputManager::GamepadButtonPressed(const SDL_Event& event)
 	{
 		for (const auto& [index, gamepad] : m_mapGameControllers)
 		{
@@ -343,7 +343,7 @@ namespace SCION_CORE {
 		}
 	}
 
-	bool InputManager::GamepadButtonReleased(const SDL_Event& event)
+	void InputManager::GamepadButtonReleased(const SDL_Event& event)
 	{
 		for (const auto& [index, gamepad] : m_mapGameControllers)
 		{
@@ -355,7 +355,7 @@ namespace SCION_CORE {
 		}
 	}
 
-	bool InputManager::GamepadAxisValues(const SDL_Event& event)
+	void InputManager::GamepadAxisValues(const SDL_Event& event)
 	{
 		for (const auto& [index, gamepad] : m_mapGameControllers)
 		{
@@ -367,7 +367,7 @@ namespace SCION_CORE {
 		}
 	}
 
-	bool InputManager::GamepadHatValues(const SDL_Event& event)
+	void InputManager::GamepadHatValues(const SDL_Event& event)
 	{
 		for (const auto& [index, gamepad] : m_mapGameControllers)
 		{
@@ -379,7 +379,7 @@ namespace SCION_CORE {
 		}
 	}
 
-	bool InputManager::UpdateGamepads()
+	void InputManager::UpdateGamepads()
 	{
 		for (const auto& [index, gamepad] : m_mapGameControllers)
 		{

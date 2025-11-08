@@ -44,6 +44,7 @@ project "ScionEditor"
 	links
 	{
 		"Glad",
+		"%{Library.SDL2}",
 		"ScionUtilities",
 		"ScionWindows",
 		"ScionRendering",

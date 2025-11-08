@@ -41,12 +41,12 @@ namespace SCION_CORE {
 
 		std::shared_ptr<Gamepad> GetController(int index);
 
-		bool AddGamepad(Sint32 gamepadIndex);
-		bool RemoveGamepad(Sint32 gamepadID);
-		bool GamepadButtonPressed(const SDL_Event& event);
-		bool GamepadButtonReleased(const SDL_Event& event);
-		bool GamepadAxisValues(const SDL_Event& event);
-		bool GamepadHatValues(const SDL_Event& event);
-		bool UpdateGamepads();
+		int AddGamepad(Sint32 gamepadIndex);
+		int RemoveGamepad(Sint32 gamepadID);
+		void GamepadButtonPressed(const SDL_Event& event);
+		void GamepadButtonReleased(const SDL_Event& event);
+		void GamepadAxisValues(const SDL_Event& event);
+		void GamepadHatValues(const SDL_Event& event);
+		void UpdateGamepads();
 	};
 }

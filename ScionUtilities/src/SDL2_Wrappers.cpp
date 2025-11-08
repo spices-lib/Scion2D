@@ -21,13 +21,3 @@ namespace SCION_UTL {
 
 	}
 }
-
-Controller make_shared_controller(SDL_GameController* controller)
-{
-	return std::shared_ptr<SDL_GameController>(controller, SCION_UTL::SDL_Destroyer{});
-}
-
-Cursor make_shared_cursor(SDL_Cursor* cursor)
-{
-	return std::shared_ptr<SDL_Cursor>(cursor, SCION_UTL::SDL_Destroyer{});
-}
