@@ -17,3 +17,4 @@ LibraryDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/lib/x64
 
 Library                                   = {}
 Library["SDL2"]                           = "%{LibraryDir.SDL2}/SDL2.lib"
+Library["SDL_mixer"]                      = "%{LibraryDir.SDL2}/SDL2_mixer.lib"

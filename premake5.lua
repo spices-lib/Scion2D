@@ -18,6 +18,7 @@ include "ScionWindows"
 include "ScionRendering"
 include "ScionLogger"
 include "ScionCore"
+include "ScionSounds"
 
 group "Dependencies"
 include "vendor/Glad"
