@@ -30,6 +30,7 @@ project "ScionEditor"
 		"%{IncludeDir.ScionUtilities}",
 		"%{IncludeDir.ScionWindows}",
 		"%{IncludeDir.ScionRendering}",
+		"%{IncludeDir.ScionSounds}",
 		"%{IncludeDir.ScionLogger}",
 		"%{IncludeDir.ScionCore}",
 		"%{IncludeDir.Glad}",
@@ -47,6 +48,7 @@ project "ScionEditor"
 		"%{Library.SDL2}",
 		"ScionUtilities",
 		"ScionWindows",
+		"ScionSounds",
 		"ScionRendering",
 		"ScionLogger",
 		"ScionCore"

@@ -5,6 +5,7 @@
 
 #include <Rendering/Essentials/Shader.h>
 #include <Rendering/Essentials/Texture.h>
+#include <Sounds/Essentials/Music.h>
 #include <sol/sol.hpp>
 #include "Core/ECS/Registry.h"
 
@@ -17,6 +18,8 @@ namespace SCION_RESOURCE {
 		std::map<std::string, std::shared_ptr<SCION_RENDERING::Texture>> m_mapTextures{};
 		std::map<std::string, std::shared_ptr<SCION_RENDERING::Shader>> m_mapShaders{};
 
+		std::map<std::string, std::shared_ptr<SCION_SOUNDS::Music>> m_mapMusic{};
+
 	public:
 
 		AssetManager() = default;
@@ -27,6 +30,9 @@ namespace SCION_RESOURCE {
 
 		bool AddShader(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath);
 		SCION_RENDERING::Shader& GetShader(const std::string& shaderName);
+
+		bool AddMusic(const std::string& musicName, const std::string& filepath);
+		std::shared_ptr<SCION_SOUNDS::Music> GetMusic(const std::string& musciName);
 
 		static void CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};

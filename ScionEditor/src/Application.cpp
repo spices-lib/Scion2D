@@ -19,6 +19,7 @@
 #include <sol/sol.hpp>
 #include <Core/Systems/RenderSystem.h>
 #include <Core/Systems/AnimationSystem.h>
+#include <Sounds/MusicPlayer/MusicPlayer.h>
 
 namespace SCION_EDITOR {
 
@@ -110,6 +111,19 @@ namespace SCION_EDITOR {
 		if (!m_pRegistry->AddToContext(animationSystem))
 		{
 			SCION_ERROR("Failed to add animation system to registry context!");
+			return false;
+		}
+
+		auto musicPlayer = std::make_shared<SCION_SOUNDS::MusicPlayer>();
+		if (!musicPlayer)
+		{
+			SCION_ERROR("Failed to create Music Player!");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(musicPlayer))
+		{
+			SCION_ERROR("Failed to add music player to registry context!");
 			return false;
 		}
 

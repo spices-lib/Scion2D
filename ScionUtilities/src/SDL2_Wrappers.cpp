@@ -20,4 +20,16 @@ namespace SCION_UTL {
 	{
 
 	}
+
+	void SDL_Destroyer::operator()(Mix_Chunk* chunk) const
+	{
+		Mix_FreeChunk(chunk);
+		std::cout << "Destroyed SDL Mixer\n";
+	}
+
+	void SDL_Destroyer::operator()(Mix_Music* music) const
+	{
+		Mix_FreeMusic(music);
+		std::cout << "Destroyed SDL Music\n";
+	}
 }

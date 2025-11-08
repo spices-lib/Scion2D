@@ -27,6 +27,7 @@ project "ScionCore"
 		"%{IncludeDir.ScionRendering}",
 		"%{IncludeDir.ScionUtilities}",
 		"%{IncludeDir.ScionWindows}",
+		"%{IncludeDir.ScionSounds}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
@@ -42,6 +43,7 @@ project "ScionCore"
 		"ScionRendering",
 		"ScionWindows",
 		"ScionUtilities",
+		"ScionSounds",
 		"LuaLibrary"
 	}
 

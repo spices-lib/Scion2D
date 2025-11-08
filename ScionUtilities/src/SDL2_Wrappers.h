@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <memory>
 
 namespace SCION_UTL {
@@ -9,6 +10,8 @@ namespace SCION_UTL {
 		void operator()(SDL_Window* window) const;
 		void operator()(SDL_GameController* controller) const;
 		void operator()(SDL_Cursor* cursor) const;
+		void operator()(Mix_Chunk* chunk) const;
+		void operator()(Mix_Music* music) const;
 	};
 
 }
@@ -27,3 +30,5 @@ static Cursor make_shared_cursor(SDL_Cursor* cursor)
 
 typedef std::unique_ptr<SDL_Window, SCION_UTL::SDL_Destroyer> WindowPtr;
 
+typedef std::unique_ptr<Mix_Chunk, SCION_UTL::SDL_Destroyer> SoundFxPtr;
+typedef std::unique_ptr<Mix_Music, SCION_UTL::SDL_Destroyer> MusicPtr;
