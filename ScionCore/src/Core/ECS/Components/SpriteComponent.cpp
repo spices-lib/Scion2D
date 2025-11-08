@@ -9,6 +9,32 @@ namespace SCION_CORE::ECS {
 
 	void SCION_CORE::ECS::SpriteComponent::CreateSpriteLuaBind(sol::state& lua, SCION_CORE::ECS::Registry& registry)
 	{
+		lua.new_usertype<SCION_RENDERING::Color>(
+			"Color",
+			sol::call_constructor,
+			sol::factories(
+				[](GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
+					return SCION_RENDERING::Color{ .r = r, .g = g, .b = b, .a = a };
+				}
+			),
+			"r", &SCION_RENDERING::Color::r,
+			"g", &SCION_RENDERING::Color::g,
+			"b", &SCION_RENDERING::Color::b,
+			"a", &SCION_RENDERING::Color::a
+		);
+
+		lua.new_usertype<UVs>(
+			"UVs",
+			sol::call_constructor,
+			sol::factories(
+				[](float u, float v) { return UVs{ .u = u, .v = v }; }
+			),
+			"u", &UVs::u,
+			"v", &UVs::v,
+			"uv_width", &UVs::uv_width,
+			"uv_height", &UVs::uv_height
+		);
+
 		lua.new_usertype<SpriteComponent>(
 			"Sprite",
 			"type_id", &entt::type_hash<SpriteComponent>::value,
@@ -31,6 +57,10 @@ namespace SCION_CORE::ECS {
 			"height", &SpriteComponent::height,
 			"start_x", &SpriteComponent::start_x,
 			"start_y", &SpriteComponent::start_y,
+			"layer", &SpriteComponent::layer,
+			"bHidden", &SpriteComponent::bHidden,
+			"color", &SpriteComponent::color,
+			"UVs", &SpriteComponent::uvs,
 			"generate_uvs", [&](SpriteComponent& sprite) {
 				auto& assetManager = registry.GetContext<std::shared_ptr<AssetManager>>();
 				auto& texture = assetManager->GetTexture(sprite.texture_name);

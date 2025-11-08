@@ -45,7 +45,7 @@ namespace SCION_CORE::Systems {
 			const auto& sprite = view.get<SpriteComponent>(e);
 			const auto& transform = view.get<TransformComponent>(e);
 
-			if (sprite.texture_name.empty())
+			if (sprite.texture_name.empty() || sprite.bHidden)
 			{
 				continue;
 			}

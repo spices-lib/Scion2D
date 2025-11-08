@@ -3,6 +3,8 @@
 #include "Core/ECS/Components/TransformComponent.h"
 #include "Core/ECS/Components/SpriteComponent.h"
 #include "Core/ECS/Components/AnimationComponent.h"
+#include "Core/ECS/Components/CircleColliderComponent.h"
+#include "Core/ECS/Components/BoxColliderComponent.h"
 #include "Core/ECS/Entity.h"
 #include "Logger.h"
 #include "Core/Scripting/GlmLuaBindings.h"
@@ -117,7 +119,7 @@ namespace SCION_CORE::Systems {
 		lua.new_usertype<Timer>(
 			"Timer",
 			sol::call_constructor,
-			sol::factories([]() { return Timer{}; }),
+			sol::constructors<Timer()>(),
 			"start", &Timer::Start,
 			"stop", &Timer::Stop,
 			"pause", &Timer::Pause,
@@ -150,14 +152,20 @@ namespace SCION_CORE::Systems {
 		TransformComponent::CreateLuaTransformBind(lua);
 		SpriteComponent::CreateSpriteLuaBind(lua, regisry);
 		AnimationComponent::CreateAnimationLuaBind(lua);
+		CircleColliderComponent::CreateLuaCircleColliderBind(lua);
+		BoxColliderComponent::CreateLuaBoxColloderBind(lua);
 
 		Entity::RegisterMetaComponent<TransformComponent>();
 		Entity::RegisterMetaComponent<SpriteComponent>();
 		Entity::RegisterMetaComponent<AnimationComponent>();
+		Entity::RegisterMetaComponent<CircleColliderComponent>();
+		Entity::RegisterMetaComponent<BoxColliderComponent>();
 
 		Registry::RegisterMetaComponent<TransformComponent>();
 		Registry::RegisterMetaComponent<SpriteComponent>();
 		Registry::RegisterMetaComponent<AnimationComponent>();
+		Registry::RegisterMetaComponent<CircleColliderComponent>();
+		Registry::RegisterMetaComponent<BoxColliderComponent>();
 	}
 
 	void ScriptingSystem::RegisterLuaFunctions(sol::state& lua)
