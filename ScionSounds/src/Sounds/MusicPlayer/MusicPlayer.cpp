@@ -41,17 +41,38 @@ namespace SCION_SOUNDS {
 
 	void MusicPlayer::Pause()
 	{
+		Mix_PauseMusic();
 	}
+
 	void MusicPlayer::Resume()
 	{
+		Mix_ResumeMusic();
 	}
+
 	void MusicPlayer::Stop()
 	{
+		Mix_HaltMusic();
 	}
+
 	void MusicPlayer::SetVolume(int volume)
 	{
+		if (volume > 100)
+		{
+			volume = 100;
+		}
+
+		if (volume < 0)
+		{
+			volume = 0;
+		}
+
+		int volume_changed = static_cast<int>((volume / 100.0f) * 128);
+		Mix_VolumeMusic(volume_changed);
 	}
-	void MusicPlayer::IsPlaying()
+
+	bool MusicPlayer::IsPlaying()
 	{
+		return Mix_PlayingMusic();
 	}
+
 }

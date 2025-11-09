@@ -13,6 +13,6 @@ namespace SCION_SOUNDS {
 		void Resume();
 		void Stop();
 		void SetVolume(int volume);
-		void IsPlaying();
+		bool IsPlaying();
 	};
 }

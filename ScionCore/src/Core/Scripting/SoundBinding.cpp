@@ -2,6 +2,7 @@
 #include "Core/ECS/Registry.h"
 #include "Core/Resources/AssetManager.h"
 #include <Sounds/MusicPlayer/MusicPlayer.h>
+#include <Sounds/SoundPlayer/SoundFxPlayer.h>
 #include <Logger.h>
 
 using namespace SCION_SOUNDS;
@@ -58,6 +59,47 @@ namespace SCION_CORE::Scripting {
 			"is_playing", [&]() {
 				return musicPlayer->IsPlaying();
 			}
+		);
+
+		auto& soundFxPlayer = registry.GetContext<std::shared_ptr<SoundFxPlayer>>();
+		if (!soundFxPlayer)
+		{
+			SCION_ERROR("Failed to bind sound player to lua");
+			return;
+		}
+
+		lua.new_usertype<SoundFxPlayer>(
+			"Sound",
+			sol::no_constructor,
+			"play",
+			sol::overload(
+				[&](const std::string& soundName) {
+					auto pSoundFx = assetManager->GetSoundFx(soundName);
+					if (!pSoundFx)
+					{
+						SCION_ERROR("Failed to get {} from asset manager", soundName);
+						return;
+					}
+
+					soundFxPlayer->Play(*pSoundFx);
+				},
+				[&](const std::string& soundName, int loops, int channel) {
+					auto pSoundFx = assetManager->GetSoundFx(soundName);
+					if (!pSoundFx)
+					{
+						SCION_ERROR("Failed to get {} from asset manager", soundName);
+						return;
+					}
+
+					soundFxPlayer->Play(*pSoundFx, loops, channel);
+				}
+			),
+			"stop",
+			[&](int channel) {
+				soundFxPlayer->Stop(channel);
+			},
+			"set_volume", [&](int channel, int volume) { soundFxPlayer->SetVolume(channel, volume); },
+			"is_playing", [&](int channel) { return soundFxPlayer->IsPlaying(channel); }
 		);
 	}
 

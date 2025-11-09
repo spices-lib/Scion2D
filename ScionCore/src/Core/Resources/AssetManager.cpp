@@ -118,6 +118,52 @@ namespace SCION_RESOURCE {
 		return m_mapMusic.at(musciName);
 	}
 
+	bool AssetManager::AddSoundFx(const std::string& soundFxName, const std::string& filepath)
+	{
+		if (!m_mapSoundFx.contains(soundFxName))
+		{
+			SCION_ERROR("Failed to add musci {0}", soundFxName);
+			return false;
+		}
+
+		Mix_Chunk* chunk = Mix_LoadWAV(filepath.c_str());
+
+		if (!chunk)
+		{
+			std::string error{ Mix_GetError() };
+			SCION_ERROR("Failed to load : {0}", filepath);
+			return false;
+		}
+
+		SCION_SOUNDS::SoundParams params {
+			.name = soundFxName,
+			.filename = filepath,
+			.duration = chunk->alen / 179.4
+		};
+
+		auto pSoundFx = std::make_shared<SCION_SOUNDS::SoundFX>(params, SoundFxPtr{ chunk });
+		if (!pSoundFx)
+		{
+			SCION_ERROR("Failed to load soundFx {0}", soundFxName);
+			return false;
+		}
+
+		m_mapSoundFx[soundFxName] = pSoundFx;
+
+		return true;
+	}
+
+	std::shared_ptr<SCION_SOUNDS::SoundFX> AssetManager::GetSoundFx(const std::string& soundFxName)
+	{
+		if (!m_mapSoundFx.contains(soundFxName))
+		{
+			SCION_ERROR("Failed to find soundFx {0}", soundFxName);
+			return nullptr;
+		}
+
+		return m_mapSoundFx.at(soundFxName);
+	}
+
 	void AssetManager::CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry)
 	{
 		auto& assetManager = registry.GetContext<std::shared_ptr<AssetManager>>();
@@ -130,6 +176,9 @@ namespace SCION_RESOURCE {
 			},
 			"add_music", [&](const std::string& musicName, const std::string& filepath){
 				return assetManager->AddMusic(musicName, filepath);
+			},
+			"add_soundFx", [&](const std::string& soundFxName, const std::string& filepath) {
+				return assetManager->AddSoundFx(soundFxName, filepath);
 			}
 		);
 	}

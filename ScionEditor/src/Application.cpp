@@ -20,6 +20,7 @@
 #include <Core/Systems/RenderSystem.h>
 #include <Core/Systems/AnimationSystem.h>
 #include <Sounds/MusicPlayer/MusicPlayer.h>
+#include <Sounds/SoundPlayer/SoundFxPlayer.h>
 
 namespace SCION_EDITOR {
 
@@ -124,6 +125,19 @@ namespace SCION_EDITOR {
 		if (!m_pRegistry->AddToContext(musicPlayer))
 		{
 			SCION_ERROR("Failed to add music player to registry context!");
+			return false;
+		}
+
+		auto soundFxPlayer = std::make_shared<SCION_SOUNDS::SoundFxPlayer>();
+		if (!soundFxPlayer)
+		{
+			SCION_ERROR("Failed to create soundFx Player!");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(soundFxPlayer))
+		{
+			SCION_ERROR("Failed to add soundFx player to registry context!");
 			return false;
 		}
 

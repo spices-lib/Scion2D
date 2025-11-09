@@ -6,6 +6,7 @@
 #include <Rendering/Essentials/Shader.h>
 #include <Rendering/Essentials/Texture.h>
 #include <Sounds/Essentials/Music.h>
+#include <Sounds/Essentials/SoundFX.h>
 #include <sol/sol.hpp>
 #include "Core/ECS/Registry.h"
 
@@ -19,6 +20,7 @@ namespace SCION_RESOURCE {
 		std::map<std::string, std::shared_ptr<SCION_RENDERING::Shader>> m_mapShaders{};
 
 		std::map<std::string, std::shared_ptr<SCION_SOUNDS::Music>> m_mapMusic{};
+		std::map<std::string, std::shared_ptr<SCION_SOUNDS::SoundFX>> m_mapSoundFx{};
 
 	public:
 
@@ -33,6 +35,9 @@ namespace SCION_RESOURCE {
 
 		bool AddMusic(const std::string& musicName, const std::string& filepath);
 		std::shared_ptr<SCION_SOUNDS::Music> GetMusic(const std::string& musciName);
+
+		bool AddSoundFx(const std::string& soundFxName, const std::string& filepath);
+		std::shared_ptr<SCION_SOUNDS::SoundFX> GetSoundFx(const std::string& soundFxName);
 
 		static void CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};
