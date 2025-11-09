@@ -21,6 +21,7 @@
 #include <Core/Systems/AnimationSystem.h>
 #include <Sounds/MusicPlayer/MusicPlayer.h>
 #include <Sounds/SoundPlayer/SoundFxPlayer.h>
+#include "Rendering/Core/Renderer.h"
 
 namespace SCION_EDITOR {
 
@@ -86,12 +87,20 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto renderer = std::make_shared<SCION_RENDERING::Renderer>();
+
 		auto assetManager = std::make_shared<SCION_RESOURCE::AssetManager>();
 
 		assetManager->AddTexture("castle", "path/to/image", true);
 		auto& texture = assetManager->GetTexture("castle");
 
 		m_pRegistry = std::make_unique<SCION_CORE::ECS::Registry>();
+
+		if (!m_pRegistry->AddToContext(renderer))
+		{
+			SCION_ERROR("Failed to add render to registry context!");
+			return false;
+		}
 
 		auto lua = std::make_shared<sol::state>();
 		lua->open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::string);
@@ -173,6 +182,14 @@ namespace SCION_EDITOR {
 
 		LoadShaders();
 
+		renderer->DrawLine(
+			SCION_RENDERING::Line{ 
+				.p1 = glm::vec2{ 50.0f }, 
+				.p2 = glm::vec2{200.0f}, 
+				.color = SCION_RENDERING::Color{ 255, 0, 0, 255} 
+			}
+		);
+
 		return true;
 	}
 
@@ -187,6 +204,12 @@ namespace SCION_EDITOR {
 		}
 
 		if (!assetMananger->AddShader("basic", "assets/shaders/basicShader.vert", "assets/shaders/basicShader.vert"))
+		{
+			SCION_ERROR("Failed to add shader to the asset manager.");
+			return false;
+		}
+
+		if (!assetMananger->AddShader("color", "assets/shaders/colorShader.vert", "assets/shaders/colorShader.vert"))
 		{
 			SCION_ERROR("Failed to add shader to the asset manager.");
 			return false;
@@ -290,6 +313,11 @@ namespace SCION_EDITOR {
 	{
 		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
 		auto& renderSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderSystem>>();
+		auto& renderer = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Renderer>>();
+		auto& camera = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
+		auto& assetManager = m_pRegistry->GetContext<std::shared_ptr<SCION_RESOURCE::AssetManager>>();
+
+		auto& shader = assetManager->GetShader("color");
 
 		glViewport(
 			0,
@@ -303,6 +331,7 @@ namespace SCION_EDITOR {
 
 		scriptSystem->Render();
 		renderSystem->Update();
+		renderer->DrawLines(shader, *camera);
 
 		SDL_GL_SwapWindow(m_pWindow->GetWindow().get());
 	}
