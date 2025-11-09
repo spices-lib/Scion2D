@@ -83,7 +83,7 @@ namespace SCION_EDITOR {
 		{
 			std::cout << "Failed to LoadGL -> GLAD" << std::endl;
 			m_bIsRunning = false;
-			return -1;
+			return false;
 		}
 
 		auto assetManager = std::make_shared<SCION_RESOURCE::AssetManager>();
@@ -172,6 +172,8 @@ namespace SCION_EDITOR {
 		}
 
 		LoadShaders();
+
+		return true;
 	}
 
 	bool Application::LoadShaders()
