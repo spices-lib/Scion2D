@@ -90,6 +90,9 @@ namespace SCION_CORE::Systems {
 				SCION_ERROR("Error running Update script: {0}", err.what());
 			}
 		}
+
+		auto& lua = m_Registry.GetContext<std::shared_ptr<sol::state>>();
+		lua->collect_garbage();
 	}
 
 	void ScriptingSystem::Render()

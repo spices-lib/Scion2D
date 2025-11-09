@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 #include "Rendering/Essentials/ShaderLoader.h"
 #include "Rendering/Essentials/TextureLoader.h"
+#include "Rendering/Essentials/FontLoader.h"
 #include "Logger.h"
 
 namespace SCION_RESOURCE {
@@ -164,6 +165,59 @@ namespace SCION_RESOURCE {
 		return m_mapSoundFx.at(soundFxName);
 	}
 
+	bool AssetManager::AddFont(const std::string& fontName, const std::string& filepath, float fontSize)
+	{
+		if (!m_mapFonts.contains(fontName))
+		{
+			SCION_ERROR("Failed to add font {}", fontName);
+			return false;
+		}
+
+		auto pFont = SCION_RENDERING::FontLoader::Create(filepath, fontSize);
+
+		if (!pFont)
+		{
+			SCION_ERROR("Failed to add font {}", fontName);
+			return false;
+		}
+
+		m_mapFonts[fontName] = pFont;
+
+		return true;
+	}
+
+	bool AssetManager::AddFontFromMemory(const std::string& fontName, unsigned char* fontData, float fontSize)
+	{
+		if (!m_mapFonts.contains(fontName))
+		{
+			SCION_ERROR("Failed to add font {}", fontName);
+			return false;
+		}
+
+		auto pFont = SCION_RENDERING::FontLoader::CreateFromMemory(fontData, fontSize);
+
+		if (!pFont)
+		{
+			SCION_ERROR("Failed to add font {}", fontName);
+			return false;
+		}
+
+		m_mapFonts[fontName] = pFont;
+
+		return true;
+	}
+
+	std::shared_ptr<SCION_RENDERING::Font> AssetManager::GetFont(const std::string& fontName)
+	{
+		if (!m_mapFonts.contains(fontName))
+		{
+			SCION_ERROR("Failed to get font {}", fontName);
+			return nullptr;
+		}
+
+		return m_mapFonts.at(fontName);
+	}
+
 	void AssetManager::CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry)
 	{
 		auto& assetManager = registry.GetContext<std::shared_ptr<AssetManager>>();
@@ -179,6 +233,9 @@ namespace SCION_RESOURCE {
 			},
 			"add_soundFx", [&](const std::string& soundFxName, const std::string& filepath) {
 				return assetManager->AddSoundFx(soundFxName, filepath);
+			},
+			"add_font", [&](const std::string& fontName, const std::string& fontpath, float fontSize) {
+				return assetManager->AddFont(fontName, fontpath, fontSize);
 			}
 		);
 	}

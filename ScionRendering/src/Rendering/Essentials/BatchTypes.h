@@ -27,4 +27,21 @@ namespace SCION_RENDERING {
 		float lineWidth;
 	};
 
+	struct RectBatch
+	{
+		GLuint numIndices{ 0 }, offset{ 0 };
+	};
+
+	struct RectGlyph
+	{
+		Vertex topLeft, bottomLeft, topRight, bottomRight;
+	};
+
+	struct CircleGlyph
+	{
+		CircleVertex topLeft, bottomLeft, topRight, bottomRight;
+	};
+
+
+
 }

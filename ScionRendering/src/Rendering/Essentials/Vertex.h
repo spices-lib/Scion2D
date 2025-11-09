@@ -31,4 +31,11 @@ namespace SCION_RENDERING {
 		}
 	};
 
+	struct CircleVertex
+	{
+		glm::vec2 position, uvs;
+		Color color;
+		float lineThickness;
+	};
+
 }
