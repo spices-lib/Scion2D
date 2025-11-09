@@ -35,6 +35,7 @@ namespace SCION_RENDERING {
 
 		GLuint fontId;
 		glGenTextures(1, &fontId);
+		glBindTexture(GL_TEXTURE_2D, fontId);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap.data());
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -54,6 +55,7 @@ namespace SCION_RENDERING {
 
 		GLuint fontId;
 		glGenTextures(1, &fontId);
+		glBindTexture(GL_TEXTURE_2D, fontId);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
 		glGenerateMipmap(GL_TEXTURE_2D);

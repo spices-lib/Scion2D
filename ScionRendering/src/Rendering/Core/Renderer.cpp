@@ -9,6 +9,7 @@ namespace SCION_RENDERING {
 	{
 		m_pLineBatch = std::make_unique<LineBatchRenderer>();
 		m_pSpriteBatch = std::make_unique<SpriteBatchRenderer>();
+		m_pCircleBatch = std::make_unique<CircleBatchRenderer>();
 	}
 
 	void Renderer::SetClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
@@ -112,6 +113,11 @@ namespace SCION_RENDERING {
 	{
 	}
 
+	void Renderer::DrawText2D(const Text& text)
+	{
+		m_Texts.push_back(text);
+	}
+
 	void Renderer::DrawLines(Shader& shader, Camera2D& camera)
 	{
 		auto cam_mat = camera.GetCameraMatrix();
@@ -142,11 +148,35 @@ namespace SCION_RENDERING {
 
 	}
 
+	void Renderer::DrawTexts(Shader& shader, Camera2D& camera)
+	{
+		if (m_Texts.empty())
+			return;
+
+		auto cam_mat = camera.GetCameraMatrix();
+
+		shader.Enable();
+		shader.SetUniformMat4("projection", cam_mat);
+
+		m_pTextBatch->Begin();
+
+		for (const auto& text : m_Texts)
+		{
+			m_pTextBatch->AddText(text.textStr, text.pFont, text.position, text.padding, text.wrap, text.color);
+		}
+
+		m_pTextBatch->End();
+		m_pTextBatch->Render();
+
+		shader.Disable();
+	}
+
 	void Renderer::ClearPrimitives()
 	{
 		m_Lines.clear();
 		m_Circles.clear();
 		m_Rects.clear();
+		m_Texts.clear();
 	}
 
 }

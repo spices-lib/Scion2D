@@ -3,6 +3,8 @@
 #include "Rendering/Essentials/Primitives.h"
 #include "SpriteBatchRenderer.h"
 #include "LineBatchRenderer.h"
+#include "CircleBatchRenderer.h"
+#include "TextBatchRenderer.h"
 
 namespace SCION_RENDERING {
 
@@ -27,10 +29,12 @@ namespace SCION_RENDERING {
 		std::vector<Line> m_Lines;
 		std::vector<Rect> m_Rects;
 		std::vector<Circle> m_Circles;
+		std::vector<Text> m_Texts;
 
 		std::unique_ptr<LineBatchRenderer> m_pLineBatch;
-		//std::unique_ptr<CircleBatchRenderer> m_pCircleBatch;
+		std::unique_ptr<CircleBatchRenderer> m_pCircleBatch;
 		std::unique_ptr<SpriteBatchRenderer> m_pSpriteBatch;
+		std::unique_ptr<TextBatchRenderer> m_pTextBatch;
 
 	public:
 
@@ -56,9 +60,12 @@ namespace SCION_RENDERING {
 		void DrawCircle(const Circle& circle);
 		void DrawCircle(const glm::vec3& position, float radius, const Color& color, float thickness = 1.0f);
 
+		void DrawText2D(const Text& text);
+
 		void DrawLines(class Shader& shader, class Camera2D& camera);
 		void DrawFilledRects(class Shader& shader, class Camera2D& camera);
 		void DrawCircles(class Shader& shader, class Camera2D& camera);
+		void DrawTexts(class Shader& shader, class Camera2D& camera);
 
 		void ClearPrimitives();
 	};

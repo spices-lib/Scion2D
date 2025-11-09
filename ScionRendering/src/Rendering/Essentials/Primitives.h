@@ -1,5 +1,8 @@
 #pragma once
 #include "Vertex.h"
+#include <string>
+#include <memory>
+#include "Rendering/Essentials/Font.h"
 
 namespace SCION_RENDERING {
 
@@ -22,5 +25,15 @@ namespace SCION_RENDERING {
 		glm::vec2 position{ 0.0f };
 		float thickness{ 1.0f }, radius{ 0.0f };
 		Color color{};
+	};
+
+	struct Text
+	{
+		glm::vec2 position{ 0.0f };
+		std::string textStr{ "" };
+		float wrap{ -1.0f };
+		float padding{ 1.0f };
+		std::shared_ptr<Font> pFont{ nullptr };
+		Color color{ 255, 255, 255, 255 };
 	};
 }

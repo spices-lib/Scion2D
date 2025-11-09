@@ -1,5 +1,7 @@
 #pragma once
 #include "Vertex.h"
+#include <string>
+#include "Font.h"
 
 namespace SCION_RENDERING {
 
@@ -42,6 +44,20 @@ namespace SCION_RENDERING {
 		CircleVertex topLeft, bottomLeft, topRight, bottomRight;
 	};
 
+	struct TextBatch
+	{
+		GLuint offset{ 0 }, numVertices{ 0 }, fontAtlas{ 0 };
+	};
 
+	struct TextGlyph
+	{
+		std::string textStr{""};
+		glm::vec2 position{ 0.0f };
+		Color color{ 255, 255, 255, 255 };
+		glm::mat4 model{ 1.0f };
+		std::shared_ptr<Font> font { nullptr };
+		float wrap{ 0.0f };
+		int padding{ 0 };
+	};
 
 }
