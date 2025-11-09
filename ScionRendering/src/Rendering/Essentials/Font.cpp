@@ -48,4 +48,18 @@ namespace SCION_RENDERING {
 		return glyph;
 	}
 
+	void Font::GetNewCharPos(char c, glm::vec2& pos)
+	{
+		if (c >= 32 && c < 128)
+		{
+			stbtt_aligned_quad quad;
+			stbtt_GetBakedQuad(
+				(stbtt_bakedchar*)(m_pData),
+				m_Width, m_Height, c - 32,
+				&pos.x, &pos.y,
+				&quad, 1
+			);
+		)
+	}
+
 }

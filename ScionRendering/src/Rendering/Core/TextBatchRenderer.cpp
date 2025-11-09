@@ -1,5 +1,6 @@
 #include "TextBatchRenderer.h"
 #include <algorithm>
+#include <Logger.h>
 
 namespace SCION_RENDERING {
 
@@ -30,10 +31,39 @@ namespace SCION_RENDERING {
 			std::vector<std::string> textChunks{};
 			std::string text_holder{""};
 			glm::vec2 temp_pos = textGlyph->position;
+			auto fontSize = textGlyph->font->GetFontSize();
 
 			if (textGlyph->wrap > 1.0f)
 			{
+				for (int i = 0; i < textGlyph->textStr.size(); i++)
+				{
+					auto character = textGlyph->textStr[i];
+					text_holder += character;
+					bool bNewLine = character == '\n';
+					size_t text_size = text_holder.size();
+					textGlyph->font->GetNewCharPos(character, temp_pos);
+					
+					if (text_size > 0 && (temp_pos.x >= (textGlyph->wrap + textGlyph->position.x) || character == '\0' || bNewLine))
+					{
+						while (textGlyph->textStr[i] != ' ' && textGlyph->textStr[i] != '.' &&
+							textGlyph->textStr[i] != '!' && textGlyph->textStr[i] != '?' && text_size > 0)
+						{
+							i--;
+							if (i < 0)
+							{
+								SCION_ERROR("Failed to draw text");
+								return;
+							}
 
+							if (!text_holder.empty())
+							{
+								text_holder.pop_back();
+								text_size = text_holder.size();
+								temp_pos.x -= fontSize;
+							}
+						}
+					}
+				}
 			}
 			else
 			{
