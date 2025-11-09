@@ -13,15 +13,46 @@ namespace SCION_RENDERING {
 
 	void Renderer::SetClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 	{
+		glClearColor(red, green, blue, alpha);
 	}
+
 	void Renderer::ClearBuffers(bool color, bool depth, bool stencil)
 	{
+		glClear(
+			(color ? GL_COLOR_BUFFER_BIT : 0) |
+			(color ? GL_DEPTH_BUFFER_BIT : 0) |
+			(color ? GL_STENCIL_BUFFER_BIT : 0)
+		);
 	}
+
+	void Renderer::SetCapability(GLCapability capability, bool enable)
+	{
+		if (enable)
+		{
+			glEnable(static_cast<GLenum>(capability));
+		}
+		else
+		{
+			glDisable(static_cast<GLenum>(capability));
+		}
+	}
+
+	bool Renderer::IsCapabilityEnable(GLCapability capability)
+	{
+		return glIsEnabled(static_cast<GLenum>(capability));
+	}
+
 	void Renderer::SetBlendCapability(BlendingFactors aFactor, BlendingFactors dFactor)
 	{
+		glBlendFunc(
+			static_cast<GLenum>(aFactor),
+			static_cast<GLenum>(dFactor)
+		);
 	}
+
 	void Renderer::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 	{
+		glViewport(x, y, width, height);
 	}
 
 	void Renderer::DrawLine(const Line& line)
@@ -36,10 +67,41 @@ namespace SCION_RENDERING {
 
 	void Renderer::DrawRect(const Rect& rect)
 	{
+		DrawLine(Line{
+			.p1 = rect.position,
+			.p2 = glm::vec2{rect.position.x + rect.width, rect.position.y},
+			.color = rect.color
+		});
+
+		DrawLine(Line{
+			.p1 = glm::vec2{rect.position.x, rect.position.y + rect.height},
+			.p2 = glm::vec2{rect.position.x + rect.width, rect.position.y + rect.height},
+			.color = rect.color
+		});
+
+		DrawLine(Line{
+			.p1 = rect.position,
+			.p2 = glm::vec2{rect.position.x, rect.position.y + rect.height},
+			.color = rect.color
+		});
+
+		DrawLine(Line{
+			.p1 = glm::vec2{rect.position.x + rect.width, rect.position.y},
+			.p2 = glm::vec2{rect.position.x + rect.width, rect.position.y + rect.height},
+			.color = rect.color
+		});
 	}
+
 	void Renderer::DrawRect(const glm::vec2 position, float width, float height, const Color& color)
 	{
+		DrawRect(Rect{
+			.position = position,
+			.width = width,
+			.height = height,
+			.color = color
+		});
 	}
+
 	void Renderer::DrawFilledRect(const Rect& rect)
 	{
 	}
@@ -70,16 +132,21 @@ namespace SCION_RENDERING {
 		shader.Disable();
 	}
 
-	void Renderer::DrawRects()
+	void Renderer::DrawFilledRects(class Shader& shader, class Camera2D& camera)
 	{
+
 	}
-	void Renderer::DrawFilledRects()
+
+	void Renderer::DrawCircles(class Shader& shader, class Camera2D& camera)
 	{
+
 	}
-	void Renderer::DrawCircles()
-	{
-	}
+
 	void Renderer::ClearPrimitives()
 	{
+		m_Lines.clear();
+		m_Circles.clear();
+		m_Rects.clear();
 	}
+
 }

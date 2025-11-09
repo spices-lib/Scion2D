@@ -11,6 +11,7 @@
 #include "Core/Resources/InputManager.h"
 #include "Core/Resources/AssetManager.h"
 #include "Core/Scripting/SoundBinding.h"
+#include "Core/Scripting/RendererBinding.h"
 #include "Timer.h"
 
 namespace SCION_CORE::Systems {
@@ -146,6 +147,7 @@ namespace SCION_CORE::Systems {
 		SCION_CORE::InputManager::CreateLuaInputBindings(lua);
 		SCION_RESOURCE::AssetManager::CreateLuaAssetManager(lua, regisry);
 		SCION_CORE::Scripting::SoundBinder::CreateSoundBind(lua, regisry);
+		SCION_CORE::Scripting::RendererBinder::CreateRenderingBinding(lua, regisry);
 
 		create_timer(lua);
 

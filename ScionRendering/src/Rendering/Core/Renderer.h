@@ -40,11 +40,14 @@ namespace SCION_RENDERING {
 		void SetClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 		void ClearBuffers(bool color = true, bool depth = true, bool stencil = false);
 
+		void SetCapability(GLCapability capability, bool enable);
+		bool IsCapabilityEnable(GLCapability capability);
+
 		void SetBlendCapability(BlendingFactors aFactor, BlendingFactors dFactor);
 		void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 		void DrawLine(const Line& line);
-		void DrawLine(const glm::vec2 p1, const glm::vec2 p2, const Color& color, float lineWidth);
+		void DrawLine(const glm::vec2 p1, const glm::vec2 p2, const Color& color, float lineWidth = 1.0f);
 
 		void DrawRect(const Rect& rect);
 		void DrawRect(const glm::vec2 position, float width, float height, const Color& color);
@@ -54,9 +57,8 @@ namespace SCION_RENDERING {
 		void DrawCircle(const glm::vec3& position, float radius, const Color& color, float thickness = 1.0f);
 
 		void DrawLines(class Shader& shader, class Camera2D& camera);
-		void DrawRects();
-		void DrawFilledRects();
-		void DrawCircles();
+		void DrawFilledRects(class Shader& shader, class Camera2D& camera);
+		void DrawCircles(class Shader& shader, class Camera2D& camera);
 
 		void ClearPrimitives();
 	};
