@@ -33,7 +33,7 @@ namespace SCION_RENDERING {
 			glm::vec2 temp_pos = textGlyph->position;
 			auto fontSize = textGlyph->font->GetFontSize();
 
-			if (textGlyph->wrap > 1.0f)
+			if (textGlyph->wrap > 100.0f)
 			{
 				for (int i = 0; i < textGlyph->textStr.size(); i++)
 				{
@@ -45,24 +45,44 @@ namespace SCION_RENDERING {
 					
 					if (text_size > 0 && (temp_pos.x >= (textGlyph->wrap + textGlyph->position.x) || character == '\0' || bNewLine))
 					{
-						while (textGlyph->textStr[i] != ' ' && textGlyph->textStr[i] != '.' &&
-							textGlyph->textStr[i] != '!' && textGlyph->textStr[i] != '?' && text_size > 0)
+						if (!bNewLine)
 						{
-							i--;
-							if (i < 0)
+							while (textGlyph->textStr[i] != ' ' && textGlyph->textStr[i] != '.' &&
+								textGlyph->textStr[i] != '!' && textGlyph->textStr[i] != '?' && text_size > 0)
 							{
-								SCION_ERROR("Failed to draw text");
-								return;
-							}
+								i--;
+								if (i < 0)
+								{
+									SCION_ERROR("Failed to draw text");
+									return;
+								}
 
-							if (!text_holder.empty())
-							{
-								text_holder.pop_back();
-								text_size = text_holder.size();
-								temp_pos.x -= fontSize;
+								if (!text_holder.empty())
+								{
+									text_holder.pop_back();
+									text_size = text_holder.size();
+									temp_pos.x -= fontSize;
+								}
 							}
 						}
+						else
+						{
+							text_holder.pop_back();
+						}
+
+						if (text_size > 0)
+						{
+							textChunks.push_back(text_holder);
+							temp_pos = textGlyph->position;
+							text_holder.clear();
+						}
 					}
+				}
+
+				if (!text_holder.empty())
+				{
+					textChunks.push_back(text_holder);
+					text_holder.clear();
 				}
 			}
 			else

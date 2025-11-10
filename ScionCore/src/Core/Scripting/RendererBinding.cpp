@@ -4,13 +4,18 @@
 #include <Rendering/Core/Renderer.h>
 #include "Core/ECS/Registry.h"
 #include <Logger.h>
+#include "Core/Resources/AssetManager.h"
 
 using namespace SCION_RENDERING;
+using namespace SCION_RESOURCE;
 
 namespace SCION_CORE::Scripting {
 
 	void RendererBinder::CreateRenderingBinding(sol::state& lua, SCION_CORE::ECS::Registry& registry)
 	{
+		auto& camera = registry.GetContext<std::shared_ptr<Camera2D>>();
+		auto& assetMananger = registry.GetContext<std::shared_ptr<AssetManager>>();
+
 		lua.new_usertype<Line>(
 			"Line",
 			sol::call_constructor,
@@ -36,6 +41,33 @@ namespace SCION_CORE::Scripting {
 			"width", &Rect::width,
 			"height", &Rect::height,
 			"color", &Rect::color
+		);
+
+		lua.new_usertype<Text>(
+			"Text",
+			sol::call_constructor,
+			sol::factories(
+				[&](const glm::vec2& position, const std::string& textStr, const std::string& fontName, float wrap, const Color& color) {
+					auto pFont = assetMananger->GetFont(fontName);
+					if (!pFont)
+					{
+						SCION_ERROR("Failed to get font {}", fontName);
+						return Text{};
+					}
+
+					return Text{
+						.position = position,
+						.textStr = textStr,
+						.wrap = wrap,
+						.pFont = pFont,
+						.color = color
+					};
+				}
+			),
+			"position", &Text::position,
+			"textStr", &Text::textStr,
+			"wrap", &Text::wrap,
+			"color", &Text::color
 		);
 
 		auto& renderer = registry.GetContext<std::shared_ptr<Renderer>>();
@@ -67,7 +99,11 @@ namespace SCION_CORE::Scripting {
 			)
 		);
 
-		auto& camera = registry.GetContext<std::shared_ptr<Camera2D>>();
+		lua.set_function(
+			"DrawText", [&](const Text& text) {
+				renderer->DrawText2D(text);
+			}
+		);
 
 		lua.new_usertype<Camera2D>(
 			"Camera", 

@@ -59,7 +59,7 @@ namespace SCION_RENDERING {
 				&pos.x, &pos.y,
 				&quad, 1
 			);
-		)
+		}
 	}
 
 }
