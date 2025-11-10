@@ -28,12 +28,14 @@ project "ScionCore"
 		"%{IncludeDir.ScionUtilities}",
 		"%{IncludeDir.ScionWindows}",
 		"%{IncludeDir.ScionSounds}",
+		"%{IncludeDir.ScionPhysics}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.Lua}", 
 		"%{IncludeDir.SDL2}",
+		"%{IncludeDir.Box2D}",
 	}
 
 	links
@@ -44,7 +46,9 @@ project "ScionCore"
 		"ScionWindows",
 		"ScionUtilities",
 		"ScionSounds",
-		"LuaLibrary"
+		"ScionPhysics",
+		"LuaLibrary",
+		"Box2D"
 	}
 
 	filter "system:windows"

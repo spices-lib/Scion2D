@@ -33,6 +33,7 @@ project "ScionEditor"
 		"%{IncludeDir.ScionSounds}",
 		"%{IncludeDir.ScionLogger}",
 		"%{IncludeDir.ScionCore}",
+		"%{IncludeDir.ScionPhysics}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.stb_image}",
@@ -40,6 +41,7 @@ project "ScionEditor"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.Lua}", 
+		"%{IncludeDir.Box2D}", 
 	}
 
 	links
@@ -51,7 +53,9 @@ project "ScionEditor"
 		"ScionSounds",
 		"ScionRendering",
 		"ScionLogger",
-		"ScionCore"
+		"ScionCore",
+		"ScionPhysics",
+		"Box2D"
 	}
 
 	filter "system:windows"
