@@ -23,7 +23,7 @@ namespace SCION_CORE::ECS {
 		int16_t groupIndex{ 0 };
 	};
 
-	class PhysicsComponent
+	struct PhysicsComponent
 	{
 		SCION_PHYSICS::PhysicalWorld m_pPhysicsWorld;
 		std::shared_ptr<b2Body> m_pRigidBody;
@@ -31,6 +31,7 @@ namespace SCION_CORE::ECS {
 
 	public:
 
+		PhysicsComponent() = default;
 		PhysicsComponent(SCION_PHYSICS::PhysicalWorld pPhysicsWorld, const PhysicsAttributes& physicsAttr);
 		~PhysicsComponent() = default;
 
