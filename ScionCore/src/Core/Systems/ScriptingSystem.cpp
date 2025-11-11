@@ -6,6 +6,7 @@
 #include "Core/ECS/Components/CircleColliderComponent.h"
 #include "Core/ECS/Components/BoxColliderComponent.h"
 #include "Core/ECS/Components/PhysicalComponent.h"
+#include "Core/ECS/Components/TextComponent.h"
 #include "Core/ECS/Entity.h"
 #include "Logger.h"
 #include "Core/Scripting/GlmLuaBindings.h"
@@ -163,6 +164,7 @@ namespace SCION_CORE::Systems {
 		CircleColliderComponent::CreateLuaCircleColliderBind(lua);
 		BoxColliderComponent::CreateLuaBoxColloderBind(lua);
 		PhysicsComponent::CreatePhysicsLuaBind(lua, regisry.GetRegistry());
+		TextComponent::CreateLuaTextBindings(lua);
 
 		Entity::RegisterMetaComponent<TransformComponent>();
 		Entity::RegisterMetaComponent<SpriteComponent>();
@@ -170,6 +172,7 @@ namespace SCION_CORE::Systems {
 		Entity::RegisterMetaComponent<CircleColliderComponent>();
 		Entity::RegisterMetaComponent<BoxColliderComponent>();
 		Entity::RegisterMetaComponent<PhysicsComponent>();
+		Entity::RegisterMetaComponent<TextComponent>();
 
 		Registry::RegisterMetaComponent<TransformComponent>();
 		Registry::RegisterMetaComponent<SpriteComponent>();
@@ -177,6 +180,7 @@ namespace SCION_CORE::Systems {
 		Registry::RegisterMetaComponent<CircleColliderComponent>();
 		Registry::RegisterMetaComponent<BoxColliderComponent>();
 		Registry::RegisterMetaComponent<PhysicsComponent>();
+		Registry::RegisterMetaComponent<TextComponent>();
 	}
 
 	void ScriptingSystem::RegisterLuaFunctions(sol::state& lua)
