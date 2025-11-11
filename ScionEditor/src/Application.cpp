@@ -13,11 +13,16 @@
 #include <Core/ECS/Components/SpriteComponent.h>
 #include <Core/ECS/Components/TransformComponent.h>
 #include <Core/ECS/Components/Identification.h>
+#include <Core/ECS/Components/BoxColliderComponent.h>
+#include <Core/ECS/Components/CircleColliderComponent.h>
+#include <Core/ECS/Components/PhysicalComponent.h>
 #include <Core/Resources/AssetManager.h>
 #include <Core/Resources/InputManager.h>
 #include <Core/Systems/ScriptingSystem.h>
+#include <Core/Systems/PhysicsSystem.h>
 #include <sol/sol.hpp>
 #include <Core/Systems/RenderSystem.h>
+#include <Core/Systems/RenderShapeSystem.h>
 #include <Core/Systems/AnimationSystem.h>
 #include <Sounds/MusicPlayer/MusicPlayer.h>
 #include <Sounds/SoundPlayer/SoundFxPlayer.h>
@@ -117,6 +122,13 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto renderShapeSystem = std::make_shared<SCION_CORE::Systems::RenderShapeSystem>(*m_pRegistry);
+		if (!m_pRegistry->AddToContext(renderShapeSystem))
+		{
+			SCION_ERROR("Failed to add render shape system to registry context!");
+			return false;
+		}
+
 		auto animationSystem = std::make_shared<SCION_CORE::Systems::AnimationSystem>(*m_pRegistry);
 		if (!m_pRegistry->AddToContext(animationSystem))
 		{
@@ -162,6 +174,20 @@ namespace SCION_EDITOR {
 		if (!m_pRegistry->AddToContext(camera))
 		{
 			SCION_ERROR("Failed to add camera to registry context!");
+			return false;
+		}
+
+		SCION_PHYSICS::PhysicalWorld pPhysicsWorld = std::make_shared<b2World>(b2Vec2{0.0f, 9.8f});
+		if (!m_pRegistry->AddToContext(pPhysicsWorld))
+		{
+			SCION_ERROR("Failed to add physics world to registry context!");
+			return false;
+		}
+
+		auto pPhysicsSystem = std::make_shared<SCION_CORE::Systems::PhysicsSystem>(*m_pRegistry);
+		if (!m_pRegistry->AddToContext(pPhysicsSystem))
+		{
+			SCION_ERROR("Failed to add physics system to registry context!");
 			return false;
 		}
 
@@ -296,6 +322,13 @@ namespace SCION_EDITOR {
 		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
 		scriptSystem->Update();
 
+		auto& pPhysicsWorld = m_pRegistry->GetContext<SCION_PHYSICS::PhysicalWorld>();
+		pPhysicsWorld->Step(
+			1.0f / 60.0f,
+			10,
+			8
+		);
+
 		auto& animationSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::AnimationSystem>>();
 		animationSystem->Update();
 
@@ -313,6 +346,7 @@ namespace SCION_EDITOR {
 	{
 		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
 		auto& renderSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderSystem>>();
+		auto& renderShapeSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderShapeSystem>>();
 		auto& renderer = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Renderer>>();
 		auto& camera = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
 		auto& assetManager = m_pRegistry->GetContext<std::shared_ptr<SCION_RESOURCE::AssetManager>>();
@@ -330,6 +364,7 @@ namespace SCION_EDITOR {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		scriptSystem->Render();
+		renderShapeSystem->Update();
 		renderSystem->Update();
 		renderer->DrawLines(shader, *camera);
 

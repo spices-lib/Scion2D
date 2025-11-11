@@ -9,11 +9,11 @@ namespace SCION_CORE::ECS {
 	constexpr float METERS_TO_PIXELS = 12.f;
 	constexpr float PIXELS_TO_METERS = 1.f / METERS_TO_PIXELS;
 
-	enum class RigiBodyType { STATIC = 0, KINEMATIC, DYNAMIC };
+	enum class RigidBodyType { STATIC = 0, KINEMATIC, DYNAMIC };
 
 	struct PhysicsAttributes
 	{
-		RigiBodyType eType{ RigiBodyType::STATIC };
+		RigidBodyType eType{ RigidBodyType::STATIC };
 		float density{ 1.0f }, friction{ 0.2f }, restitution{ 0.2f };
 		float restitutionThreshold{ 1.0f }, radius{ 0.0f }, gravityScale{ 1.0f };
 

@@ -110,4 +110,9 @@ namespace SCION_RENDERING {
 		m_Glyphs.push_back(newCircle);
 	}
 
+	void CircleBatchRenderer::AddCircle(const glm::vec4& circle, const Color& color, float thickness)
+	{
+
+	}
+
 }

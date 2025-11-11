@@ -85,7 +85,128 @@ namespace SCION_CORE::ECS {
 
 	void PhysicsComponent::CreatePhysicsLuaBind(sol::state& lua, entt::registry& registry)
 	{
+		lua.new_enum<RigidBodyType>(
+			"BodyType", {
+				{ "Static", RigidBodyType::STATIC },
+				{ "Kinematic", RigidBodyType::KINEMATIC },
+				{ "Dynamic", RigidBodyType::DYNAMIC }
+			}
+		);
 
+		lua.new_usertype<PhysicsAttributes>(
+			"PhysicsAttributes", 
+			sol::call_constructor, 
+			sol::factories(
+				[]() {
+					return PhysicsAttributes{};
+				}
+			),
+			"eType", &PhysicsAttributes::eType,
+			"density", &PhysicsAttributes::density,
+			"friction", &PhysicsAttributes::friction,
+			"restitution", &PhysicsAttributes::restitution,
+			"restitutionThreshold", &PhysicsAttributes::restitutionThreshold,
+			"radius", &PhysicsAttributes::radius,
+			"gravityScale", &PhysicsAttributes::gravityScale,
+			"position", &PhysicsAttributes::position,
+			"scale", &PhysicsAttributes::scale,
+			"boxSize", &PhysicsAttributes::boxSize,
+			"offset", &PhysicsAttributes::offset,
+			"bCircle", &PhysicsAttributes::bCircle,
+			"bBoxShape", &PhysicsAttributes::bBoxShape,
+			"bFixdRotation", &PhysicsAttributes::bFixdRotation
+		);
+
+		auto& pPhysicsWorld = registry.ctx().get<SCION_PHYSICS::PhysicalWorld>();
+
+		if (!pPhysicsWorld)
+		{
+			return;
+		}
+
+		lua.new_usertype<PhysicsComponent>(
+			"PhysicsComp",
+			"type_id", &entt::type_hash<PhysicsComponent>::value,
+			sol::call_constructor,
+			sol::factories(
+				[&](const PhysicsAttributes& attr) {
+					PhysicsComponent pc{ pPhysicsWorld, attr };
+					pc.Init(640, 480);
+					return pc;
+				}
+			),
+			"linear_impulse", [](PhysicsComponent& pc, const glm::vec2& impulse) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return;
+				}
+
+				body->ApplyLinearImpulse(b2Vec2{ impulse.x, impulse.y }, body->GetPosition(), true);
+			},
+			"angular_impulse", [](PhysicsComponent& pc, float impulse) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return;
+				}
+
+				body->ApplyAngularImpulse(impulse, true);
+			},
+			"set_linear_velocity", [](PhysicsComponent& pc, const glm::vec2 velocity) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return;
+				}
+
+				body->SetLinearVelocity(b2Vec2{ velocity.x, velocity.y });
+			},
+			"get_linear_velocity", [](PhysicsComponent& pc) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return glm::vec2{ 0.0f };
+				}
+
+				 auto v = body->GetLinearVelocity();
+				 return glm::vec2{ v.x, v.y };
+			},
+			"set_angular_velocity", [](PhysicsComponent& pc, float angularVelocity) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return;
+				}
+
+				body->SetAngularVelocity(angularVelocity);
+			},
+			"get_angular_velocity", [](PhysicsComponent& pc) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return 0.0f;
+				}
+
+				return body->GetAngularVelocity();
+			},
+			"set_gravity_scale", [](PhysicsComponent& pc, float gravityScale) {
+				auto body = pc.GetBody();
+				if (!body)
+				{
+					SCION_ERROR("body not exist.");
+					return;
+				}
+
+				body->SetGravityScale(gravityScale);
+			}
+		);
 	}
-
+	
 }

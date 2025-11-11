@@ -5,7 +5,7 @@
 
 namespace SCION_RENDERING {
 
-	class CircleBatchRenderer : public Batcher<RectBatch, CircleGlyph>
+	class RectBatchRenderer : public Batcher<RectBatch, RectGlyph>
 	{
 	private:
 
@@ -14,13 +14,13 @@ namespace SCION_RENDERING {
 
 	public:
 
-		CircleBatchRenderer();
-		~CircleBatchRenderer() = default;
+		RectBatchRenderer();
+		~RectBatchRenderer() = default;
 
 		virtual void End() override;
 		virtual void Render() override;
 
-		void AddCircle(const Circle& circle);
-		void AddCircle(const glm::vec4& circle, const Color& color, float thickness);
+		void AddRect(const glm::vec4& dstRect, int layer, const Color& color, glm::mat4 model = glm::mat4{ 1.0f });
+		void AddRect(const Rect& rect, glm::mat4 model = glm::mat4{1.0f});
 	};
 }
