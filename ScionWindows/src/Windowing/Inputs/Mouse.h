@@ -2,6 +2,7 @@
 #include "Button.h"
 #include "MouseButton.h"
 #include <map>
+#include <glm/glm.hpp>
 
 namespace SCION_WINDOWING::Inputs {
 
@@ -32,7 +33,7 @@ namespace SCION_WINDOWING::Inputs {
 		const bool IsButtonJustPressed(int btn);
 		const bool IsButtonJustReleased(int btn);
 
-		std::tuple<int, int> GetMouseScreenPosition();
+		glm::vec2 GetMouseScreenPosition();
 
 		inline void SetMouseWheelX(int wheel) { m_WheelX = wheel; }
 		inline void SetMouseWheelY(int wheel) { m_WheelY = wheel; }

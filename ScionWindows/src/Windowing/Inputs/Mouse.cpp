@@ -101,10 +101,10 @@ namespace SCION_WINDOWING::Inputs {
 		return m_mapButtons.at(btn).bJustReleased;
 	}
 
-	std::tuple<int, int> Mouse::GetMouseScreenPosition()
+	glm::vec2 Mouse::GetMouseScreenPosition()
 	{
 		SDL_GetMouseState(&m_X, &m_Y);
-		return std::make_tuple(m_X, m_Y);
+		return glm::vec2(m_X, m_Y);
 	}
 
 }

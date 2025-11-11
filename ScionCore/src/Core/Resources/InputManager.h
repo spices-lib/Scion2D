@@ -2,6 +2,7 @@
 #include <Windowing/Inputs/Keyboard.h>
 #include <Windowing/Inputs/Mouse.h>
 #include <Windowing/Inputs/Gamepad.h>
+#include <Core/ECS/Registry.h>
 #include <memory>
 #include <sol/sol.hpp>
 
@@ -34,7 +35,7 @@ namespace SCION_CORE {
 	public:
 
 		static InputManager& GetInstance();
-		static void CreateLuaInputBindings(sol::state& lua);
+		static void CreateLuaInputBindings(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 
 		inline Keyboard& GetKeyboard() { return *m_pKeyboard; }
 		inline Mouse& GetMouse() { return *m_pMouse; }

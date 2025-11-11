@@ -2,6 +2,8 @@
 #include <Logger.h>
 #include <SDL2_Wrappers.h>
 #include <SDL.h>
+#include <glm/glm.hpp>
+#include <Rendering/Core/Camera.h>
 
 namespace SCION_CORE {
 
@@ -188,7 +190,7 @@ namespace SCION_CORE {
 		return instance;
 	}
 
-	void InputManager::CreateLuaInputBindings(sol::state& lua)
+	void InputManager::CreateLuaInputBindings(sol::state& lua, SCION_CORE::ECS::Registry& registry)
 	{
 		RegisterLuaKeyNames(lua);
 		RegisterLuaMouseButtonNames(lua);
@@ -196,6 +198,7 @@ namespace SCION_CORE {
 
 		auto& inputManager = GetInstance();
 		auto& keyboard = inputManager.GetKeyboard();
+		auto& camera = registry.GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
 
 		lua.new_usertype<Keyboard>(
 			"Keyboard",
@@ -214,6 +217,9 @@ namespace SCION_CORE {
 			"just_released", [&](int key) { return mouse.IsButtonJustReleased(key); },
 			"pressed", [&](int key) { return mouse.IsButtonPressed(key); },
 			"screen_position", [&]() { return mouse.GetMouseScreenPosition(); },
+			"world_position", [&]() {
+				return camera->ScreenCoordsToWorld(mouse.GetMouseScreenPosition());
+			},
 			"wheel_x", [&]() { return mouse.GetMouseWheelX(); },
 			"wheel_y", [&]() { return mouse.GetMouseWheelY(); }
 		);

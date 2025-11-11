@@ -20,6 +20,15 @@ namespace SCION_CORE::ECS {
 		Entity(Registry& registry, const entt::entity& entity);
 		~Entity() = default;
 
+		Entity& operator=(const Entity& other)
+		{
+			this->m_Entity = other.m_Entity;
+			this->m_sName = other.m_sName;
+			this->m_sGroup = other.m_sGroup;
+
+			return *this;
+		}
+
 		inline const std::string& GetName() const { return m_sName; }
 		inline const std::string& GetGroup() const { return m_sGroup; }
 

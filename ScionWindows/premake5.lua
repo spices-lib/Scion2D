@@ -25,6 +25,7 @@ project "ScionWindows"
 		"%{IncludeDir.ScionUtilities}",
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.ScionLogger}",
+		"%{IncludeDir.glm}",
 	}
 
 	links

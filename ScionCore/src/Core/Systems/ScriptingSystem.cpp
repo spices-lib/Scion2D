@@ -149,7 +149,7 @@ namespace SCION_CORE::Systems {
 	void ScriptingSystem::RegisterLuaBindings(sol::state& lua, SCION_CORE::ECS::Registry& regisry)
 	{
 		SCION_CORE::Scripting::CreateGLMBindings(lua);
-		SCION_CORE::InputManager::CreateLuaInputBindings(lua);
+		SCION_CORE::InputManager::CreateLuaInputBindings(lua, regisry);
 		SCION_RESOURCE::AssetManager::CreateLuaAssetManager(lua, regisry);
 		SCION_CORE::Scripting::SoundBinder::CreateSoundBind(lua, regisry);
 		SCION_CORE::Scripting::RendererBinder::CreateRenderingBinding(lua, regisry);

@@ -118,6 +118,14 @@ namespace SCION_CORE::Scripting {
 			},
 			"set_scale", [&](float scale) {
 				camera->SetScale(scale);
+			},
+			"width", [&]() { return camera->GetWidth(); },
+			"height", [&]() { return camera->GetHeight(); },
+			"get_world_coords", [&](const glm::vec2 screenCoords) {
+				return camera->ScreenCoordsToWorld(screenCoords);
+			},
+			"get_screen_coords", [&](const glm::vec2 worldCoords) {
+				return camera->WorldCoordsToScreen(worldCoords);
 			}
 		);
 	}
