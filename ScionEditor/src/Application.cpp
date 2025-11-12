@@ -28,6 +28,7 @@
 #include <Sounds/MusicPlayer/MusicPlayer.h>
 #include <Sounds/SoundPlayer/SoundFxPlayer.h>
 #include "Rendering/Core/Renderer.h"
+#include <Physics/ContactListener.h>
 
 namespace SCION_EDITOR {
 
@@ -213,6 +214,15 @@ namespace SCION_EDITOR {
 			SCION_ERROR("Failed to add script system to registry context!");
 			return false;
 		}
+
+		auto pContactListener = std::make_shared<SCION_PHYSICS::ContactListener>();
+		if (!m_pRegistry->AddToContext(pContactListener))
+		{
+			SCION_ERROR("Failed to add conatct listener to registry context!");
+			return false;
+		}
+
+		pPhysicsWorld->SetContactListener(pContactListener.get());
 
 		LoadShaders();
 

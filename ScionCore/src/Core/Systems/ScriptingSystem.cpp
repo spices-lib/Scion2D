@@ -18,6 +18,7 @@
 #include "Timer.h"
 #include "RandomGenerator.h"
 #include "Core/Scripting/UserDataBinding.h"
+#include "Core/Scripting/ContactListenerBind.h"
 
 namespace SCION_CORE::Systems {
 
@@ -157,6 +158,7 @@ namespace SCION_CORE::Systems {
 		SCION_CORE::Scripting::SoundBinder::CreateSoundBind(lua, regisry);
 		SCION_CORE::Scripting::RendererBinder::CreateRenderingBinding(lua, regisry);
 		SCION_CORE::Scripting::UserDataBinder::CreateLuaUserData(lua);
+		SCION_CORE::Scripting::ContactListenerBinder::CreateLuaContactListener(lua, regisry.GetRegistry());
 		SCION_CORE::FollowCamera::CreateLuaFollowCamera(lua, regisry);
 
 		create_timer(lua);

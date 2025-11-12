@@ -117,7 +117,13 @@ namespace SCION_CORE::ECS {
 					};
 				}
 			),
+			"tag", &ObjectData::tag,
+			"group", &ObjectData::group,
+			"bCollider", &ObjectData::bCollider,
+			"bTrigger", &ObjectData::bTrigger,
+			"entityID", &ObjectData::entityID,
 			"to_string", &ObjectData::to_string
+
 		);
 
 		lua.new_enum<RigidBodyType>(
