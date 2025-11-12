@@ -17,6 +17,7 @@
 #include "Core/CoreUtilities/FollowCamera.h"
 #include "Timer.h"
 #include "RandomGenerator.h"
+#include "Core/Scripting/UserDataBinding.h"
 
 namespace SCION_CORE::Systems {
 
@@ -155,6 +156,7 @@ namespace SCION_CORE::Systems {
 		SCION_RESOURCE::AssetManager::CreateLuaAssetManager(lua, regisry);
 		SCION_CORE::Scripting::SoundBinder::CreateSoundBind(lua, regisry);
 		SCION_CORE::Scripting::RendererBinder::CreateRenderingBinding(lua, regisry);
+		SCION_CORE::Scripting::UserDataBinder::CreateLuaUserData(lua);
 		SCION_CORE::FollowCamera::CreateLuaFollowCamera(lua, regisry);
 
 		create_timer(lua);
@@ -184,6 +186,8 @@ namespace SCION_CORE::Systems {
 		Registry::RegisterMetaComponent<BoxColliderComponent>();
 		Registry::RegisterMetaComponent<PhysicsComponent>();
 		Registry::RegisterMetaComponent<TextComponent>();
+
+		SCION_CORE::Scripting::UserDataBinder::register_meta_user_data<ObjectData>();
 	}
 
 	void ScriptingSystem::RegisterLuaFunctions(sol::state& lua)

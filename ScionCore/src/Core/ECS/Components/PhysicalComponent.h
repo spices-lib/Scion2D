@@ -3,6 +3,7 @@
 #include <sol/sol.hpp>
 #include <glm/glm.hpp>
 #include <entt.hpp>
+#include <Physics/UserData.h>
 
 namespace SCION_CORE::ECS {
 
@@ -21,12 +22,14 @@ namespace SCION_CORE::ECS {
 		bool bCircle{ false }, bBoxShape{ true }, bFixdRotation{ true };
 		uint16_t filterCategory{ 0 }, filterMask{ 0 };
 		int16_t groupIndex{ 0 };
+		SCION_PHYSICS::ObjectData objectData{};
 	};
 
 	struct PhysicsComponent
 	{
 		SCION_PHYSICS::PhysicalWorld m_pPhysicsWorld;
 		std::shared_ptr<b2Body> m_pRigidBody;
+		std::shared_ptr<SCION_PHYSICS::UserData> m_pUserData;
 		PhysicsAttributes m_InitialAttribs;
 
 	public:
@@ -37,6 +40,7 @@ namespace SCION_CORE::ECS {
 
 		void Init(int windowWidth, int windowHeight);
 		b2Body* GetBody() { return m_pRigidBody.get(); }
+		SCION_PHYSICS::UserData* GetUserData() { return m_pUserData.get(); }
 
 		static void CreatePhysicsLuaBind(sol::state& lua, entt::registry& registry);
 	};

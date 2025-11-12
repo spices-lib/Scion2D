@@ -1,10 +1,12 @@
 #include "PhysicalComponent.h"
 #include <Logger.h>
 
+using namespace SCION_PHYSICS;
+
 namespace SCION_CORE::ECS {
 
 	PhysicsComponent::PhysicsComponent(SCION_PHYSICS::PhysicalWorld pPhysicsWorld, const PhysicsAttributes& physicsAttr)
-		: m_pPhysicsWorld{ pPhysicsWorld }, m_pRigidBody{ nullptr }, m_InitialAttribs{ physicsAttr }
+		: m_pPhysicsWorld{ pPhysicsWorld }, m_pRigidBody{ nullptr }, m_InitialAttribs{ physicsAttr }, m_pUserData{ nullptr }
 	{
 
 	}
@@ -61,6 +63,10 @@ namespace SCION_CORE::ECS {
 
 		}
 
+		m_pUserData = std::make_shared<UserData>();
+		m_pUserData->userData = m_InitialAttribs.objectData;
+		m_pUserData->type_id = entt::type_hash<ObjectData>::value();
+
 		b2FixtureDef fixtureDef{};
 		if (bCircle)
 		{
@@ -75,6 +81,7 @@ namespace SCION_CORE::ECS {
 		fixtureDef.friction = m_InitialAttribs.friction;
 		fixtureDef.restitution = m_InitialAttribs.restitution;
 		fixtureDef.restitutionThreshold = m_InitialAttribs.restitutionThreshold;
+		fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(m_pUserData.get());
 
 		auto pFixture = m_pRigidBody->CreateFixture(&fixtureDef);
 		if (!pFixture)
@@ -85,6 +92,34 @@ namespace SCION_CORE::ECS {
 
 	void PhysicsComponent::CreatePhysicsLuaBind(sol::state& lua, entt::registry& registry)
 	{
+		lua.new_usertype<ObjectData>(
+			"ObjectData",
+			"type_id", entt::type_hash<ObjectData>::value,
+			sol::call_constructor,
+			sol::factories(
+				[](const std::string& tag, const std::string& group, 
+					bool bCollider, bool bTrigger, std::uint32_t entityID) {
+						return ObjectData{
+							.tag = tag,
+							.group = group,
+							.bCollider = bCollider,
+							.bTrigger = bTrigger,
+							.entityID = entityID
+						};
+				},
+				[](const sol::table& objectData) {
+					return ObjectData{
+						.tag = objectData["tag"].get_or(std::string{""}),
+						.group = objectData["group"].get_or(std::string{""}),
+						.bCollider = objectData["bCollider"].get_or(false),
+						.bTrigger = objectData["bTrigger"].get_or(false),
+						.entityID = objectData["entityID"].get_or(std::uint32_t(entt::null))
+					};
+				}
+			),
+			"to_string", &ObjectData::to_string
+		);
+
 		lua.new_enum<RigidBodyType>(
 			"BodyType", {
 				{ "Static", RigidBodyType::STATIC },
@@ -114,7 +149,8 @@ namespace SCION_CORE::ECS {
 			"offset", &PhysicsAttributes::offset,
 			"bCircle", &PhysicsAttributes::bCircle,
 			"bBoxShape", &PhysicsAttributes::bBoxShape,
-			"bFixdRotation", &PhysicsAttributes::bFixdRotation
+			"bFixdRotation", &PhysicsAttributes::bFixdRotation,
+			"objectData", &PhysicsAttributes::objectData
 		);
 
 		auto& pPhysicsWorld = registry.ctx().get<SCION_PHYSICS::PhysicalWorld>();
