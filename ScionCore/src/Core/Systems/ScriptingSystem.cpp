@@ -14,7 +14,9 @@
 #include "Core/Resources/AssetManager.h"
 #include "Core/Scripting/SoundBinding.h"
 #include "Core/Scripting/RendererBinding.h"
+#include "Core/CoreUtilities/FollowCamera.h"
 #include "Timer.h"
+#include "RandomGenerator.h"
 
 namespace SCION_CORE::Systems {
 
@@ -153,6 +155,7 @@ namespace SCION_CORE::Systems {
 		SCION_RESOURCE::AssetManager::CreateLuaAssetManager(lua, regisry);
 		SCION_CORE::Scripting::SoundBinder::CreateSoundBind(lua, regisry);
 		SCION_CORE::Scripting::RendererBinder::CreateRenderingBinding(lua, regisry);
+		SCION_CORE::FollowCamera::CreateLuaFollowCamera(lua, regisry);
 
 		create_timer(lua);
 
@@ -199,6 +202,14 @@ namespace SCION_CORE::Systems {
 
 				return true;
 			}
+		);
+
+		lua.new_usertype<SCION_UTL::RandomGenerator>(
+			"Random",
+			sol::call_constructor,
+			sol::constructors<SCION_UTL::RandomGenerator(uint32_t, uint32_t), SCION_UTL::RandomGenerator()>(),
+			"get_float", &SCION_UTL::RandomGenerator::GetFloat,
+			"get_int", &SCION_UTL::RandomGenerator::GetInt
 		);
 	}
 

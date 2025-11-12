@@ -43,7 +43,55 @@ namespace SCION_CORE {
 
 	void FollowCamera::CreateLuaFollowCamera(sol::state& lua, ECS::Registry& registry)
 	{
+		lua.new_usertype<FollowCamParams>(
+			"FollowCamParams",
+			sol::call_constructor,
+			sol::factories(
+				[](const sol::table& params) {
+					return FollowCamParams{
+						.minX = params["min_x"].get_or(0.0f),
+						.minY = params["min_y"].get_or(0.0f),
+						.scale = params["scale"].get_or(1.0f),
+						.springback = params["springback"].get_or(1.0f),
+						.maxX = params["max_x"].get_or(static_cast<float>(CoreEngineData::GetInstance().WindowWidth())),
+						.maxY = params["max_y"].get_or(static_cast<float>(CoreEngineData::GetInstance().WindowHeight()))
+					};
+				},
+				[](float minX, float minY, float maxX, float maxY, float scale, float springback) {
+					return FollowCamParams{
+						.minX = minX,
+						.minY = minY,
+						.scale = scale,
+						.springback = springback,
+						.maxX = maxX,
+						.maxY = maxY,
+					};
+				}
+			),
+			"min_x", &FollowCamParams::minX,
+			"min_y", &FollowCamParams::minY,
+			"scale", &FollowCamParams::scale,
+			"springback", &FollowCamParams::springback,
+			"max_x", &FollowCamParams::maxX,
+			"max_y", &FollowCamParams::maxY
+		);
 
+		auto& camera = registry.GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
+
+		lua.new_usertype<FollowCamera>(
+			"FollowCamera",
+			sol::call_constructor,
+			sol::factories(
+				[&](const FollowCamParams& params, const ECS::Entity& entity) {
+					return FollowCamera{ *camera, entity, params };
+				}
+			),
+			"update", &FollowCamera::Update,
+			"set_params", &FollowCamera::SetCameraParameters,
+			"set_entity", &FollowCamera::SetEntity,
+			"set_springback", &FollowCamera::SetSpringback,
+			"get_params", &FollowCamera::GetParams
+		);
 	}
 
 }
