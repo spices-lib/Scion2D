@@ -13,3 +13,6 @@
 
 /vendor/Lua/bin
 /vendor/Lua/bin-int
+
+/vendor/imgui/bin
+/vendor/imgui/bin-int

@@ -14,6 +14,7 @@ IncludeDir["entt"]                        = "%{wks.location}/vendor/entt/include
 IncludeDir["sol2"]                        = "%{wks.location}/vendor/sol2/include"
 IncludeDir["Lua"]                         = "%{wks.location}/vendor/Lua/src"
 IncludeDir["Box2D"]                       = "%{wks.location}/vendor/Box2D/include"
+IncludeDir["ImGui"]                       = "%{wks.location}/vendor/ImGui"
 
 LibraryDir                                = {}
 LibraryDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/lib/x64"
