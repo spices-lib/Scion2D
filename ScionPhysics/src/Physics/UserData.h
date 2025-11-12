@@ -1,6 +1,7 @@
 #pragma once
 #include <any>
 #include <string>
+#include <vector>
 #include <sstream>
 
 namespace SCION_PHYSICS {
@@ -16,18 +17,12 @@ namespace SCION_PHYSICS {
 		std::string tag{""}, group{ "" };
 		bool bCollider{ false }, bTrigger{ false };
 		std::uint32_t entityID{};
+		std::vector<ObjectData> contactEntities;
 
-		[[nodiscard]] std::string to_string() const
-		{
-			std::stringstream ss;
-			ss << "=== Object Data === \n" << std::boolalpha
-				<< "Tag: " << tag << "\n"
-				<< "Group: " << group << "\n"
-				<< "bCollider: " << bCollider << "\n"
-				<< "bTrigger: " << bTrigger << "\n"
-				<< "entityID: " << entityID << "\n";
+		friend bool operator==(const ObjectData& a, const ObjectData& b);
+		bool AddContact(const ObjectData& objectData);
+		bool RemoveContact(const ObjectData& objectData);
 
-			return ss.str();
-		}
+		[[nodiscard]] std::string to_string() const;
 	};
 }

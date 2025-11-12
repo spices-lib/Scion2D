@@ -15,6 +15,10 @@ namespace SCION_CORE {
 		int WindowWidth() { return m_WindowWidth; }
 		int WindowHeight() { return m_WindowHeight; }
 
+		float PixelsToMeters() { return 1.0f; }
+		float ScaledHeight() { return 1.0f; }
+		float ScaledWidth() { return 1.0f; }
+
 	private:
 
 		int m_WindowWidth = 480;
