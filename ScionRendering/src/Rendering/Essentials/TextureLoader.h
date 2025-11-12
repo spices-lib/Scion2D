@@ -13,6 +13,7 @@ namespace SCION_RENDERING {
 
 		TextureLoader() = default;
 		static std::shared_ptr<Texture> Create(Texture::TextureType type, const std::string& texturePath);
+		static std::shared_ptr<Texture> Create(Texture::TextureType type, int width, int height);
 
 
 	};

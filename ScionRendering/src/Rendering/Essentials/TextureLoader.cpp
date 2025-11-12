@@ -67,4 +67,9 @@ namespace SCION_RENDERING {
 		return std::make_shared<Texture>(id, width, height, type, texturePath);
 	}
 
+	std::shared_ptr<Texture> TextureLoader::Create(Texture::TextureType type, int width, int height)
+	{
+		return std::shared_ptr<Texture>();
+	}
+
 }

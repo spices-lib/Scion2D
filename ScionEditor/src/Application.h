@@ -28,6 +28,11 @@ namespace SCION_EDITOR {
 
 		void ClearUp();
 
+		bool InitImGui();
+		void Begin();
+		void End();
+		void RenderImGui();
+
 		Application();
 
 	public:

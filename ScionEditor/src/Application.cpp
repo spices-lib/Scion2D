@@ -29,6 +29,10 @@
 #include <Sounds/SoundPlayer/SoundFxPlayer.h>
 #include "Rendering/Core/Renderer.h"
 #include <Physics/ContactListener.h>
+#include <imgui.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_sdl2.h>
+#include <SDL_opengl.h>
 
 namespace SCION_EDITOR {
 
@@ -66,7 +70,18 @@ namespace SCION_EDITOR {
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
-		m_pWindow = std::make_unique<SCION_WINDOWING::Window>("Test window", 640, 480, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, true, SDL_WINDOW_OPENGL);
+		SDL_DisplayMode displayMode;
+		SDL_GetCurrentDisplayMode(0, &displayMode);
+
+		m_pWindow = std::make_unique<SCION_WINDOWING::Window>(
+			"Test window", 
+			displayMode.w,
+			displayMode.h,
+			SDL_WINDOWPOS_CENTERED, 
+			SDL_WINDOWPOS_CENTERED, 
+			true, 
+			SDL_WINDOW_OPENGL
+		);
 
 		if (!m_pWindow->GetWindow())
 		{
@@ -224,6 +239,12 @@ namespace SCION_EDITOR {
 
 		pPhysicsWorld->SetContactListener(pContactListener.get());
 
+		if (!InitImGui())
+		{
+			SCION_ERROR("Failed to initialize ImGui!");
+			return false;
+		}
+
 		LoadShaders();
 
 		renderer->DrawLine(
@@ -270,6 +291,8 @@ namespace SCION_EDITOR {
 
 		while (SDL_PollEvent(&m_Event))
 		{
+			ImGui_ImplSDL2_ProcessEvent(&m_Event);
+
 			switch (m_Event.type)
 			{
 			case SDL_QUIT:
@@ -388,12 +411,85 @@ namespace SCION_EDITOR {
 		renderUISystem->Update(m_pRegistry->GetRegistry());
 		renderer->DrawLines(shader, *camera);
 
+		Begin();
+		RenderImGui();
+		End();
+
 		SDL_GL_SwapWindow(m_pWindow->GetWindow().get());
 	}
 
 	void Application::ClearUp()
 	{
 		SDL_Quit();
+	}
+
+	bool Application::InitImGui()
+	{
+		const char* glslVersion = "#version 460";
+		IMGUI_CHECKVERSION();
+
+		if (!ImGui::CreateContext())
+		{
+			SCION_ERROR("Failed to create ImGui Context");
+			return false;
+		}
+
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+		if (!ImGui_ImplSDL2_InitForOpenGL(
+			m_pWindow->GetWindow().get(),
+			m_pWindow->GetGLContext()
+		))
+		{
+			SCION_ERROR("Failed to initialize Imgui SDL2");
+			return false;
+		}
+
+		if (!ImGui_ImplOpenGL3_Init(glslVersion))
+		{
+			SCION_ERROR("Failed to initialize ImGui OpenGL3");
+			return false;
+		}
+
+		return true;
+	}
+
+	void Application::Begin()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void Application::End()
+	{
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+
+			SDL_GLContext backupContext = SDL_GL_GetCurrentContext();
+
+			SDL_GL_MakeCurrent(
+				m_pWindow->GetWindow().get(),
+				backupContext
+			);
+		}
+	}
+
+	void Application::RenderImGui()
+	{
+		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+		ImGui::ShowDemoWindow();
 	}
 
 	Application::Application()
