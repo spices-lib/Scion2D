@@ -29,6 +29,8 @@ namespace SCION_RESOURCE {
 		AssetManager() = default;
 		~AssetManager() = default;
 
+		bool CreateDefaultFonts();
+
 		bool AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt = true);
 		const SCION_RENDERING::Texture& GetTexture(const std::string& textureName);
 

@@ -3,8 +3,22 @@
 #include "Rendering/Essentials/TextureLoader.h"
 #include "Rendering/Essentials/FontLoader.h"
 #include "Logger.h"
+#include "Core/Resources/fonts/default_fonts.h"
 
 namespace SCION_RESOURCE {
+
+	bool AssetManager::CreateDefaultFonts()
+	{
+		if (!AddFontFromMemory("pixel", pixel_font))
+		{
+			SCION_ERROR("Failed to create pixel font.");
+			return false;
+		}
+
+
+
+		return true;
+	}
 
 	bool AssetManager::AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt)
 	{
