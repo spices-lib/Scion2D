@@ -19,6 +19,7 @@
 #include "RandomGenerator.h"
 #include "Core/Scripting/UserDataBinding.h"
 #include "Core/Scripting/ContactListenerBind.h"
+#include "Core/State/StateStack.h"
 
 namespace SCION_CORE::Systems {
 
@@ -162,6 +163,9 @@ namespace SCION_CORE::Systems {
 		SCION_CORE::FollowCamera::CreateLuaFollowCamera(lua, regisry);
 
 		create_timer(lua);
+
+		SCION_CORE::State::CreateLuaStateBind(lua);
+		SCION_CORE::StateStack::CreateLuaStateStackBind(lua);
 
 		Registry::CreateLuaRegistryBind(lua, regisry);
 		Entity::CreateLuaEntityBind(lua, regisry);

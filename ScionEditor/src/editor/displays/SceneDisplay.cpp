@@ -24,7 +24,7 @@ namespace SCION_EDITOR {
 	
 			ImGui::SetCursorPos(ImVec2{ 0.0f, 0.0f });
 
-			ImGui::Image(fb->GetTextureID(), ImVec2{ fb->Width(), fb->Height() }, ImVec2{0.0f, 1.0f}, ImVec2{1.0f, 0.0f});
+			ImGui::Image(fb->GetTextureID(), ImVec2{ (float)fb->Width(), (float)fb->Height() }, ImVec2{0.0f, 1.0f}, ImVec2{1.0f, 0.0f});
 
 			ImGui::EndChild();
 
