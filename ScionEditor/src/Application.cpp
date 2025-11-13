@@ -29,6 +29,8 @@
 #include <Sounds/SoundPlayer/SoundFxPlayer.h>
 #include "Rendering/Core/Renderer.h"
 #include <Physics/ContactListener.h>
+#include <Rendering/Buffers/Framebuffer.h>
+#include <editor/displays/SceneDisplay.h>
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>

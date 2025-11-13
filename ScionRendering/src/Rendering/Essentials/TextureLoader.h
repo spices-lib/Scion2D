@@ -8,6 +8,7 @@ namespace SCION_RENDERING {
 	{
 	private:
 		static bool LoadTexture(const std::string& filePath, GLuint& id, int& width, int& height, bool blended = false);
+		static bool LoadFBTexture(GLuint& id, int& width, int& height);
 
 	public:
 

@@ -17,12 +17,16 @@ namespace SCION_RENDERING {
 	private:
 
 		bool Initialize();
+		void ClearUp();
 
 	public:
 
 		Framebuffer();
 		Framebuffer(int width, int height, bool bUseRbo);
 		~Framebuffer();
+
+		void Bind();
+		void Unbind();
 
 		void Resize(int width, int height);
 		void CheckResize();
