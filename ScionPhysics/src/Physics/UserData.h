@@ -15,7 +15,7 @@ namespace SCION_PHYSICS {
 	struct ObjectData
 	{
 		std::string tag{""}, group{ "" };
-		bool bCollider{ false }, bTrigger{ false };
+		bool bCollider{ false }, bTrigger{ false }, bIsFriendly{ false };
 		std::uint32_t entityID{};
 		std::vector<ObjectData> contactEntities;
 

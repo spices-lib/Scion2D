@@ -31,6 +31,8 @@
 #include <Physics/ContactListener.h>
 #include <Rendering/Buffers/Framebuffer.h>
 #include <editor/displays/SceneDisplay.h>
+#include <editor/displays/LogDisplay.h>
+#include <Core/ECS/MainRegistry.h>
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -232,6 +234,8 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		CreateDisplays();
+
 		auto pContactListener = std::make_shared<SCION_PHYSICS::ContactListener>();
 		if (!m_pRegistry->AddToContext(pContactListener))
 		{
@@ -425,6 +429,49 @@ namespace SCION_EDITOR {
 		SDL_Quit();
 	}
 
+	bool Application::CreateDisplays()
+	{
+		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
+
+		auto pDisplayHolder = std::make_shared<DisplayHolder>();
+		if (!m_pRegistry->AddToContext(pDisplayHolder))
+		{
+			SCION_ERROR("Failed to add DisplayHolder");
+			return false;
+		}
+
+		auto pSceneDisplay = std::make_shared<SceneDisplay>(*m_pRegistry);
+		if (!pSceneDisplay)
+		{
+			SCION_ERROR("Failed to create SceneDisplay");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(pSceneDisplay))
+		{
+			SCION_ERROR("Failed to add SceneDisplay");
+			return false;
+		}
+
+		auto pLogDisplay = std::make_shared<LogDisplay>();
+		if (!pLogDisplay)
+		{
+			SCION_ERROR("Failed to create LogDisplay");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(pLogDisplay))
+		{
+			SCION_ERROR("Failed to add LogDisplay");
+			return false;
+		}
+
+		pDisplayHolder->displays.push_back(pSceneDisplay);
+		pDisplayHolder->displays.push_back(pLogDisplay);
+
+		return true;
+	}
+
 	bool Application::InitImGui()
 	{
 		const char* glslVersion = "#version 460";
@@ -491,6 +538,20 @@ namespace SCION_EDITOR {
 	void Application::RenderImGui()
 	{
 		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+		
+		static std::once_flag flag;
+
+		std::call_once(flag, [&]() {
+
+		});
+
+		auto& pDisplayHolder = m_pRegistry->GetContext<std::shared_ptr<DisplayHolder>>();
+
+		for (const auto& pDisplay : pDisplayHolder->displays)
+		{
+			pDisplay->Draw();
+		}
+
 		ImGui::ShowDemoWindow();
 	}
 

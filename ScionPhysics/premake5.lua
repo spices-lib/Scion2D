@@ -24,6 +24,7 @@ project "ScionPhysics"
 		"src",
 		"%{IncludeDir.ScionLogger}",
 		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.entt}"
 	}
 
 	links

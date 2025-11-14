@@ -28,6 +28,7 @@ namespace SCION_EDITOR {
 
 		void ClearUp();
 
+		bool CreateDisplays();
 		bool InitImGui();
 		void Begin();
 		void End();

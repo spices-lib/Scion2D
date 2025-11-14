@@ -10,7 +10,7 @@ namespace SCION_CORE {
 
 		std::map<std::string, std::unique_ptr<State>> m_mapStates;
 		std::string m_sCurrentState;
-		sol::table m_StateTable;
+		std::optional<sol::table> m_StateTable;
 
 	public:
 

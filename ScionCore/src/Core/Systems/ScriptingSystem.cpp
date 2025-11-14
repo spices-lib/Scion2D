@@ -20,6 +20,7 @@
 #include "Core/Scripting/UserDataBinding.h"
 #include "Core/Scripting/ContactListenerBind.h"
 #include "Core/State/StateStack.h"
+#include "Core/State/StateMachine.h"
 
 namespace SCION_CORE::Systems {
 
@@ -166,6 +167,7 @@ namespace SCION_CORE::Systems {
 
 		SCION_CORE::State::CreateLuaStateBind(lua);
 		SCION_CORE::StateStack::CreateLuaStateStackBind(lua);
+		SCION_CORE::StateMachine::CreateLuaStateMachine(lua);
 
 		Registry::CreateLuaRegistryBind(lua, regisry);
 		Entity::CreateLuaEntityBind(lua, regisry);
@@ -221,6 +223,31 @@ namespace SCION_CORE::Systems {
 			"get_float", &SCION_UTL::RandomGenerator::GetFloat,
 			"get_int", &SCION_UTL::RandomGenerator::GetInt
 		);
+
+		lua.set_function("S2D_load_script_table", [&](const sol::table& scriptList) {
+			if (!scriptList.valid())
+			{
+				SCION_ERROR("Failed to load script list");
+				return;
+			}
+
+			for (const auto& [index, script] : scriptList)
+			{
+				try
+				{
+					auto result = lua.safe_script_file(script.as<std::string>());
+					if (!result.valid())
+					{
+						sol::error error = result;
+						throw error;
+					}
+				}
+				catch (const sol::error& error)
+				{
+					SCION_ERROR("Failed to load script: {}", error.what());
+				}
+			}
+		});
 	}
 
 }

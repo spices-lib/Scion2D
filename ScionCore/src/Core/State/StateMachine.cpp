@@ -150,16 +150,51 @@ namespace SCION_CORE {
 
 	void StateMachine::ExitState()
 	{
+		if (!m_mapStates.contains(m_sCurrentState))
+		{
+			SCION_ERROR("Failed to exit state: {}", m_sCurrentState);
+			return;
+		}
 
+		auto& state = m_mapStates.at(m_sCurrentState);
+		state->on_exit();
+		state->bKillState = true;
+		m_sCurrentState.clear();
 	}
 
 	void StateMachine::DestroyStates()
 	{
+		std::for_each(m_mapStates.begin(), m_mapStates.end(), [](const auto& pair) {
+			pair.second->on_exit();
+		});
 
+		m_mapStates.clear();
 	}
 
 	void StateMachine::CreateLuaStateMachine(sol::state& lua)
 	{
-
+		lua.new_usertype<StateMachine>(
+			"StateMachine",
+			sol::call_constructor,
+			sol::constructors<StateMachine(), StateMachine(const sol::table&)>(),
+			"change_state",
+			sol::overload(
+				[](StateMachine& sm, const std::string& state, bool bRemove, const sol::object& enterParams) {
+					sm.ChangeState(state, bRemove, enterParams);
+				},
+				[](StateMachine& sm, const std::string& state, bool bRemove) {
+					sm.ChangeState(state, bRemove);
+				},
+				[](StateMachine& sm, const std::string& state) {
+					sm.ChangeState(state);
+				}
+			),
+			"update", &StateMachine::Update,
+			"render", &StateMachine::Render,
+			"current_state", &StateMachine::CurrentState,
+			"add_state", &StateMachine::AddState,
+			"exit_state", &StateMachine::ExitState,
+			"destroyStates", &StateMachine::DestroyStates
+		);
 	}
 }
