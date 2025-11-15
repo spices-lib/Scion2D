@@ -31,8 +31,8 @@ namespace SCION_RESOURCE {
 
 		bool CreateDefaultFonts();
 
-		bool AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt = true);
-		bool AddTextureFromMemory(const std::string& textureName, const unsigned char* imageData, size_t length, bool pixelArt);
+		bool AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt = true, bool bTileset = false);
+		bool AddTextureFromMemory(const std::string& textureName, const unsigned char* imageData, size_t length, bool pixelArt, bool bTileset = false);
 		const SCION_RENDERING::Texture& GetTexture(const std::string& textureName);
 
 		bool AddShader(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath);
@@ -47,6 +47,8 @@ namespace SCION_RESOURCE {
 		bool AddFont(const std::string& fontName, const std::string& filepath, float fontSize = 32.0f);
 		bool AddFontFromMemory(const std::string& fontName, unsigned char* fontData, float fontSize = 32.0f);
 		std::shared_ptr<SCION_RENDERING::Font> GetFont(const std::string& fontName);
+
+		inline const std::map<std::string, std::shared_ptr<SCION_RENDERING::Texture>>& GetAllTextures() { return m_mapTextures; }
 
 		static void CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};

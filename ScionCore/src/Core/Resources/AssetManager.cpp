@@ -20,7 +20,7 @@ namespace SCION_RESOURCE {
 		return true;
 	}
 
-	bool AssetManager::AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt)
+	bool AssetManager::AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt, bool bTileset)
 	{
 		if (m_mapTextures.contains(textureName))
 		{
@@ -30,7 +30,7 @@ namespace SCION_RESOURCE {
 
 		auto texture = SCION_RENDERING::TextureLoader::Create(
 			pixelArt ? SCION_RENDERING::Texture::TextureType::PIXEL : SCION_RENDERING::Texture::TextureType::BLENDED,
-			texturePath
+			texturePath, bTileset
 		);
 
 		if (!texture)
@@ -43,7 +43,7 @@ namespace SCION_RESOURCE {
 		return true;
 	}
 
-	bool AssetManager::AddTextureFromMemory(const std::string& textureName, const unsigned char* imageData, size_t length, bool pixelArt)
+	bool AssetManager::AddTextureFromMemory(const std::string& textureName, const unsigned char* imageData, size_t length, bool pixelArt, bool bTileset)
 	{
 		if (m_mapTextures.contains(textureName))
 		{
@@ -51,7 +51,7 @@ namespace SCION_RESOURCE {
 			return false;
 		}
 
-		auto texture = SCION_RENDERING::TextureLoader::CreateFromMemory(imageData, length, pixelArt);
+		auto texture = SCION_RENDERING::TextureLoader::CreateFromMemory(imageData, length, pixelArt, bTileset);
 
 		if (!texture)
 		{
@@ -260,9 +260,15 @@ namespace SCION_RESOURCE {
 		lua.new_usertype<AssetManager>(
 			"AssetManager",
 			sol::no_constructor,
-			"add_texture", [&](const std::string& assetName, const std::string& filePath, bool pixel_art) {
-				return assetManager->AddTexture(assetName, filePath, pixel_art);
-			},
+			"add_texture",
+			sol::overload(
+				[&](const std::string& assetName, const std::string& filePath, bool pixel_art) {
+					return assetManager->AddTexture(assetName, filePath, pixel_art);
+				},
+				[&](const std::string& assetName, const std::string& filePath, bool pixel_art, bool bTileset) {
+					return assetManager->AddTexture(assetName, filePath, pixel_art, bTileset);
+				}
+			),
 			"add_music", [&](const std::string& musicName, const std::string& filepath){
 				return assetManager->AddMusic(musicName, filepath);
 			},

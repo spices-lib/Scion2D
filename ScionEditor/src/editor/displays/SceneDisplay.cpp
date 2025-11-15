@@ -81,7 +81,7 @@ namespace SCION_EDITOR {
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.0f, 0.9f, 0.0f, 0.3f});
 		}
 
-		if (ImGui::ImageButton("##", playTexture.GetID(), ImVec2{ playTexture.GetWidth() , playTexture.GetHeight() }))
+		if (ImGui::ImageButton("##", playTexture.GetID(), ImVec2{ (float)playTexture.GetWidth() , (float)playTexture.GetHeight() }))
 		{
 			LoadScene();
 		}
@@ -98,7 +98,7 @@ namespace SCION_EDITOR {
 
 		ImGui::SameLine();
 
-		if (ImGui::ImageButton("##", stopTexture.GetID(), ImVec2{ stopTexture.GetWidth() , stopTexture.GetHeight() }))
+		if (ImGui::ImageButton("##", stopTexture.GetID(), ImVec2{ (float)stopTexture.GetWidth() , (float)stopTexture.GetHeight() }))
 		{
 			UnloadScene();
 		}

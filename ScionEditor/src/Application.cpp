@@ -34,6 +34,7 @@
 #include <editor/displays/LogDisplay.h>
 #include <Core/ECS/MainRegistry.h>
 #include <editor/utilities/editor_textures.h>
+#include <editor/displays/TilesetDisplay.h>
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -464,8 +465,22 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto pTilesetDisplay = std::make_shared<TilesetDisplay>();
+		if (!pTilesetDisplay)
+		{
+			SCION_ERROR("Failed to create TilesetDisplay");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(pTilesetDisplay))
+		{
+			SCION_ERROR("Failed to add TilesetDisplay");
+			return false;
+		}
+
 		pDisplayHolder->displays.push_back(pSceneDisplay);
 		pDisplayHolder->displays.push_back(pLogDisplay);
+		pDisplayHolder->displays.push_back(pTilesetDisplay);
 
 		return true;
 	}
