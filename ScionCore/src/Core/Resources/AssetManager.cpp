@@ -43,6 +43,27 @@ namespace SCION_RESOURCE {
 		return true;
 	}
 
+	bool AssetManager::AddTextureFromMemory(const std::string& textureName, const unsigned char* imageData, size_t length, bool pixelArt)
+	{
+		if (m_mapTextures.contains(textureName))
+		{
+			SCION_ERROR("Asset already exist");
+			return false;
+		}
+
+		auto texture = SCION_RENDERING::TextureLoader::CreateFromMemory(imageData, length, pixelArt);
+
+		if (!texture)
+		{
+			SCION_ERROR("Unable to load texture");
+			return false;
+		}
+
+		m_mapTextures.emplace(textureName, texture);
+
+		return true;
+	}
+
 	const SCION_RENDERING::Texture& AssetManager::GetTexture(const std::string& textureName)
 	{
 		if (m_mapTextures.contains(textureName))

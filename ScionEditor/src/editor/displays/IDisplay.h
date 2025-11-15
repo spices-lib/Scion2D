@@ -8,6 +8,7 @@ namespace SCION_EDITOR {
 	{
 		virtual ~IDisplay() = default;
 		virtual void Draw() = 0;
+		virtual void Update() {}
 	};
 
 	struct DisplayHolder

@@ -2,7 +2,7 @@
 #include "Registry.h"
 #include <memory>
 
-namespace SCION_RESOURCES {
+namespace SCION_RESOURCE {
 
 	class AssetManager;
 }
@@ -37,9 +37,18 @@ namespace SCION_CORE::ECS {
 
 		void Initialize();
 
-		SCION_RESOURCES::AssetManager& GetAssetManager();
-		SCION_SOUNDS::MusicPlayer& GetMusicPlayer();
-		SCION_SOUNDS::SoundFxPlayer& GetSoundPlayer();
+		SCION_RESOURCE::AssetManager& GetAssetManager()
+		{
+			return *GetContext<std::shared_ptr<SCION_RESOURCE::AssetManager>>();
+		}
+		SCION_SOUNDS::MusicPlayer& GetMusicPlayer()
+		{
+			return *GetContext<std::shared_ptr<SCION_SOUNDS::MusicPlayer>>();
+		}
+		SCION_SOUNDS::SoundFxPlayer& GetSoundPlayer()
+		{
+			return *GetContext<std::shared_ptr<SCION_SOUNDS::SoundFxPlayer>>();
+		}
 
 		template<typename TContext>
 		TContext AddToContext(TContext context)

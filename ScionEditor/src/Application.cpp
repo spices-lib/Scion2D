@@ -33,6 +33,7 @@
 #include <editor/displays/SceneDisplay.h>
 #include <editor/displays/LogDisplay.h>
 #include <Core/ECS/MainRegistry.h>
+#include <editor/utilities/editor_textures.h>
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -129,7 +130,6 @@ namespace SCION_EDITOR {
 		}
 
 		auto lua = std::make_shared<sol::state>();
-		lua->open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::string);
 		if (!m_pRegistry->AddToContext(lua))
 		{
 			SCION_ERROR("Failed to add lua state to registry context!");
@@ -219,15 +219,7 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
-		SCION_CORE::Systems::ScriptingSystem::RegisterLuaBindings(*lua, *m_pRegistry);
-		SCION_CORE::Systems::ScriptingSystem::RegisterLuaFunctions(*lua);
-
 		auto scriptSystem = std::make_shared<SCION_CORE::Systems::ScriptingSystem>(*m_pRegistry);
-		if (!scriptSystem->LoadMainScript(*lua))
-		{
-			SCION_ERROR("Failed to load main lua script.")
-				return false;
-		}
 		if (!m_pRegistry->AddToContext(scriptSystem))
 		{
 			SCION_ERROR("Failed to add script system to registry context!");
@@ -252,6 +244,7 @@ namespace SCION_EDITOR {
 		}
 
 		LoadShaders();
+		LoadTextures();
 
 		renderer->DrawLine(
 			SCION_RENDERING::Line{ 
@@ -283,6 +276,25 @@ namespace SCION_EDITOR {
 		if (!assetMananger->AddShader("color", "assets/shaders/colorShader.vert", "assets/shaders/colorShader.vert"))
 		{
 			SCION_ERROR("Failed to add shader to the asset manager.");
+			return false;
+		}
+
+		return true;
+	}
+
+	bool Application::LoadTextures()
+	{
+		auto& assetMananger = m_pRegistry->GetContext<std::shared_ptr<SCION_RESOURCE::AssetManager>>();
+
+		if (!assetMananger->AddTextureFromMemory("play_button", play_button, sizeof(play_button) / sizeof(play_button[0]), false))
+		{
+			SCION_ERROR("Failed to load texture from memory.");
+			return false;
+		}
+
+		if (!assetMananger->AddTextureFromMemory("stop_button", stop_button, sizeof(stop_button) / sizeof(stop_button[0]), false))
+		{
+			SCION_ERROR("Failed to load texture from memory.");
 			return false;
 		}
 
@@ -357,27 +369,13 @@ namespace SCION_EDITOR {
 
 	void Application::Update()
 	{
-		auto& camera = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
+		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
+		auto displayHolder = mainRegistry.GetContext<std::shared_ptr<DisplayHolder>>();
 
-		if (!camera)
+		for (const auto& pDisplay : displayHolder->displays)
 		{
-			SCION_ERROR("Failed to get camera from registry context!");
+			pDisplay->Update();
 		}
-
-		camera->Update();
-
-		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
-		scriptSystem->Update();
-
-		auto& pPhysicsWorld = m_pRegistry->GetContext<SCION_PHYSICS::PhysicalWorld>();
-		pPhysicsWorld->Step(
-			1.0f / 60.0f,
-			10,
-			8
-		);
-
-		auto& animationSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::AnimationSystem>>();
-		animationSystem->Update();
 
 		auto& inputManager = SCION_CORE::InputManager::GetInstance();
 		auto& keyboard = inputManager.GetKeyboard();

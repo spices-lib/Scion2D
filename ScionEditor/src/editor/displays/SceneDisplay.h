@@ -9,6 +9,12 @@ namespace SCION_EDITOR {
 	private:
 
 		SCION_CORE::ECS::Registry& m_Registry;
+		bool m_bPlayScene, m_bSceneLoaded;
+
+	private:
+
+		void LoadScene();
+		void UnloadScene();
 
 	public:
 
@@ -16,5 +22,6 @@ namespace SCION_EDITOR {
 		~SceneDisplay() override = default;
 
 		void Draw() override;
+		void Update() override;
 	};
 }

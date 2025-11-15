@@ -58,6 +58,33 @@ namespace SCION_RENDERING {
 		return true;
 	}
 
+	bool TextureLoader::LoadTextureFromMemory(const unsigned char* imageData, size_t length, GLuint& id, int& width, int& height, bool blended)
+	{
+		int comp;
+
+		auto p = stbi_loadf_from_memory(imageData, length, &width, &height, &comp, 4);
+
+		glBindTexture(GL_TEXTURE_2D, id);
+		glad_glGetTextureLevelParameteriv(id, 0, GL_TEXTURE_WIDTH, &width);
+		glad_glGetTextureLevelParameteriv(id, 0, GL_TEXTURE_HEIGHT, &height);
+
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		if (!blended)
+		{
+			glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		}
+		else
+		{
+			glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
+
+		return true;
+	}
+
 	std::shared_ptr<Texture> TextureLoader::Create(Texture::TextureType type, const std::string& texturePath)
 	{
 		GLuint id;
@@ -95,6 +122,19 @@ namespace SCION_RENDERING {
 		LoadFBTexture(id, width, height);
 
 		return std::make_shared<Texture>(id, width, height, type);
+	}
+
+	std::shared_ptr<Texture> TextureLoader::CreateFromMemory(const unsigned char* imageData, size_t length, bool blended)
+	{
+		GLuint id;
+		int width, height;
+
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+
+		LoadTextureFromMemory(imageData, length, id, width, height, blended);
+
+		return std::make_shared<Texture>(id, width, height, blended ? Texture::TextureType::BLENDED : Texture::TextureType::PIXEL, "");
 	}
 
 }

@@ -32,6 +32,7 @@ namespace SCION_RESOURCE {
 		bool CreateDefaultFonts();
 
 		bool AddTexture(const std::string& textureName, const std::string& texturePath, bool pixelArt = true);
+		bool AddTextureFromMemory(const std::string& textureName, const unsigned char* imageData, size_t length, bool pixelArt);
 		const SCION_RENDERING::Texture& GetTexture(const std::string& textureName);
 
 		bool AddShader(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath);

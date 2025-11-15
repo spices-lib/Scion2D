@@ -21,6 +21,7 @@ namespace SCION_EDITOR {
 
 		bool Initialize();
 		bool LoadShaders();
+		bool LoadTextures();
 
 		void ProcessEvents();
 		void Update();
