@@ -32,9 +32,12 @@
 #include <Rendering/Buffers/Framebuffer.h>
 #include <editor/displays/SceneDisplay.h>
 #include <editor/displays/LogDisplay.h>
+#include <editor/displays/TilemapDisplay.h>
 #include <Core/ECS/MainRegistry.h>
 #include <editor/utilities/editor_textures.h>
+#include <editor/utilities/EditorFramebuffer.h>
 #include <editor/displays/TilesetDisplay.h>
+#include "editor/systems/GridSystem.h"
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -227,6 +230,15 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto pEditorFramebuffers = std::make_shared<EditorFramebuffers>();
+		if (!m_pRegistry->AddToContext(pEditorFramebuffers))
+		{
+			SCION_ERROR("Failed to add editor frame buffer to registry context!");
+			return false;
+		}
+		pEditorFramebuffers->mapFramebuffer.emplace(FramebufferType::SCENE, std::make_shared<SCION_RENDERING::Framebuffer>(640, 480, false));
+		pEditorFramebuffers->mapFramebuffer.emplace(FramebufferType::TILEMAP, std::make_shared<SCION_RENDERING::Framebuffer>(640, 480, false));
+
 		CreateDisplays();
 
 		auto pContactListener = std::make_shared<SCION_PHYSICS::ContactListener>();
@@ -390,32 +402,6 @@ namespace SCION_EDITOR {
 
 	void Application::Render()
 	{
-		auto& scriptSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::ScriptingSystem>>();
-		auto& renderSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderSystem>>();
-		auto& renderUISystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderUISystem>>();
-		auto& renderShapeSystem = m_pRegistry->GetContext<std::shared_ptr<SCION_CORE::Systems::RenderShapeSystem>>();
-		auto& renderer = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Renderer>>();
-		auto& camera = m_pRegistry->GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
-		auto& assetManager = m_pRegistry->GetContext<std::shared_ptr<SCION_RESOURCE::AssetManager>>();
-
-		auto& shader = assetManager->GetShader("color");
-
-		glViewport(
-			0,
-			0,
-			m_pWindow->GetWidth(),
-			m_pWindow->GetHeight()
-		);
-
-		glClearColor(0.f, 0.f, 0.f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		scriptSystem->Render();
-		renderShapeSystem->Update();
-		renderSystem->Update();
-		renderUISystem->Update(m_pRegistry->GetRegistry());
-		renderer->DrawLines(shader, *camera);
-
 		Begin();
 		RenderImGui();
 		End();

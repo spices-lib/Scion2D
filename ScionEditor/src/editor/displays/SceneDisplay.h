@@ -15,6 +15,7 @@ namespace SCION_EDITOR {
 
 		void LoadScene();
 		void UnloadScene();
+		void RenderScene();
 
 	public:
 

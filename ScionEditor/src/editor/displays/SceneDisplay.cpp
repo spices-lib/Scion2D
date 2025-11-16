@@ -14,6 +14,8 @@
 #include <Physics/Box2DWrappers.h>
 #include <Core/CoreUtilities/CoreEngineData.h>
 #include <Core/Resources/AssetManager.h>
+#include "editor/utilities/EditorFramebuffer.h"
+#include <Rendering/Core/Renderer.h>
 #include <imgui.h>
 
 using namespace SCION_CORE::Systems;
@@ -51,6 +53,30 @@ namespace SCION_EDITOR {
 		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
 		mainRegistry.GetMusicPlayer().Stop();
 		mainRegistry.GetSoundPlayer().Stop(-1);
+	}
+
+	void SceneDisplay::RenderScene()
+	{
+		auto& renderSystem = m_Registry.GetContext<std::shared_ptr<SCION_CORE::Systems::RenderSystem>>();
+		auto& renderUISystem = m_Registry.GetContext<std::shared_ptr<SCION_CORE::Systems::RenderUISystem>>();
+		auto& renderShapeSystem = m_Registry.GetContext<std::shared_ptr<SCION_CORE::Systems::RenderShapeSystem>>();
+		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
+		auto editorFramebuffers = mainRegistry.GetContext<std::shared_ptr<SCION_EDITOR::EditorFramebuffers>>();
+		auto renderer = mainRegistry.GetContext<std::shared_ptr<SCION_RENDERING::Renderer>>();
+		const auto& fb = editorFramebuffers->mapFramebuffer[FramebufferType::SCENE];
+
+		fb->Bind();
+		renderer->SetViewport(0, 0, fb->Width(), fb->Height());
+		renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		renderer->ClearBuffers(true, true, true);
+
+		renderSystem->Update();
+		renderShapeSystem->Update();
+		renderUISystem->Update(m_Registry.GetRegistry());
+
+
+		fb->Unbind();
+		fb->CheckResize();
 	}
 
 	SceneDisplay::SceneDisplay(SCION_CORE::ECS::Registry& registry)
@@ -98,6 +124,8 @@ namespace SCION_EDITOR {
 
 		ImGui::SameLine();
 
+		RenderScene();
+
 		if (ImGui::ImageButton("##", stopTexture.GetID(), ImVec2{ (float)stopTexture.GetWidth() , (float)stopTexture.GetHeight() }))
 		{
 			UnloadScene();
@@ -105,7 +133,8 @@ namespace SCION_EDITOR {
 
 		if (ImGui::BeginChild("##SceneChild", ImVec2{ 0.0f, 0.0f }, NULL, ImGuiWindowFlags_NoScrollWithMouse))
 		{
-			const auto& fb = m_Registry.GetContext<std::shared_ptr<SCION_RENDERING::Framebuffer>>();
+			const auto& editorFramebuffers = m_Registry.GetContext<std::shared_ptr<EditorFramebuffers>>();
+			const auto& fb = editorFramebuffers->mapFramebuffer[FramebufferType::SCENE];
 	
 			ImGui::SetCursorPos(ImVec2{ 0.0f, 0.0f });
 
