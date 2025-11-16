@@ -38,6 +38,7 @@
 #include <editor/utilities/EditorFramebuffer.h>
 #include <editor/displays/TilesetDisplay.h>
 #include "editor/systems/GridSystem.h"
+#include "editor/displays/AssetDisplay.h"
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -330,10 +331,6 @@ namespace SCION_EDITOR {
 				m_bIsRunning = false;
 				break;
 			case SDL_KEYDOWN:
-				if (m_Event.key.keysym.sym == SDLK_ESCAPE)
-				{
-					m_bIsRunning = false;
-				}
 				keyboard.OnKeyPressed(m_Event.key.keysym.sym);
 				break;
 			case SDL_KEYUP:
@@ -464,9 +461,23 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto pAssetDisplay = std::make_shared<AssetDisplay>();
+		if (!pAssetDisplay)
+		{
+			SCION_ERROR("Failed to create AssetDisplay");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(pAssetDisplay))
+		{
+			SCION_ERROR("Failed to add AssetDisplay");
+			return false;
+		}
+
 		pDisplayHolder->displays.push_back(pSceneDisplay);
 		pDisplayHolder->displays.push_back(pLogDisplay);
 		pDisplayHolder->displays.push_back(pTilesetDisplay);
+		pDisplayHolder->displays.push_back(pAssetDisplay);
 
 		return true;
 	}

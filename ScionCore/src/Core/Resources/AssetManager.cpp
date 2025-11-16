@@ -4,6 +4,7 @@
 #include "Rendering/Essentials/FontLoader.h"
 #include "Logger.h"
 #include "Core/Resources/fonts/default_fonts.h"
+#include <ScionUtilities.h>
 
 namespace SCION_RESOURCE {
 
@@ -251,6 +252,63 @@ namespace SCION_RESOURCE {
 		}
 
 		return m_mapFonts.at(fontName);
+	}
+
+	std::vector<std::string> AssetManager::GetAssetKeyNames(SCION_UTL::AssetType eAssetType) const
+	{
+		switch (eAssetType)
+		{
+		case SCION_UTL::AssetType::TEXTURE:
+			return SCION_UTL::GetKeys(m_mapTextures, [](const auto& pair) { return !pair.second->IsEditorTexture(); });
+		case SCION_UTL::AssetType::FONT:
+			return SCION_UTL::GetKeys(m_mapFonts);
+		case SCION_UTL::AssetType::SOUNDFX:
+			return SCION_UTL::GetKeys(m_mapSoundFx);
+		case SCION_UTL::AssetType::MUSIC:
+			return SCION_UTL::GetKeys(m_mapMusic);
+		case SCION_UTL::AssetType::SCENE:
+			break;
+		}
+
+		return {};
+	}
+
+	bool AssetManager::ChangeAssetName(const std::string& sOldName, const std::string& sNewName, SCION_UTL::AssetType eAssetType)
+	{
+		switch (eAssetType)
+		{
+		case SCION_UTL::AssetType::TEXTURE:
+			return SCION_UTL::KeyChanged(m_mapTextures, sOldName, sNewName);
+		case SCION_UTL::AssetType::FONT:
+			return SCION_UTL::KeyChanged(m_mapFonts, sOldName, sNewName);
+		case SCION_UTL::AssetType::SOUNDFX:
+			return SCION_UTL::KeyChanged(m_mapSoundFx, sOldName, sNewName);
+		case SCION_UTL::AssetType::MUSIC:
+			return SCION_UTL::KeyChanged(m_mapMusic, sOldName, sNewName);
+		case SCION_UTL::AssetType::SCENE:
+			break;
+		}
+
+		return false;
+	}
+
+	bool AssetManager::CheckHasAsset(const std::string& sName, SCION_UTL::AssetType eAssetType)
+	{
+		switch (eAssetType)
+		{
+		case SCION_UTL::AssetType::TEXTURE:
+			return m_mapTextures.contains(sName);
+		case SCION_UTL::AssetType::FONT:
+			return m_mapFonts.contains(sName);
+		case SCION_UTL::AssetType::SOUNDFX:
+			return m_mapSoundFx.contains(sName);
+		case SCION_UTL::AssetType::MUSIC:
+			return m_mapMusic.contains(sName);
+		case SCION_UTL::AssetType::SCENE:
+			break;
+		}
+
+		return false;
 	}
 
 	void AssetManager::CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry)

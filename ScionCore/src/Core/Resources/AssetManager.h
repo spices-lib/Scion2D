@@ -11,6 +11,10 @@
 #include <sol/sol.hpp>
 #include "Core/ECS/Registry.h"
 
+namespace SCION_UTL {
+	enum class AssetType;
+}
+
 namespace SCION_RESOURCE {
 
 	class AssetManager 
@@ -49,6 +53,10 @@ namespace SCION_RESOURCE {
 		std::shared_ptr<SCION_RENDERING::Font> GetFont(const std::string& fontName);
 
 		inline const std::map<std::string, std::shared_ptr<SCION_RENDERING::Texture>>& GetAllTextures() { return m_mapTextures; }
+
+		std::vector<std::string> GetAssetKeyNames(SCION_UTL::AssetType eAssetType) const;
+		bool ChangeAssetName(const std::string& sOldName, const std::string& sNewName, SCION_UTL::AssetType eAssetType);
+		bool CheckHasAsset(const std::string& sName, SCION_UTL::AssetType eAssetType);
 
 		static void CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};
