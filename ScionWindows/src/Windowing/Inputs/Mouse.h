@@ -32,6 +32,7 @@ namespace SCION_WINDOWING::Inputs {
 		const bool IsButtonPressed(int btn);
 		const bool IsButtonJustPressed(int btn);
 		const bool IsButtonJustReleased(int btn);
+		inline bool IsMouseMoving() { return m_bMouseMoving; }
 
 		glm::vec2 GetMouseScreenPosition();
 
