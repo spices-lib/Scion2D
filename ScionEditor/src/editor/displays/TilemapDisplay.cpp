@@ -6,6 +6,8 @@
 #include <Logger.h>
 #include <imgui.h>
 #include <Core/ECS/MainRegistry.h>
+#include "editor/utilities/EditorUtilities.h"
+#include "editor/scene/SceneManager.h"
 
 namespace SCION_EDITOR {
 
@@ -63,6 +65,17 @@ namespace SCION_EDITOR {
 			ImGui::SetCursorPos(ImVec2{ x, y });
 
 			ImGui::Image(fb->GetTextureID(), imageSize, ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_SCENE_SRC);
+				if (payload)
+				{
+					SceneManager::GetInstance().SetCurrentScene(std::string{ (const char*)payload->Data });
+				}
+
+				ImGui::EndDragDropTarget();
+			}
 
 			ImGui::EndChild();
 		}

@@ -39,6 +39,7 @@
 #include <editor/displays/TilesetDisplay.h>
 #include "editor/systems/GridSystem.h"
 #include "editor/displays/AssetDisplay.h"
+#include "editor/scene/SceneManager.h"
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -259,6 +260,10 @@ namespace SCION_EDITOR {
 
 		LoadShaders();
 		LoadTextures();
+
+		SceneManager::GetInstance().AddScene("DefaultScene");
+		SceneManager::GetInstance().AddScene("NewScene");
+		SceneManager::GetInstance().SetCurrentScene("DefaultScene");
 
 		renderer->DrawLine(
 			SCION_RENDERING::Line{ 

@@ -5,6 +5,7 @@
 #include <Core/Resources/InputManager.h>
 #include <Core/Resources/AssetManager.h>
 #include "editor/utilities/EditorUtilities.h"
+#include "editor/scene/SceneManager.h"
 
 constexpr float DEFAULT_ASSET_SIZE = 128.0f;
 constexpr ImVec2 DRAG_ASSET_SIZE = ImVec2{ 32.0f, 32.0f };
@@ -59,7 +60,7 @@ namespace SCION_EDITOR {
 
 		if (m_eSelectedType == SCION_UTL::AssetType::SCENE)
 		{
-
+			assetNames = SceneManager::GetInstance().GetSceneNames();
 		}
 		else
 		{
@@ -121,14 +122,7 @@ namespace SCION_EDITOR {
 					auto sAssetName = (*assetItr).c_str();
 					if (bSelectedAsset && ImGui::BeginPopupContextItem())
 					{
-						if (ImGui::Selectable("name"))
-						{
-							m_bRename = true;
-						}
-						if (ImGui::Selectable("delete"))
-						{
-							SCION_LOG("PLEASE DELETE");
-						}
+						OpenAssetContext(*assetItr);
 						ImGui::EndPopup();
 					}
 
@@ -256,6 +250,23 @@ namespace SCION_EDITOR {
 		if (bHasAsset)
 		{
 			ImGui::TextColored(ImVec4{ 1.0f, 0.0f, 0.0f, 1.0f }, "Asset name exist!");
+		}
+	}
+
+	void AssetDisplay::OpenAssetContext(const std::string& sAssetName)
+	{
+		if (ImGui::Selectable("name"))
+		{
+			m_bRename = true;
+		}
+
+		if (ImGui::Selectable("delete"))
+		{
+			auto& assetManager = SCION_CORE::ECS::MainRegistry::GetInstance().GetAssetManager();
+			if (!assetManager.DeleteAsset(sAssetName, m_eSelectedType))
+			{
+				SCION_ERROR("Failed to delete asset.");
+			}
 		}
 	}
 

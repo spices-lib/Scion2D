@@ -22,6 +22,9 @@ namespace SCION_CORE::ECS {
 		TContext AddToContext(TContext context);
 
 		template<typename TContext>
+		bool RemoveContext();
+
+		template<typename TContext>
 		TContext& GetContext();
 
 		static void CreateLuaRegistryBind(sol::state& lua, Registry& registry);

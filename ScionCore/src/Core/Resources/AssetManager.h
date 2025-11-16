@@ -57,6 +57,7 @@ namespace SCION_RESOURCE {
 		std::vector<std::string> GetAssetKeyNames(SCION_UTL::AssetType eAssetType) const;
 		bool ChangeAssetName(const std::string& sOldName, const std::string& sNewName, SCION_UTL::AssetType eAssetType);
 		bool CheckHasAsset(const std::string& sName, SCION_UTL::AssetType eAssetType);
+		bool DeleteAsset(const std::string& sName, SCION_UTL::AssetType eAssetType);
 
 		static void CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry);
 	};

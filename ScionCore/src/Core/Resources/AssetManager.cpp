@@ -311,6 +311,25 @@ namespace SCION_RESOURCE {
 		return false;
 	}
 
+	bool AssetManager::DeleteAsset(const std::string& sName, SCION_UTL::AssetType eAssetType)
+	{
+		switch (eAssetType)
+		{
+		case SCION_UTL::AssetType::TEXTURE:
+			return std::erase_if(m_mapTextures, [&](const auto& pair) { return pair.first == sName; }) > 0;
+		case SCION_UTL::AssetType::FONT:
+			return std::erase_if(m_mapFonts, [&](const auto& pair) { return pair.first == sName; }) > 0;
+		case SCION_UTL::AssetType::SOUNDFX:
+			return std::erase_if(m_mapSoundFx, [&](const auto& pair) { return pair.first == sName; }) > 0;
+		case SCION_UTL::AssetType::MUSIC:
+			return std::erase_if(m_mapMusic, [&](const auto& pair) { return pair.first == sName; }) > 0;
+		case SCION_UTL::AssetType::SCENE:
+			break;
+		}
+
+		return false;
+	}
+
 	void AssetManager::CreateLuaAssetManager(sol::state& lua, SCION_CORE::ECS::Registry& registry)
 	{
 		auto& assetManager = registry.GetContext<std::shared_ptr<AssetManager>>();

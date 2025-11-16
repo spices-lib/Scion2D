@@ -29,6 +29,7 @@ namespace SCION_EDITOR {
 		unsigned int GetTextureID(const std::string& sAssetName);
 		bool DoRenameAsset(const std::string& sOldName, const std::string& sNewName);
 		void CheckRename(const std::string& name);
+		void OpenAssetContext(const std::string& sAssetName);
 
 	public:
 

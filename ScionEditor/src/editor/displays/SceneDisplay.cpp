@@ -17,6 +17,7 @@
 #include "editor/utilities/EditorFramebuffer.h"
 #include <Rendering/Core/Renderer.h>
 #include <imgui.h>
+#include "editor/scene/SceneManager.h"
 
 using namespace SCION_CORE::Systems;
 
