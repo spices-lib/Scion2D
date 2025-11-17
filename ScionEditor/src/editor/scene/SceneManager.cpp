@@ -2,6 +2,8 @@
 #include <Logger.h>
 #include "SceneObject.h"
 #include <ScionUtilities.h>
+#include "editor/tools/ToolManager.h"
+#include "editor/tools/TileTool.h"
 
 namespace SCION_EDITOR {
 
@@ -42,6 +44,30 @@ namespace SCION_EDITOR {
 		}
 
 		return m_mapScenes.at(m_sCurrentScene);
+	}
+
+	ToolManager& SceneManager::GetToolManager()
+	{
+		if (!m_pToolManager)
+		{
+			m_pToolManager = std::make_unique<ToolManager>();
+		}
+
+		return *m_pToolManager;
+	}
+
+	void SceneManager::SetTileset(const std::string& sTileset)
+	{
+		m_sCurrentTileset = sTileset;
+		if (!m_pToolManager)
+			return;
+
+		auto pActivateTool = m_pToolManager->GetActiveTool();
+
+		if (pActivateTool)
+		{
+			pActivateTool->LoadSpriteTextureData(m_sCurrentTileset);
+		}
 	}
 
 	std::vector<std::string> SceneManager::GetSceneNames()

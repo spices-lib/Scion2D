@@ -113,7 +113,7 @@ namespace SCION_EDITOR {
 		, m_pMouseTile{ std::make_shared<Tile>() }
 		, m_MouseRect{ 16.f }
 		, m_GridCoords{ 0.0f }
-		, m_bGridSnap{ true }
+		, m_bGridSnap{ false }
 	{
 
 	}

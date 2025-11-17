@@ -19,7 +19,7 @@ namespace SCION_EDITOR {
 		GridSystem();
 		~GridSystem() = default;
 
-		void Update(SCION_RENDERING::Camera2D& camera);
+		void Update(class SceneObject& currentScene, SCION_RENDERING::Camera2D& camera);
 	};
 	
 }

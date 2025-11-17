@@ -5,6 +5,7 @@
 #include <Rendering/Essentials/Vertex.h>
 #include <Rendering/Core/Camera.h>
 #include <Core/Resources/AssetManager.h>
+#include "editor/scene/SceneObject.h"
 
 namespace SCION_EDITOR {
 
@@ -12,9 +13,10 @@ namespace SCION_EDITOR {
 		: m_pBatchRenderer{ std::make_unique<SCION_RENDERING::RectBatchRenderer>() }
 	{}
 
-	void GridSystem::Update(SCION_RENDERING::Camera2D& camera)
+	void GridSystem::Update(SceneObject& currentScene, SCION_RENDERING::Camera2D& camera)
 	{
 		auto& assetManager = SCION_CORE::ECS::MainRegistry::GetInstance();
+		const auto& canvas = currentScene.GetCanvas();
 
 		auto& pColorShader = assetManager.GetAssetManager().GetShader("color");
 		pColorShader.SetUniformMat4("uProjection", camera.GetCameraMatrix());
@@ -22,7 +24,7 @@ namespace SCION_EDITOR {
 		m_pBatchRenderer->Begin();
 
 
-		int tileWidth{ 16 }, tileHeight{ 16 }, canvasWidth{ 640 }, canvasHeight{ 480 };
+		int tileWidth{ canvas.tileWidth }, tileHeight{ canvas.tileHeight }, canvasWidth{ canvas.width }, canvasHeight{ canvas.height };
 
 		int cols = canvasWidth / tileWidth;
 		int rows = canvasHeight / tileHeight;

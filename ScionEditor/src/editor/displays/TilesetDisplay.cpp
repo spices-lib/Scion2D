@@ -4,6 +4,9 @@
 #include <Core/ECS/MainRegistry.h>
 #include <ScionUtilities.h>
 #include <imgui.h>
+#include "editor/scene/SceneManager.h"
+#include "editor/tools/ToolManager.h"
+#include "editor/tools/CreateTileTool.h"
 
 namespace SCION_EDITOR {
 
@@ -28,6 +31,7 @@ namespace SCION_EDITOR {
 				if (ImGui::Selectable(sTileset.c_str(), bIsSelected))
 				{
 					m_sTileset = sTileset;
+					SceneManager::GetInstance().SetTileset(sTileset);
 				}
 
 				if (bIsSelected)
@@ -87,6 +91,11 @@ namespace SCION_EDITOR {
 						if (ImGui::ImageButton("##", pTexture.GetID(), ImVec2{16.0f * 1.5, 16.0f * 1.5}, ImVec2{ux, uy}, ImVec2{vx, vy}))
 						{
 							m_Selected = id;
+							auto pActiveTool = SceneManager::GetInstance().GetToolManager().GetActiveTool();
+							if (pActiveTool)
+							{
+								pActiveTool->SetSpriteUVs(j, i);
+							}
 						}
 
 						ImGui::PopID();

@@ -17,6 +17,7 @@ namespace SCION_EDITOR {
 	private:
 
 		void RenderTilemap();
+		void LoadNewScene();
 
 	public:
 
