@@ -1,4 +1,13 @@
 #pragma once
+#include <Core/ECS/Components/TransformComponent.h>
+#include <Core/ECS/Components/ScriptComponent.h>
+#include <Core/ECS/Components/SpriteComponent.h>
+#include <Core/ECS/Components/AnimationComponent.h>
+#include <Core/ECS/Components/CircleColliderComponent.h>
+#include <Core/ECS/Components/BoxColliderComponent.h>
+#include <Core/ECS/Components/PhysicalComponent.h>
+#include <Physics/UserData.h>
+#include <entt.hpp>
 
 namespace SCION_EDITOR {
 
@@ -11,5 +20,19 @@ namespace SCION_EDITOR {
 	struct Canvas
 	{
 		int width{ 640 }, height{ 480 }, tileWidth{ 16 }, tileHeight{ 16 };
+	};
+
+	struct Tile
+	{
+		uint32_t id{ entt::null };
+		SCION_CORE::ECS::TransformComponent transform{};
+		SCION_CORE::ECS::SpriteComponent sprite{};
+		SCION_CORE::ECS::AnimationComponent animation{};
+		SCION_CORE::ECS::CircleColliderComponent circleCollider{};
+		SCION_CORE::ECS::BoxColliderComponent boxCollider{};
+		SCION_CORE::ECS::PhysicsComponent physics{};
+		SCION_PHYSICS::ObjectData objectData{};
+
+		bool bColloder{ false }, bAnimation{ false }, bPhysics{ false }, bCircle{ false };
 	};
 }
