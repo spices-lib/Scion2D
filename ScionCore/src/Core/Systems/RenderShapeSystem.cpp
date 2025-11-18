@@ -20,13 +20,12 @@ namespace SCION_CORE::Systems {
 
 	}
 
-	void RenderShapeSystem::Update()
+	void RenderShapeSystem::Update(SCION_RENDERING::Camera2D& camera)
 	{
-		auto& camera = m_Registry.GetContext<std::shared_ptr<Camera2D>>();
 		auto& assetManager = m_Registry.GetContext<std::shared_ptr<AssetManager>>();
 
 		auto colorShader = assetManager->GetShader("color");
-		auto cam_mat = camera->GetCameraMatrix();
+		auto cam_mat = camera.GetCameraMatrix();
 
 		colorShader.Enable();
 		colorShader.SetUniformMat4("uProjection", cam_mat);

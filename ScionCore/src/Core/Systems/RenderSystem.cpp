@@ -5,6 +5,7 @@
 #include <Rendering/Core/Camera.h>
 #include <Rendering/Essentials/Shader.h>
 #include <Logger.h>
+#include <Rendering/Core/SpriteBatchRenderer.h>
 
 namespace SCION_CORE::Systems {
 
@@ -19,7 +20,7 @@ namespace SCION_CORE::Systems {
 		m_pBatchRenderer = std::make_unique<SpriteBatchRenderer>();
 	}
 
-	void RenderSystem::Update()
+	void RenderSystem::Update(Camera2D& camera)
 	{
 		auto& assetManager = m_Registry.GetContext<std::shared_ptr<AssetManager>>();
 
@@ -33,8 +34,7 @@ namespace SCION_CORE::Systems {
 
 		spriteShader.Enable();
 
-		auto& camera = m_Registry.GetContext<std::shared_ptr<Camera2D>>();
-		spriteShader.SetUniformMat4("uProjection", camera->GetCameraMatrix());
+		spriteShader.SetUniformMat4("uProjection", camera.GetCameraMatrix());
 
 		m_pBatchRenderer->Begin();
 

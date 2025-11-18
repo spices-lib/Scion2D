@@ -16,6 +16,7 @@
 #include "editor/scene/SceneManager.h"
 #include "editor/scene/SceneObject.h"
 #include "editor/tools/TileTool.h"
+#include <Core/Resources/InputManager.h>
 
 using namespace SCION_CORE::Systems;
 
@@ -27,6 +28,7 @@ namespace SCION_EDITOR {
 		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
 		auto editorFramebuffers = mainRegistry.GetContext<std::shared_ptr<SCION_EDITOR::EditorFramebuffers>>();
 		auto renderer = mainRegistry.GetContext<std::shared_ptr<SCION_RENDERING::Renderer>>();
+		auto camera = mainRegistry.GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
 		const auto& fb = editorFramebuffers->mapFramebuffer[FramebufferType::TILEMAP];
 
 		auto renderSystem = mainRegistry.GetContext<std::shared_ptr<RenderSystem>>();
@@ -47,10 +49,10 @@ namespace SCION_EDITOR {
 		auto gridSystem = mainRegistry.GetContext<std::shared_ptr<GridSystem>>();
 		gridSystem->Update(*pCurrentScene, *m_pTilemapCam);
 
-		renderSystem->Update();
-		renderShapeSystem->Update();
-		renderUISystem->Update(pCurrentScene->GetRegistry().GetRegistry());
-
+		renderSystem->Update(*camera);
+		renderShapeSystem->Update(*camera);
+		renderUISystem->Update(pCurrentScene->GetRegistry().GetRegistry(), *camera);
+ 
 		auto pActivateTool = SceneManager::GetInstance().GetToolManager().GetActiveTool();
 		if (pActivateTool)
 		{
@@ -83,6 +85,67 @@ namespace SCION_EDITOR {
 				pActiveTool->LoadSpriteTextureData(SceneManager::GetInstance().GetCurrentTileset());
 			}
 		}
+	}
+
+	void TilemapDisplay::PanZoomCamera(const glm::vec2& mousePos)
+	{
+		if (!m_pTilemapCam)
+			return;
+
+		auto& mouse = SCION_CORE::InputManager::GetInstance().GetMouse();
+
+		if (!mouse.IsButtonJustPressed(SCION_MOUSE_MIDDLE) && !mouse.IsButtonPressed(SCION_MOUSE_MIDDLE) &&
+			mouse.GetMouseWheelY() == 0)
+		{
+			return;
+		}
+
+		static glm::vec2 startPosition{ 0.0f };
+		auto screenOffset = m_pTilemapCam->GetScreenOffset();
+		bool bOffsetChanged{ false }, bScaledChanged{ false };
+
+		if (mouse.IsButtonJustPressed(SCION_MOUSE_MIDDLE))
+		{
+			startPosition = mousePos;
+		}
+
+		if (mouse.IsButtonPressed(SCION_MOUSE_MIDDLE))
+		{
+			screenOffset += (mousePos - startPosition);
+			bOffsetChanged = true;
+		}
+
+		glm::vec2 currentWorldPos = m_pTilemapCam->ScreenCoordsToWorld(mousePos);
+		float scale = m_pTilemapCam->GetScale();
+
+		if (mouse.GetMouseWheelX() == 1)
+		{
+			scale += 0.2f;
+			bScaledChanged = true;
+			bOffsetChanged = true;
+		}
+		else if (mouse.GetMouseWheelY() == -1)
+		{
+			scale = 0.2f;
+			bScaledChanged = true;
+			bOffsetChanged = true;
+		}
+
+		scale = std::clamp(scale, 1.0f, 10.0f);
+
+		if (bScaledChanged)
+			m_pTilemapCam->SetScale(scale);
+
+		glm::vec2 afterMovePos = m_pTilemapCam->ScreenCoordsToWorld(mousePos);
+
+		screenOffset += (afterMovePos - currentWorldPos);
+
+		if (bOffsetChanged)
+		{
+			m_pTilemapCam->SetScreenOffset(screenOffset);
+		}
+
+		startPosition = mousePos;
 	}
 
 	TilemapDisplay::TilemapDisplay()
@@ -127,6 +190,8 @@ namespace SCION_EDITOR {
 				pActiveTool->SetCursorCoords(glm::vec2{io.MousePos.x, io.MousePos.y});
 				pActiveTool->SetWindowPos(glm::vec2{windowPos.x, windowPos.y});
 				pActiveTool->SetWindowSize(glm::vec2{windowSize.x, windowSize.y});
+
+				pActiveTool->SetOverTilemapWindow(ImGui::IsWindowHovered());
 			}
 
 			ImGui::Image(fb->GetTextureID(), imageSize, ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
@@ -138,9 +203,16 @@ namespace SCION_EDITOR {
 				{
 					SceneManager::GetInstance().SetCurrentScene(std::string{ (const char*)payload->Data });
 					LoadNewScene();
+					m_pTilemapCam->Reset();
 				}
 
 				ImGui::EndDragDropTarget();
+			}
+
+			if (fb->Width() != windowSize.x || fb->Height() != windowSize.y)
+			{
+				fb->Resize(windowSize.x, windowSize.y);
+				m_pTilemapCam->Resize(windowSize.x, windowSize.y);
 			}
 
 			ImGui::EndChild();
@@ -158,8 +230,10 @@ namespace SCION_EDITOR {
 
 		auto pActiveTool = SceneManager::GetInstance().GetToolManager().GetActiveTool();
 
-		if (pActiveTool && ImGui::GetDragDropPayload())
+		if (pActiveTool && pActiveTool->IsOverTilemapWindow() && !ImGui::GetDragDropPayload())
 		{
+			PanZoomCamera(pActiveTool->GetMouseScreenCoords());
+
 			pActiveTool->Update(pCurrentScene->GetCanvas());
 			pActiveTool->Create();
 		}

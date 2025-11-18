@@ -16,6 +16,10 @@ namespace SCION_RENDERING {
 
 		bool m_bNeedsUpdate;
 
+	private:
+
+		void Initialize();
+
 	public:
 
 		Camera2D();
@@ -23,12 +27,16 @@ namespace SCION_RENDERING {
 		
 		inline void SetPosition(glm::vec2 newPosition) { m_Position = newPosition; m_bNeedsUpdate = true; }
 		inline void SetScale(float scale) { m_Scale = scale; m_bNeedsUpdate = true; }
+		void SetScreenOffset(glm::vec2 newOffset);
 
 		inline const glm::vec2& GetPosition() const { return m_Position; }
 		inline float GetScale() const { return m_Scale; }
+		inline const glm::vec2& GetScreenOffset() const { return m_ScreenOffset; }
 
 		inline const glm::mat4& GetCameraMatrix() { return m_CameraMatrix; }
 		void Update();
+		void Resize(int width, int height);
+		void Reset();
 
 		glm::vec2 ScreenCoordsToWorld(const glm::vec2 screenCoords);
 		glm::vec2 WorldCoordsToScreen(const glm::vec2 worldCoords);

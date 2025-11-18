@@ -20,7 +20,7 @@ namespace SCION_CORE::Systems {
 		m_pCamera2D->Update();
 	}
 
-	void RenderUISystem::Update(entt::registry& registry)
+	void RenderUISystem::Update(entt::registry& registry, SCION_RENDERING::Camera2D& camera)
 	{
 		auto& assetManager = m_Registry.GetContext<std::shared_ptr<AssetManager>>();
 		auto pFontShader = assetManager->GetShader("font");

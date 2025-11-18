@@ -64,6 +64,7 @@ namespace SCION_EDITOR {
 		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
 		auto editorFramebuffers = mainRegistry.GetContext<std::shared_ptr<SCION_EDITOR::EditorFramebuffers>>();
 		auto renderer = mainRegistry.GetContext<std::shared_ptr<SCION_RENDERING::Renderer>>();
+		auto camera = mainRegistry.GetContext<std::shared_ptr<SCION_RENDERING::Camera2D>>();
 		const auto& fb = editorFramebuffers->mapFramebuffer[FramebufferType::SCENE];
 
 		fb->Bind();
@@ -71,9 +72,9 @@ namespace SCION_EDITOR {
 		renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		renderer->ClearBuffers(true, true, true);
 
-		renderSystem->Update();
-		renderShapeSystem->Update();
-		renderUISystem->Update(m_Registry.GetRegistry());
+		renderSystem->Update(*camera);
+		renderShapeSystem->Update(*camera);
+		renderUISystem->Update(m_Registry.GetRegistry(), *camera);
 
 
 		fb->Unbind();

@@ -20,7 +20,7 @@ namespace SCION_CORE::Systems {
 		RenderUISystem(SCION_CORE::ECS::Registry& registry);
 		~RenderUISystem() = default;
 
-		void Update(entt::registry& registry);
+		void Update(entt::registry& registry, SCION_RENDERING::Camera2D& camera);
 	};
 
 }

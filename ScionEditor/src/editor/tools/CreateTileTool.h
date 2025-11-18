@@ -5,6 +5,11 @@ namespace SCION_EDITOR {
 
 	class CreateTileTool :public TileTool
 	{
+	private:
+
+		void CreateNewTile();
+		void RemoveTile();
+
 	public:
 
 		CreateTileTool();

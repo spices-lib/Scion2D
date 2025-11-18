@@ -1,6 +1,11 @@
 #pragma once
 #include "Core/ECS/Registry.h"
-#include <Rendering/Core/SpriteBatchRenderer.h>
+
+namespace SCION_RENDERING
+{
+	class Camera2D;
+	class SpriteBatchRenderer;
+}
 
 namespace  SCION_CORE::Systems {
 
@@ -16,6 +21,6 @@ namespace  SCION_CORE::Systems {
 		RenderSystem(SCION_CORE::ECS::Registry& registry);
 		~RenderSystem() = default;
 
-		void Update();
+		void Update(SCION_RENDERING::Camera2D& camera);
 	};
 }

@@ -2,6 +2,13 @@
 
 namespace SCION_RENDERING {
 
+	void Camera2D::Initialize()
+	{
+		m_OrthoProjection = glm::ortho(0.0f, static_cast<float>(m_Width), 0.0f, static_cast<float>(m_Height), -1.0f, 1.0f);
+
+		Update();
+	}
+
 	Camera2D::Camera2D()
 		: Camera2D(640, 480)
 	{}
@@ -14,9 +21,13 @@ namespace SCION_RENDERING {
 		, m_OrthoProjection(1.0f)
 		, m_bNeedsUpdate(true)
 	{
-		m_OrthoProjection = glm::ortho(0.0f, static_cast<float>(m_Width), 0.0f, static_cast<float>(m_Height), -1.0f, 1.0f);
+		Initialize();
+	}
 
-		Update();
+	void Camera2D::SetScreenOffset(glm::vec2 newOffset)
+	{
+		m_ScreenOffset = newOffset;
+		m_bNeedsUpdate = true;
 	}
 
 	void Camera2D::Update()
@@ -24,13 +35,29 @@ namespace SCION_RENDERING {
 		if (!m_bNeedsUpdate)
 			return;
 
-		glm::vec3 translate(-m_Position.x, -m_Position.y, 0.0f);
+		glm::vec3 translate(-m_Position.x + m_ScreenOffset.x, -m_Position.y + m_ScreenOffset.y, 0.0f);
 		m_CameraMatrix = glm::translate(m_OrthoProjection, translate);
 
 		glm::vec3 scale(m_Scale, m_Scale, 0.0f);
 		m_CameraMatrix *= glm::scale(glm::mat4(1.0f), scale);
 
 		m_bNeedsUpdate = false;
+	}
+
+	void Camera2D::Resize(int width, int height)
+	{
+		m_Width = width;
+		m_Height = height;
+
+		Initialize();
+	}
+
+	void Camera2D::Reset()
+	{
+		m_Scale = 1.0f;
+		m_Position = glm::vec2{ 0.0f };
+		m_ScreenOffset = glm::vec2{ 0.0f };
+		m_bNeedsUpdate = true;
 	}
 
 	glm::vec2 Camera2D::ScreenCoordsToWorld(const glm::vec2 screenCoords)

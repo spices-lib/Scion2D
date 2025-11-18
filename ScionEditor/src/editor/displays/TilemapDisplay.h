@@ -1,6 +1,7 @@
 #pragma once
 #include "IDisplay.h"
 #include <string>
+#include <glm/glm.hpp>
 
 namespace SCION_RENDERING {
 	class Camera2D;
@@ -18,6 +19,7 @@ namespace SCION_EDITOR {
 
 		void RenderTilemap();
 		void LoadNewScene();
+		void PanZoomCamera(const glm::vec2& mousePos);
 
 	public:
 

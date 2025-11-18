@@ -18,7 +18,7 @@ namespace SCION_EDITOR {
 		glm::vec2 m_GuiCursorCoords, m_GuiRelativeCoords;
 		glm::vec2 m_WindowPos, m_WindowSize;
 
-		bool m_bActivate, m_bOutOfBounds;
+		bool m_bActivate, m_bOutOfBounds, m_bOverTilemap;
 
 	private:
 
@@ -69,8 +69,10 @@ namespace SCION_EDITOR {
 
 		inline void Activate() { m_bActivate = true; }
 		inline void Deactivate() { m_bActivate = false; }
+		inline void SetOverTilemapWindow(bool bOverWindow) { m_bOverTilemap = bOverWindow; }
 		inline const bool IsActivated() const { return m_bActivate; }
 		inline const bool OutOfBounds() const { return m_bOutOfBounds; }
+		inline const bool IsOverTilemapWindow() const { return m_bOverTilemap; }
 
 	};
 }

@@ -3,6 +3,11 @@
 #include <Rendering/Core/RectBatchRenderer.h>
 #include <Rendering/Core/CircleBatchRenderer.h>
 
+namespace SCION_RENDERING
+{
+	class Camera2D;
+}
+
 namespace SCION_CORE::Systems {
 
 	class RenderShapeSystem
@@ -18,6 +23,6 @@ namespace SCION_CORE::Systems {
 		RenderShapeSystem(SCION_CORE::ECS::Registry& registry);
 		~RenderShapeSystem() = default;
 
-		void Update();
+		void Update(SCION_RENDERING::Camera2D& camera);
 	};
 }

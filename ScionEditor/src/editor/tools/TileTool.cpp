@@ -84,20 +84,18 @@ namespace SCION_EDITOR {
 
 		if (m_bGridSnap)
 		{
-			glm::vec2 mouseGrid{0.0f};
-			if (mouseWorldPos.x >= 0.0f)
-			{
-				mouseGrid.x = static_cast<int>(mouseWorldPos.x / (m_MouseRect.x * transform.scale.x) * cameraScale);
-			}
-			if (mouseWorldPos.y >= 0.0f)
-			{
-				mouseGrid.y = static_cast<int>(mouseWorldPos.y / (m_MouseRect.y * transform.scale.y) * cameraScale);
-			}
-			transform.position.x = std::floor((mouseGrid.x / cameraScale)) * m_MouseRect.x * transform.position.x;
-			transform.position.x = std::floor((mouseGrid.y / cameraScale)) * m_MouseRect.y * transform.position.y;
+			glm::vec2 mouseGrid{
+				mouseWorldPos.x / (m_MouseRect.x * transform.scale.x) * cameraScale,
+				mouseWorldPos.y / (m_MouseRect.y * transform.scale.y) * cameraScale
+			};
 
-			m_GridCoords.x = mouseGrid.x / cameraScale;
-			m_GridCoords.y = mouseGrid.y / cameraScale;
+			auto scaleGridToCamX = std::floor(mouseGrid.x / cameraScale);
+			auto scaleGridToCamY = std::floor(mouseGrid.y / cameraScale);
+			transform.position.x = scaleGridToCamX * m_MouseRect.x * transform.position.x;
+			transform.position.x = scaleGridToCamY * m_MouseRect.y * transform.position.y;
+
+			m_GridCoords.x = scaleGridToCamX;
+			m_GridCoords.y = scaleGridToCamY;
 
 			SetMouseWorldCoords(transform.position);
 		}
