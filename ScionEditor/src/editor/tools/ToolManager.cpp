@@ -2,13 +2,14 @@
 #include "CreateTileTool.h"
 #include "ToolAccessories.h"
 #include <algorithm>
+#include "RectFillTool.h"
 
 namespace SCION_EDITOR {
 
 	ToolManager::ToolManager()
 	{
-		auto pCreateTileTool = std::make_unique<CreateTileTool>();
-		m_mapTools.emplace(EToolType::CREATE_TILE, std::move(pCreateTileTool));
+		m_mapTools.emplace(EToolType::CREATE_TILE, std::make_unique<CreateTileTool>());
+		m_mapTools.emplace(EToolType::RECT_FILE_TILE, std::make_unique<RectFillTool>());
 
 		SetToolActive(EToolType::CREATE_TILE);
 	}
