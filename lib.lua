@@ -4,6 +4,7 @@ IncludeDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/include
 IncludeDir["ScionUtilities"]              = "%{wks.location}/ScionUtilities/src"
 IncludeDir["ScionWindows"]                = "%{wks.location}/ScionWindows/src"
 IncludeDir["ScionRendering"]              = "%{wks.location}/ScionRendering/src"
+IncludeDir["ScionRendering"]              = "%{wks.location}/ScionFileSystem/src"
 IncludeDir["ScionLogger"]                 = "%{wks.location}/ScionLogger/src"
 IncludeDir["ScionCore"]                   = "%{wks.location}/ScionCore/src"
 IncludeDir["ScionSounds"]                 = "%{wks.location}/ScionSounds/src"
@@ -15,6 +16,7 @@ IncludeDir["sol2"]                        = "%{wks.location}/vendor/sol2/include
 IncludeDir["Lua"]                         = "%{wks.location}/vendor/Lua/src"
 IncludeDir["Box2D"]                       = "%{wks.location}/vendor/Box2D/include"
 IncludeDir["ImGui"]                       = "%{wks.location}/vendor/ImGui"
+IncludeDir["tinyfiledialogs"]             = "%{wks.location}/vendor/tinyfiledialogs"
 
 LibraryDir                                = {}
 LibraryDir["SDL2"]                        = "%{wks.location}/vendor/SDL2/lib/x64"

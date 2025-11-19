@@ -16,3 +16,6 @@
 
 /vendor/imgui/bin
 /vendor/imgui/bin-int
+
+/vendor/tinyfiledialogs/bin
+/vendor/tinyfiledialogs/bin-int
