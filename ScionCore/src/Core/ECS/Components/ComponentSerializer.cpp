@@ -52,6 +52,15 @@ namespace SCION_CORE::ECS {
 
     void ComponentSerializer::SerializeComponent(SCION_FILESYSTEM::JSONSerializer& serializer, const BoxColliderComponent& boxCollider)
     {
+        serializer
+        .StartNewObject("boxCollider")
+            .AddKeyValuePair("width", boxCollider.width)
+            .AddKeyValuePair("height", boxCollider.height)
+            .StartNewObject("offset")
+                .AddKeyValuePair("x", boxCollider.offset.x)
+                .AddKeyValuePair("y", boxCollider.offset.y)
+            .EndObject()
+        .EndObject();
     }
 
     void ComponentSerializer::SerializeComponent(SCION_FILESYSTEM::JSONSerializer& serializer, const TextComponent& text)
