@@ -14,7 +14,7 @@ namespace SCION_FILESYSTEM {
 		std::string SaveFileDialog(const std::string& sTitle = "Save", const std::string& sDefaultPath = "",
 			const std::vector<const char*> filter = {}, const std::string& sFilterDecs = "");
 
-		std::string SelectFOLDERDialog(const std::string& sTitle = "Save");
+		std::string SelectFOLDERDialog(const std::string& sTitle = "Save", const std::string& sDefaultPath = "");
 
 	private:
 	};

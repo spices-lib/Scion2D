@@ -43,6 +43,7 @@ project "ScionEditor"
 		"%{IncludeDir.Lua}", 
 		"%{IncludeDir.Box2D}", 
 		"%{IncludeDir.ImGui}", 
+		"%{IncludeDir.ScionFileSystem}", 
 	}
 
 	links
@@ -57,7 +58,8 @@ project "ScionEditor"
 		"ScionCore",
 		"ScionPhysics",
 		"Box2D",
-		"ImGui"
+		"ImGui",
+		"ScionFileSystem"
 	}
 
 	filter "system:windows"

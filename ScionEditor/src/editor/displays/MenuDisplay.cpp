@@ -1,6 +1,8 @@
 #include "MenuDisplay.h"
 #include <imgui.h>
 #include <Logger.h>
+#include <Dialogs/FileDialogs.h>
+#include <SDL.h>
 
 namespace SCION_EDITOR {
 
@@ -16,7 +18,12 @@ namespace SCION_EDITOR {
 				}
 				if (ImGui::MenuItem("Open", "Ctrl + O"))
 				{
-
+					SCION_FILESYSTEM::FileDialog fd{};
+					auto file = fd.OpenFileDialog("Open tests", SDL_GetBasePath(), { "*.png", "*.jpg"});
+					if (!file.empty())
+					{
+						SCION_LOG("FILE OPENED: {}", file);
+					}
 				}
 				if (ImGui::MenuItem("Save", "Ctrl + S"))
 				{
