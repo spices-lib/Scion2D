@@ -29,6 +29,7 @@ project "ScionCore"
 		"%{IncludeDir.ScionWindows}",
 		"%{IncludeDir.ScionSounds}",
 		"%{IncludeDir.ScionPhysics}",
+		"%{IncludeDir.ScionFileSystem}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
@@ -36,6 +37,7 @@ project "ScionCore"
 		"%{IncludeDir.Lua}", 
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.rapidjson}",
 	}
 
 	links

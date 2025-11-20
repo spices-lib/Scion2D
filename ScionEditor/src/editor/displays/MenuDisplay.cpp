@@ -27,7 +27,12 @@ namespace SCION_EDITOR {
 				}
 				if (ImGui::MenuItem("Save", "Ctrl + S"))
 				{
-
+					SCION_FILESYSTEM::FileDialog fd{};
+					auto file = fd.SaveFileDialog("Save Tilemap test", SDL_GetBasePath(), { "*.lua" });
+					if (!file.empty())
+					{
+						SCION_LOG("FILE OPENED: {}", file);
+					}
 				}
 				if (ImGui::MenuItem("Exit"))
 				{

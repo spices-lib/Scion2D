@@ -24,6 +24,7 @@ project "ScionFileSystem"
 		"src",
 		"%{IncludeDir.ScionLogger}",
 		"%{IncludeDir.tinyfiledialogs}",
+		"%{IncludeDir.rapidjson}",
 	}
 
 	links

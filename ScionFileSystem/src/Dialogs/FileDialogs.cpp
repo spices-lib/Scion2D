@@ -16,7 +16,7 @@ namespace SCION_FILESYSTEM {
 
 	std::string FileDialog::SaveFileDialog(const std::string& sTitle, const std::string& sDefaultPath, const std::vector<const char*> filter, const std::string& sFilterDecs)
 	{
-		const char* file = tinyfd_saveFileDialog(sTitle.c_str(), sDefaultPath.c_str(), filter.size(), filter.data(), sFilterDecs.c_str(), 1);
+		const char* file = tinyfd_saveFileDialog(sTitle.c_str(), sDefaultPath.c_str(), filter.size(), filter.data(), sFilterDecs.c_str());
 		if (!file)
 		{
 			return std::string{};
