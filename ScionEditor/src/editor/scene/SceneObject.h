@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/ECS/Entity.h"
 #include "editor/utilities/EditorUtilities.h"
+#include <HelperUtilities.h>
 
 namespace SCION_EDITOR {
 
@@ -11,6 +12,7 @@ namespace SCION_EDITOR {
 		SCION_CORE::ECS::Registry m_Registry, m_RuntimeRegistry;
 		std::string m_sSceneName;
 		Canvas m_Canvas;
+		std::vector<SCION_UTL::SpriteLayerParams> m_LayerParams;
 
 	public:
 
@@ -19,6 +21,9 @@ namespace SCION_EDITOR {
 
 		void CopySceneToRuntime();
 		void ClearRuntimeScene();
+
+		bool AddNewLayer();
+		inline std::vector<SCION_UTL::SpriteLayerParams>& GetLayerParams() { return m_LayerParams; }
 
 		inline Canvas& GetCanvas() { return m_Canvas; }
 		inline const std::string& GetName() { return m_sSceneName; }

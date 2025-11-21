@@ -21,4 +21,20 @@ namespace SCION_EDITOR {
 
 	}
 
+	bool SceneObject::AddNewLayer()
+	{
+		static int number = { 0 };
+
+		std::stringstream ss;
+		ss << "NewLayer" << number;
+
+		m_LayerParams.emplace_back(SCION_UTL::SpriteLayerParams{
+			.sLayerName = ss.str()
+		});
+
+		number++;
+
+		return true;
+	}
+
 }

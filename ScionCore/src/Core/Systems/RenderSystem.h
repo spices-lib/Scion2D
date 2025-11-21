@@ -7,6 +7,11 @@ namespace SCION_RENDERING
 	class SpriteBatchRenderer;
 }
 
+namespace SCION_UTL
+{
+	struct SpriteLayerParams;
+}
+
 namespace  SCION_CORE::Systems {
 
 	class RenderSystem
@@ -21,6 +26,6 @@ namespace  SCION_CORE::Systems {
 		RenderSystem(SCION_CORE::ECS::Registry& registry);
 		~RenderSystem() = default;
 
-		void Update(SCION_RENDERING::Camera2D& camera);
+		void Update(SCION_RENDERING::Camera2D& camera, const std::vector<SCION_UTL::SpriteLayerParams>& layerFilters = {});
 	};
 }

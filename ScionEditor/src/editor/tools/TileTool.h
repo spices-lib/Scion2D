@@ -61,6 +61,8 @@ namespace SCION_EDITOR {
 		const bool CanDrawOrCreate() const;
 		inline void EnableGridSnap() { m_bGridSnap = true; }
 		inline void DisableGridSnap() { m_bGridSnap = false; }
+
+		inline Tile& GetTileData() { return *m_pMouseTile; }
 	};
 
 }

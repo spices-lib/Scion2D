@@ -49,7 +49,7 @@ namespace SCION_EDITOR {
 		auto gridSystem = mainRegistry.GetContext<std::shared_ptr<GridSystem>>();
 		gridSystem->Update(*pCurrentScene, *m_pTilemapCam);
 
-		renderSystem->Update(*camera);
+		renderSystem->Update(*camera, pCurrentScene->GetLayerParams());
 		renderShapeSystem->Update(*camera);
 		renderUISystem->Update(pCurrentScene->GetRegistry().GetRegistry(), *camera);
  

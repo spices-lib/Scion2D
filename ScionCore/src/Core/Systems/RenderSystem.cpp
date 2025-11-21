@@ -6,6 +6,8 @@
 #include <Rendering/Essentials/Shader.h>
 #include <Logger.h>
 #include <Rendering/Core/SpriteBatchRenderer.h>
+#include <HelperUtilities.h>
+#include <ranges>
 
 namespace SCION_CORE::Systems {
 
@@ -20,7 +22,7 @@ namespace SCION_CORE::Systems {
 		m_pBatchRenderer = std::make_unique<SpriteBatchRenderer>();
 	}
 
-	void RenderSystem::Update(Camera2D& camera)
+	void RenderSystem::Update(Camera2D& camera, const std::vector<SCION_UTL::SpriteLayerParams>& layerFilters)
 	{
 		auto& assetManager = m_Registry.GetContext<std::shared_ptr<AssetManager>>();
 
@@ -40,7 +42,26 @@ namespace SCION_CORE::Systems {
 
 		auto view = m_Registry.GetRegistry().view<SpriteComponent, TransformComponent>();
 
-		for (const auto& e : view)
+		std::function<bool(entt::entity)> filterFunc;
+
+		if (layerFilters.empty())
+		{
+			filterFunc = [](entt::entity) { return true; };
+		}
+		else
+		{
+			filterFunc = [&](entt::entity entity) { 
+				const auto& sprite = view.get<SpriteComponent>(entity);
+				if (sprite.layer >= 0 && sprite.layer < layerFilters.size())
+				{
+					return layerFilters[sprite.layer].bVisible;
+				}
+
+				SCION_ERROR("Out of bounds");
+			};
+		}
+
+		for (const auto& e : std::views::filter(view, filterFunc))
 		{
 			const auto& sprite = view.get<SpriteComponent>(e);
 			const auto& transform = view.get<TransformComponent>(e);

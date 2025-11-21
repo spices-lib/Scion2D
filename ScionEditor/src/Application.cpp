@@ -37,6 +37,7 @@
 #include <editor/utilities/editor_textures.h>
 #include <editor/utilities/EditorFramebuffer.h>
 #include <editor/displays/TilesetDisplay.h>
+#include <editor/displays/TileDetailsDisplay.h>
 #include <editor/displays/MenuDisplay.h>
 #include "editor/systems/GridSystem.h"
 #include "editor/displays/AssetDisplay.h"
@@ -493,11 +494,25 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto pTileDetailsDisplay = std::make_shared<TileDetailsDisplay>();
+		if (!pMenuDisplay)
+		{
+			SCION_ERROR("Failed to create TileDetailsDisplay");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(pTileDetailsDisplay))
+		{
+			SCION_ERROR("Failed to add TileDetailsDisplay");
+			return false;
+		}
+
 		pDisplayHolder->displays.push_back(pSceneDisplay);
 		pDisplayHolder->displays.push_back(pLogDisplay);
 		pDisplayHolder->displays.push_back(pTilesetDisplay);
 		pDisplayHolder->displays.push_back(pAssetDisplay);
 		pDisplayHolder->displays.push_back(pMenuDisplay);
+		pDisplayHolder->displays.push_back(pTileDetailsDisplay);
 
 		return true;
 	}
