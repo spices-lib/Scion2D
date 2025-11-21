@@ -21,4 +21,12 @@ namespace SCION_CORE {
 	{
 		return glm::mat4(1.0f);
 	}
+
+	void GenerateUVs(SCION_CORE::ECS::SpriteComponent& sprite, int textureWidth, int textureHeight)
+	{
+		sprite.uvs.uv_width = sprite.width / textureWidth;
+		sprite.uvs.uv_height = sprite.height / textureHeight;
+		sprite.uvs.u = sprite.start_x * sprite.uvs.uv_width;
+		sprite.uvs.v = sprite.start_y * sprite.uvs.uv_height;
+	}
 }

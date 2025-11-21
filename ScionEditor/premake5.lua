@@ -44,6 +44,7 @@ project "ScionEditor"
 		"%{IncludeDir.Box2D}", 
 		"%{IncludeDir.ImGui}", 
 		"%{IncludeDir.ScionFileSystem}", 
+		"%{IncludeDir.rapidjson}", 
 	}
 
 	links
