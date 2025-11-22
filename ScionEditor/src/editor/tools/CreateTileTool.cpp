@@ -6,6 +6,9 @@
 #include "editor/utilities/EditorUtilities.h"
 #include <Core/ECS/Entity.h>
 #include <Core/ECS/Components/TileComponent.h>
+#include "editor/scene/SceneManager.h"
+#include "editor/scene/SceneObject.h"
+#include "editor/commands/CommandManager.h"
 
 using namespace SCION_CORE::ECS;
 
@@ -39,6 +42,15 @@ namespace SCION_EDITOR {
 		}
 
 		tile.AddComponent<TileComponent>(static_cast<uint32_t>(tile.GetEntity()));
+
+		auto createToolAddCmd = UndoableCommands{
+			CreateTileToolAddCmd{
+				.pRegistry = SceneManager::GetInstance().GetCurrentScene()->GetRegistryPtr(),
+				.pTile = std::make_shared<Tile>(*m_pMouseTile)
+			}
+		};
+
+		SceneManager::GetInstance().GetCommandManager().Execute(createToolAddCmd);
 	}
 
 	void CreateTileTool::RemoveTile()

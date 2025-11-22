@@ -8,6 +8,7 @@ namespace SCION_EDITOR {
 
 	class SceneObject;
 	class ToolManager;
+	class CommandManager;
 
 	class SceneManager
 	{
@@ -27,6 +28,7 @@ namespace SCION_EDITOR {
 		std::shared_ptr<SCION_EDITOR::SceneObject> GetScene(const std::string& sSceneName);
 		std::shared_ptr<SCION_EDITOR::SceneObject> GetCurrentScene();
 		ToolManager& GetToolManager();
+		CommandManager& GetCommandManager();
 		void SetTileset(const std::string& sTileset);
 		std::vector<std::string> GetSceneNames();
 
@@ -39,6 +41,7 @@ namespace SCION_EDITOR {
 		std::map<std::string, std::shared_ptr<SCION_EDITOR::SceneObject>> m_mapScenes;
 		std::string m_sCurrentScene{ "" }, m_sCurrentTileset{""};
 		std::unique_ptr<ToolManager> m_pToolManager{ nullptr };
+		std::unique_ptr<CommandManager> m_pCommandManager{ nullptr };
 		
 	};
 }

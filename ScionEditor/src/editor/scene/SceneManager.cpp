@@ -4,6 +4,7 @@
 #include <ScionUtilities.h>
 #include "editor/tools/ToolManager.h"
 #include "editor/tools/TileTool.h"
+#include "editor/commands/CommandManager.h"
 
 namespace SCION_EDITOR {
 
@@ -54,6 +55,16 @@ namespace SCION_EDITOR {
 		}
 
 		return *m_pToolManager;
+	}
+
+	CommandManager& SceneManager::GetCommandManager()
+	{
+		if (!m_pCommandManager)
+		{
+			m_pCommandManager = std::make_unique<CommandManager>();
+		}
+
+		return *m_pCommandManager;
 	}
 
 	void SceneManager::SetTileset(const std::string& sTileset)

@@ -17,6 +17,7 @@
 #include "editor/scene/SceneObject.h"
 #include "editor/tools/TileTool.h"
 #include <Core/Resources/InputManager.h>
+#include "editor/commands/CommandManager.h"
 
 using namespace SCION_CORE::Systems;
 
@@ -239,6 +240,19 @@ namespace SCION_EDITOR {
 		}
 
 		m_pTilemapCam->Update();
+
+		auto& keyboard = SCION_CORE::InputManager::GetInstance().GetKeyboard();
+		if (keyboard.IsKeyPressed(SCION_KEY_LCTRL) && keyboard.IsKeyJustPressed(SCION_KEY_Z))
+		{
+			if (keyboard.IsKeyPressed(SCION_KEY_LSHIFT))
+			{
+				SceneManager::GetInstance().GetCommandManager().Redo();
+			}
+			else
+			{
+				SceneManager::GetInstance().GetCommandManager().Undo();
+			}
+		}
 	}
 
 }
