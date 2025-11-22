@@ -87,4 +87,10 @@ namespace SCION_CORE::ECS {
 		return entity.RemoveComponent<TComponent>();
 	}
 
+	template<typename TComponent>
+	auto copy_component(Entity& entityToCopy, Entity& entityThatCopied)
+	{
+
+	}
+
 }

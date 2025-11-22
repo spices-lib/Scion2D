@@ -38,6 +38,7 @@
 #include <editor/utilities/EditorFramebuffer.h>
 #include <editor/displays/TilesetDisplay.h>
 #include <editor/displays/TileDetailsDisplay.h>
+#include <editor/displays/SceneHierarchyDisplay.h>
 #include <editor/displays/MenuDisplay.h>
 #include "editor/systems/GridSystem.h"
 #include "editor/displays/AssetDisplay.h"
@@ -507,12 +508,26 @@ namespace SCION_EDITOR {
 			return false;
 		}
 
+		auto pSceneHierarchyDisplay = std::make_shared<SceneHierarchyDisplay>();
+		if (!pMenuDisplay)
+		{
+			SCION_ERROR("Failed to create SceneHierarchyDisplay");
+			return false;
+		}
+
+		if (!m_pRegistry->AddToContext(pSceneHierarchyDisplay))
+		{
+			SCION_ERROR("Failed to add SceneHierarchyDisplay");
+			return false;
+		}
+
 		pDisplayHolder->displays.push_back(pSceneDisplay);
 		pDisplayHolder->displays.push_back(pLogDisplay);
 		pDisplayHolder->displays.push_back(pTilesetDisplay);
 		pDisplayHolder->displays.push_back(pAssetDisplay);
 		pDisplayHolder->displays.push_back(pMenuDisplay);
 		pDisplayHolder->displays.push_back(pTileDetailsDisplay);
+		pDisplayHolder->displays.push_back(pSceneHierarchyDisplay);
 
 		return true;
 	}

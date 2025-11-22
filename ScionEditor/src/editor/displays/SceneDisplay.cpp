@@ -18,6 +18,7 @@
 #include <Rendering/Core/Renderer.h>
 #include <imgui.h>
 #include "editor/scene/SceneManager.h"
+#include "editor/scene/SceneObject.h"
 
 using namespace SCION_CORE::Systems;
 
@@ -25,6 +26,9 @@ namespace SCION_EDITOR {
 
 	void SceneDisplay::LoadScene()
 	{
+		auto scene = SceneManager::GetInstance().GetCurrentScene();
+		scene->CopySceneToRuntime();
+
 		auto& scriptSystem = m_Registry.GetContext<std::shared_ptr<ScriptingSystem>>();
 
 		auto& lua = m_Registry.GetContext<std::shared_ptr<sol::state>>();
