@@ -19,6 +19,7 @@
 #include <imgui.h>
 #include "editor/scene/SceneManager.h"
 #include "editor/scene/SceneObject.h"
+#include "editor/utilities/ImGuiUtils.h"
 
 using namespace SCION_CORE::Systems;
 
@@ -85,21 +86,8 @@ namespace SCION_EDITOR {
 		fb->CheckResize();
 	}
 
-	SceneDisplay::SceneDisplay(SCION_CORE::ECS::Registry& registry)
-		: m_Registry(registry)
-		, m_bPlayScene{ false }
-		, m_bSceneLoaded{ false }
-	{}
-
-	void SceneDisplay::Draw()
+	void SceneDisplay::DrawToolbar()
 	{
-		static bool pOpen{ true };
-		if (!ImGui::Begin("Scene", &pOpen))
-		{
-			ImGui::End();
-			return;
-		}
-
 		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();
 		auto& assetManager = mainRegistry.GetAssetManager();
 
@@ -108,9 +96,9 @@ namespace SCION_EDITOR {
 
 		if (m_bPlayScene)
 		{
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.0f, 0.9f, 0.0f, 0.3f});
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.0f, 0.9f, 0.0f, 0.3f});
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.0f, 0.9f, 0.0f, 0.3f});
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.9f, 0.0f, 0.3f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.0f, 0.9f, 0.0f, 0.3f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.0f, 0.9f, 0.0f, 0.3f });
 		}
 
 		if (ImGui::ImageButton("##", playTexture.GetID(), ImVec2{ (float)playTexture.GetWidth() , (float)playTexture.GetHeight() }))
@@ -130,12 +118,30 @@ namespace SCION_EDITOR {
 
 		ImGui::SameLine();
 
-		RenderScene();
 
 		if (ImGui::ImageButton("##", stopTexture.GetID(), ImVec2{ (float)stopTexture.GetWidth() , (float)stopTexture.GetHeight() }))
 		{
 			UnloadScene();
 		}
+	}
+
+	SceneDisplay::SceneDisplay(SCION_CORE::ECS::Registry& registry)
+		: m_Registry(registry)
+		, m_bPlayScene{ false }
+		, m_bSceneLoaded{ false }
+	{}
+
+	void SceneDisplay::Draw()
+	{
+		static bool pOpen{ true };
+		if (!ImGui::Begin("Scene", &pOpen))
+		{
+			ImGui::End();
+			return;
+		}
+
+		DrawToolbar();
+		RenderScene();
 
 		if (ImGui::BeginChild("##SceneChild", ImVec2{ 0.0f, 0.0f }, NULL, ImGuiWindowFlags_NoScrollWithMouse))
 		{

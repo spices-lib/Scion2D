@@ -17,6 +17,10 @@ namespace SCION_EDITOR {
 		void UnloadScene();
 		void RenderScene();
 
+	protected:
+
+		virtual void DrawToolbar() override;
+
 	public:
 
 		SceneDisplay(SCION_CORE::ECS::Registry& registry);

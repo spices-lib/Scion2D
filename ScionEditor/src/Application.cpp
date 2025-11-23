@@ -47,6 +47,7 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
 #include <SDL_opengl.h>
+#include "editor/utilities/fonts/IconsFontAwesome5.h"
 
 namespace SCION_EDITOR {
 
@@ -549,6 +550,19 @@ namespace SCION_EDITOR {
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+		io.Fonts->AddFontDefault();
+
+		float baseFontSize = 13.0f;
+		float iconFontSize = baseFontSize * 2.0f / 3.0f;
+
+		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+		ImFontConfig icon_config;
+		icon_config.MergeMode = true;
+		icon_config.PixelSnapH = true;
+		icon_config.GlyphMinAdvanceX = iconFontSize;
+		icon_config.GlyphOffset = ImVec2{0.0f, 2.0f};
+		io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAS, iconFontSize, &icon_config, icons_ranges);
 
 		if (!ImGui_ImplSDL2_InitForOpenGL(
 			m_pWindow->GetWindow().get(),

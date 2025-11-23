@@ -31,3 +31,23 @@ void ImGui::InlineLabel(const std::string& label, float spaceSize)
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(spaceSize);
 }
+
+void ImGui::ActiveButton(const char* label, ImVec2 size)
+{
+	ImGui::PushStyleColor(ImGuiCol_Button, BUTTON_HELD);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, BUTTON_HELD);
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, BUTTON_HELD);
+	ImGui::Button(label, size);
+	ImGui::PopStyleColor(3);
+}
+
+void ImGui::DisabledButton(const char* label, ImVec2 size, const std::string& disabledMsg)
+{
+	ImGui::BeginDisabled();
+	ImGui::Button(label, size);
+
+	if (!disabledMsg.empty())
+	{
+
+	}
+}

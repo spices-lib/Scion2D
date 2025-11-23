@@ -18,6 +18,10 @@
 #include "editor/tools/TileTool.h"
 #include <Core/Resources/InputManager.h>
 #include "editor/commands/CommandManager.h"
+#include "editor/utilities/fonts/IconsFontAwesome5.h"
+#include "editor/utilities/ImGuiUtils.h"
+#include "editor/tools/CreateTileTool.h"
+#include "editor/tools/ToolAccessories.h"
 
 using namespace SCION_CORE::Systems;
 
@@ -149,6 +153,87 @@ namespace SCION_EDITOR {
 		startPosition = mousePos;
 	}
 
+	void TilemapDisplay::DrawToolbar()
+	{
+		ImGui::Separator();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, {0.0f, 0.0f});
+
+		auto& commandManager = SceneManager::GetInstance().GetCommandManager();
+		if (commandManager.UndoEmpty())
+		{
+			ImGui::DisabledButton("##");
+		}
+		else
+		{
+			ImGui::Button("##");
+		}
+
+		ImGui::SameLine();
+
+		if (commandManager.RedoEmpty())
+		{
+			ImGui::DisabledButton("##");
+		}
+		else
+		{
+			ImGui::Button("##");
+		}
+
+		ImGui::SameLine();
+
+		auto& toolManager = SceneManager::GetInstance().GetToolManager();
+		auto eActiveToolType = toolManager.GetActiveToolType();
+		auto eActiveGizmoType = toolManager.GetActiveGizmoType();
+
+		ImGui::DisabledButton(ICON_FA_TOOLS, TOOL_BUTTON_SIZE);
+
+		ImGui::SameLine();
+
+		if (eActiveGizmoType == EGizmoType::TRANSLATE)
+		{
+			ImGui::ActiveButton(ICON_FA_ARROWS_ALT, TOOL_BUTTON_SIZE);
+		}
+		else
+		{
+			if (ImGui::Button(ICON_FA_ARROWS_ALT, TOOL_BUTTON_SIZE))
+			{
+				toolManager.SetGizmoActive(EGizmoType::TRANSLATE);
+			}
+		}
+
+		ImGui::SameLine();
+
+		if (eActiveGizmoType == EGizmoType::SCALE)
+		{
+			ImGui::ActiveButton(ICON_FA_EXPAND, TOOL_BUTTON_SIZE);
+		}
+		else
+		{
+			if (ImGui::Button(ICON_FA_EXPAND, TOOL_BUTTON_SIZE))
+			{
+				toolManager.SetGizmoActive(EGizmoType::SCALE);
+			}
+		}
+
+		ImGui::SameLine();
+
+		if (eActiveGizmoType == EGizmoType::ROTATE)
+		{
+			ImGui::ActiveButton(ICON_FA_CIRCLE_NOTCH, TOOL_BUTTON_SIZE);
+		}
+		else
+		{
+			if (ImGui::Button(ICON_FA_CIRCLE_NOTCH, TOOL_BUTTON_SIZE))
+			{
+				toolManager.SetGizmoActive(EGizmoType::ROTATE);
+			}
+		}
+
+		ImGui::DisabledButton(ICON_FA_TOOLS, TOOL_BUTTON_SIZE);
+	}
+
 	TilemapDisplay::TilemapDisplay()
 		: m_pTilemapCam{ std::make_unique<SCION_RENDERING::Camera2D>() }
 	{
@@ -163,6 +248,7 @@ namespace SCION_EDITOR {
 			return;
 		}
 
+		DrawToolbar();
 		RenderTilemap();
 
 		auto& mainRegistry = SCION_CORE::ECS::MainRegistry::GetInstance();

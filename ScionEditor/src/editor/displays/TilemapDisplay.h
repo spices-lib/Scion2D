@@ -21,6 +21,10 @@ namespace SCION_EDITOR {
 		void LoadNewScene();
 		void PanZoomCamera(const glm::vec2& mousePos);
 
+	protected:
+
+		void DrawToolbar() override;
+
 	public:
 
 		TilemapDisplay();

@@ -3,6 +3,7 @@
 #include "ToolAccessories.h"
 #include <algorithm>
 #include "RectFillTool.h"
+#include "editor/scene/SceneObject.h"
 
 namespace SCION_EDITOR {
 
@@ -32,6 +33,29 @@ namespace SCION_EDITOR {
 			else
 				pTool->Deactivate();
 		}
+
+		m_eActiveToolType = eToolType;
+	}
+
+	void ToolManager::SetGizmoActive(EGizmoType eGizmoType)
+	{
+		for (const auto& [eType, pTool] : m_mapTools)
+		{
+			pTool->Deactivate();
+		}
+
+		m_eActiveGizmoType = eGizmoType;
+	}
+
+	bool ToolManager::SetupTools(SceneObject* pSceneObject, SCION_RENDERING::Camera2D* pCamera)
+	{
+		for (auto& [eType, pTool] : m_mapTools)
+		{
+			if (!pTool->SetupTool(pSceneObject, pCamera))
+				return false;
+		}
+
+		return true;
 	}
 
 	TileTool* ToolManager::GetActiveTool()

@@ -9,4 +9,13 @@ namespace SCION_EDITOR {
 
 		NO_TOOL
 	};
+
+	enum class EGizmoType
+	{
+		TRANSLATE = 0,
+		SCALE,
+		ROTATE,
+
+		NO_GIZMO
+	};
 }
