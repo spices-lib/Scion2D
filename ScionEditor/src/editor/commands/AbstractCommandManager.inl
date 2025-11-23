@@ -4,39 +4,39 @@
 namespace SCION_EDITOR {
 
 	template<CommandType ...Cmds>
-	inline void AbstractCommandManager<...Cmds>::Undo()
+	inline void AbstractCommandManager<Cmds...>::Undo()
 	{
-		if (m_UndoStack.empty())
+		if (true)
 			return;
 
-		RunUndo(m_UndoStack.top());
+		/*RunUndo(m_UndoStack.top());
 		m_RedoStack.push(m_UndoStack.top());
-		m_UndoStack.pop();
+		m_UndoStack.pop();*/
 	}
 
 	template<CommandType ...Cmds>
 	inline void AbstractCommandManager<Cmds...>::Redo()
 	{
-		if (m_RedoStack.empty())
-			return;
+		/*if (m_RedoStack.empty())
+			return;*/
 
-		RunRedo(m_RedoStack.top());
+		/*RunRedo(m_RedoStack.top());
 		m_UndoStack.push(m_RedoStack.top());
-		m_RedoStack.pop();
+		m_RedoStack.pop();*/
 	}
 
 	template<CommandType ...Cmds>
 	inline void AbstractCommandManager<Cmds...>::Clear()
 	{
-		m_RedoStack = {};
-		m_UndoStack = {};
+		/*m_RedoStack = {};
+		m_UndoStack = {};*/
 	}
 
 	template<CommandType ...Cmds>
 	inline void AbstractCommandManager<Cmds...>::Execute(VarCommands<Cmds...>& undoableVariant)
 	{
-		m_RedoStack = {};
-		m_UndoStack.push(std::move(undoableVariant));
+		/*m_RedoStack = {};
+		m_UndoStack.push(std::move(undoableVariant));*/
 	}
 
 	template<CommandType ...Cmds>

@@ -22,6 +22,7 @@
 #include "editor/utilities/ImGuiUtils.h"
 #include "editor/tools/CreateTileTool.h"
 #include "editor/tools/ToolAccessories.h"
+#include "editor/tools/gizmos/Gizmo.h"
 
 using namespace SCION_CORE::Systems;
 
@@ -39,6 +40,8 @@ namespace SCION_EDITOR {
 		auto renderSystem = mainRegistry.GetContext<std::shared_ptr<RenderSystem>>();
 		auto renderShapeSystem = mainRegistry.GetContext<std::shared_ptr<RenderShapeSystem>>();
 		auto renderUISystem = mainRegistry.GetContext<std::shared_ptr<RenderUISystem>>();
+
+		auto pActiveGizmo = SceneManager::GetInstance().GetToolManager().GetActiveGizmo();
 
 		fb->Bind();
 		renderer->SetViewport(0, 0, fb->Width(), fb->Height());
@@ -62,6 +65,11 @@ namespace SCION_EDITOR {
 		if (pActivateTool)
 		{
 			pActivateTool->Draw();
+		}
+
+		if (pActiveGizmo)
+		{
+			pActiveGizmo->Draw(pCurrentScene->GetCanvas());
 		}
 
 		fb->Unbind();
@@ -323,6 +331,15 @@ namespace SCION_EDITOR {
 
 			pActiveTool->Update(pCurrentScene->GetCanvas());
 			pActiveTool->Create();
+		}
+
+		auto pActiveGizmo = SceneManager::GetInstance().GetToolManager().GetActiveGizmo();
+
+		if (pActiveGizmo && pActiveGizmo->IsOverTilemapWindow() && !ImGui::GetDragDropPayload())
+		{
+			PanZoomCamera(pActiveGizmo->GetMouseScreenCoords());
+
+			pActiveGizmo->Update(pCurrentScene->GetCanvas());
 		}
 
 		m_pTilemapCam->Update();

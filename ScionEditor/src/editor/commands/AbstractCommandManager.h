@@ -29,8 +29,8 @@ namespace SCION_EDITOR {
 		void Redo();
 		void Clear();
 
-		bool UndoEmpty() const noexcept { return m_UndoStack.empty(); };
-		bool RedoEmpty() const noexcept { return m_RedoStack.empty(); };
+		bool UndoEmpty() const noexcept { return true; };
+		bool RedoEmpty() const noexcept { return true; };
 
 		void Execute(VarCommands<Cmds...>& undoableVariant);
 

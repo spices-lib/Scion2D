@@ -52,7 +52,7 @@ namespace SCION_EDITOR {
 		Entity tile{ *pRegistry, "", "" };
 		tile.AddComponent<TransformComponent>(pTile->transform);
 		tile.AddComponent<SpriteComponent>(pTile->sprite);
-		tile.AddComponent<TileComponent>(tile.GetEntity());
+		tile.AddComponent<TileComponent>();
 
 		if (pTile->bAnimation)
 		{
@@ -80,7 +80,7 @@ namespace SCION_EDITOR {
 		Entity tile{ *pRegistry, "", "" };
 		tile.AddComponent<TransformComponent>(pTile->transform);
 		tile.AddComponent<SpriteComponent>(pTile->sprite);
-		tile.AddComponent<TileComponent>(tile.GetEntity());
+		tile.AddComponent<TileComponent>();
 
 		if (pTile->bAnimation)
 		{

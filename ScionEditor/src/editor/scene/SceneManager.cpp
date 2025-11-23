@@ -5,6 +5,7 @@
 #include "editor/tools/ToolManager.h"
 #include "editor/tools/TileTool.h"
 #include "editor/commands/CommandManager.h"
+#include "editor/tools/gizmos/Gizmo.h"
 
 namespace SCION_EDITOR {
 

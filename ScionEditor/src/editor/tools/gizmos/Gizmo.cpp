@@ -12,7 +12,6 @@ using namespace SCION_CORE::ECS;
 namespace SCION_EDITOR {
 
 	Gizmo::Gizmo()
-		: Gizmo()
 	{
 	}
 
@@ -36,6 +35,11 @@ namespace SCION_EDITOR {
 			return;
 
 		m_pYAxisParams = std::make_unique<GizmoAxisParams>(yAxisParams);
+	}
+
+	Gizmo::~Gizmo()
+	{
+
 	}
 
 	void Gizmo::Update(Canvas& canvas)

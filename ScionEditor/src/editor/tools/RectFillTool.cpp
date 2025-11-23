@@ -67,8 +67,8 @@ namespace SCION_EDITOR {
 
 				}
 
-				tile.AddComponent<TileComponent>(static_cast<uint32_t>(tile.GetEntity()));
-				createdTiles.emplace_back(tile);
+				tile.AddComponent<TileComponent>();
+				createdTiles.emplace_back(createTile);
 			}
 		}
 

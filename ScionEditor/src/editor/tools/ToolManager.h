@@ -10,14 +10,17 @@ namespace SCION_EDITOR {
 
 	struct Canvas;
 	class TileTool;
+	class Gizmo;
 	enum class EToolType;
 	enum class EGizmoType;
+	class AbstractTool;
 
 	class ToolManager
 	{
 	private:
 
 		std::map<EToolType, std::unique_ptr<TileTool>> m_mapTools;
+		std::map<EGizmoType, std::unique_ptr<Gizmo>> m_mapGizmos;
 
 		EToolType m_eActiveToolType;
 		EGizmoType m_eActiveGizmoType;
@@ -33,11 +36,14 @@ namespace SCION_EDITOR {
 
 		void SetGizmoActive(EGizmoType eGizmoType);
 
-		bool SetupTools(SceneObject* pSceneObject, SCION_RENDERING::Camera2D* pCamera);
+		bool SetupTools(class SceneObject* pSceneObject, SCION_RENDERING::Camera2D* pCamera);
 
 		EToolType GetActiveToolType() const { return m_eActiveToolType; }
 		EGizmoType GetActiveGizmoType() const { return m_eActiveGizmoType; }
 
 		TileTool* GetActiveTool();
+		Gizmo* GetActiveGizmo();
+
+		AbstractTool* GetActiveToolFromAbstract();
 	};
 }

@@ -4,7 +4,7 @@
 #include <memory>
 #include <entt.hpp>
 
-namespace SCEION_CORE::ECS {
+namespace SCION_CORE::ECS {
 	class Entity;
 }
 
@@ -19,8 +19,9 @@ namespace SCION_EDITOR {
 
 		Gizmo();
 		Gizmo(const GizmoAxisParams& xAxisParams, const GizmoAxisParams& yAxisParams, bool bOneAxis);
+		~Gizmo() override;
 
-		void Update(Canvas& canvas) override;
+		virtual void Update(Canvas& canvas) override;
 		virtual void Draw(Canvas& canvas) = 0;
 
 		void SetSelectedEntity(entt::entity entity);

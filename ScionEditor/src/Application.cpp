@@ -48,6 +48,7 @@
 #include <backends/imgui_impl_sdl2.h>
 #include <SDL_opengl.h>
 #include "editor/utilities/fonts/IconsFontAwesome5.h"
+#include <HelperUtilities.h>
 
 namespace SCION_EDITOR {
 

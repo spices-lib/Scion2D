@@ -40,7 +40,7 @@ namespace SCION_EDITOR {
 
 			addedTile.AddComponent<TransformComponent>(tile.transform);
 			addedTile.AddComponent<SpriteComponent>(tile.sprite);
-			addedTile.AddComponent<TileComponent>(tile);
+			addedTile.AddComponent<TileComponent>();
 
 			if (tile.bAnimation)
 			{
