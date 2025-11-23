@@ -7,6 +7,9 @@
 #include <Logger.h>
 #include <Rendering/Core/Camera.h>
 #include "editor/utilities/EditorUtilities.h"
+#include "editor/commands/CommandManager.h"
+#include "editor/scene/SceneManager.h"
+#include "editor/scene/SceneObject.h"
 
 using namespace SCION_RENDERING;
 using namespace SCION_CORE::ECS;
@@ -27,6 +30,8 @@ namespace SCION_EDITOR {
 		auto spriteWidth = sprite.width * transform.scale.x * (dx > 0 ? 1.0f : -1.0f);
 		auto spriteHeight = sprite.height * transform.scale.y * (dy > 0 ? 1.0f : -1.0f);
 
+		std::vector<Tile> createdTiles;
+
 		for (int y = 0; (dy > 0 ? y < dy : y > dy); y += spriteHeight)
 		{
 			for (int x = 0; (dx > 0 ? x < dx : x > dx); x += spriteWidth)
@@ -37,9 +42,13 @@ namespace SCION_EDITOR {
 					continue;
 
 				Entity tile{ CreateEntity() };
+				Tile createTile{};
 
 				auto& newTransform = tile.AddComponent<TransformComponent>(transform);
 				newTransform.position = newTilePosition;
+
+				createTile.transform = newTransform;
+				createTile.sprite = sprite;
 
 				tile.AddComponent<SpriteComponent>(sprite);
 
@@ -59,8 +68,18 @@ namespace SCION_EDITOR {
 				}
 
 				tile.AddComponent<TileComponent>(static_cast<uint32_t>(tile.GetEntity()));
+				createdTiles.emplace_back(tile);
 			}
 		}
+
+		auto rectToolAddCmd = UndoableCommands{
+			RectToolAddTilesCmd{
+				.pRegistry = SceneManager::GetInstance().GetCurrentScene()->GetRegistryPtr(),
+				.tiles = createdTiles
+			}
+		};
+
+		SceneManager::GetInstance().GetCommandManager().Execute(rectToolAddCmd);
 	}
 
 	void RectFillTool::RemoveTiles()
@@ -87,11 +106,22 @@ namespace SCION_EDITOR {
 			}
 		}
 
+		std::vector<Tile> removedTiles;
+
 		for (auto id : entitiesToRemove)
 		{
 			Entity removedTile{ CreateEntity(id) };
 			removedTile.kill();
 		}
+
+		auto rectToolRemoveCmd = UndoableCommands{
+			RectToolRemoveTilesCmd{
+				.pRegistry = SceneManager::GetInstance().GetCurrentScene()->GetRegistryPtr(),
+				.tiles = removedTiles
+			}
+		};
+
+		SceneManager::GetInstance().GetCommandManager().Execute(rectToolRemoveCmd);
 	}
 
 	void RectFillTool::DrawPreview(int dx, int dy)

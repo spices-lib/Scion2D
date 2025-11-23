@@ -55,7 +55,51 @@ namespace SCION_EDITOR {
 
 	void CreateTileTool::RemoveTile()
 	{
+		const auto& mouseWorldCoords = GetMouseWorldCoords();
 
+		if (auto id = CheckForTile(mouseWorldCoords); id != entt::null)
+		{
+			Entity tileToRemove{ CreateEntity(id) };
+			Tile removedTile{};
+
+			removedTile.transform = tileToRemove.GetComponent<TransformComponent>();
+			removedTile.sprite = tileToRemove.GetComponent<SpriteComponent>();
+
+			if (tileToRemove.HasComponent<BoxColliderComponent>())
+			{
+				removedTile.bColloder = true;
+				removedTile.boxCollider = tileToRemove.GetComponent<BoxColliderComponent>();
+			}
+
+			if (tileToRemove.HasComponent<CircleColliderComponent>())
+			{
+				removedTile.bCircle = true;
+				removedTile.circleCollider = tileToRemove.GetComponent<CircleColliderComponent>();
+			}
+
+			if (tileToRemove.HasComponent<AnimationComponent>())
+			{
+				removedTile.bAnimation = true;
+				removedTile.animation = tileToRemove.GetComponent<AnimationComponent>();
+			}
+
+			if (tileToRemove.HasComponent<PhysicsComponent>())
+			{
+				removedTile.bPhysics = true;
+				removedTile.physics = tileToRemove.GetComponent<PhysicsComponent>();
+			}
+
+			tileToRemove.kill();
+
+			auto createToolRemoveCmd = UndoableCommands{
+				CreateTileToolRemoveCmd{
+					.pRegistry = SceneManager::GetInstance().GetCurrentScene()->GetRegistryPtr(),
+					.pTile = std::make_shared<Tile>(removedTile)
+				}
+			};
+
+			SceneManager::GetInstance().GetCommandManager().Execute(createToolRemoveCmd);
+		}
 	}
 
 	CreateTileTool::CreateTileTool()

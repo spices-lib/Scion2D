@@ -1,5 +1,5 @@
 #pragma once
-#include <memory>
+#include <vector>
 
 namespace SCION_CORE::ECS {
 	class Registry;
@@ -9,21 +9,24 @@ namespace SCION_EDITOR {
 
 	struct Tile;
 
-	struct CreateTileToolAddCmd
+	struct RectToolAddTilesCmd
 	{
 		SCION_CORE::ECS::Registry* pRegistry{ nullptr };
-		std::shared_ptr<Tile> pTile{ nullptr };
+		std::vector<Tile> tiles{};
 
 		void undo();
 		void redo();
+
 	};
 
-	struct CreateTileToolRemoveCmd
+	struct RectToolRemoveTilesCmd
 	{
 		SCION_CORE::ECS::Registry* pRegistry{ nullptr };
-		std::shared_ptr<Tile> pTile{ nullptr };
+		std::vector<Tile> tiles{};
 
 		void undo();
 		void redo();
+
 	};
+
 }
