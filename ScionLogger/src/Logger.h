@@ -9,8 +9,6 @@
 #define SCION_WARN(x, ...) SCION_LOGGER::Logger::GetInstance().Warn(x, __VA_ARGS__);
 #define SCION_ERROR(x, ...) SCION_LOGGER::Logger::GetInstance().Error(std::source_location::current(), x, __VA_ARGS__);
 #define SCION_INIT_LOGS(console, retain) SCION_LOGGER::Logger::GetInstance().Init(console, retain);
-#define SCION_LOG_ADDED() SCION_LOGGER::Logger::GetInstance().LogAdded()
-#define SCION_RESET_ADDED() SCION_LOGGER::Logger::GetInstance().ResetLogAdded();
 #define SCION_GET_LOGS() SCION_LOGGER::Logger::GetInstance().GetLogs()
 #define SCION_CLEAR_LOGS() SCION_LOGGER::Logger::GetInstance().ClearLogs();
 
@@ -28,7 +26,6 @@ namespace SCION_LOGGER {
 	private:
 
 		std::vector<LogEntry> m_LogEntries;
-		bool m_bLogAdded{ false };
 		bool m_bInitialized{ false };
 		bool m_bConsoleLog{ false };
 		bool m_bRetainLogs{ true };
@@ -53,8 +50,6 @@ namespace SCION_LOGGER {
 
 		inline void ClearLogs() { m_LogEntries.clear(); }
 		inline const decltype(m_LogEntries)& GetLogs() { return m_LogEntries; }
-		inline void ResetLogAdded() { m_bLogAdded = false; }
-		inline const bool LogAdded() const { return m_bLogAdded; }
 
 		void Init(bool consoleLog = true, bool retainLogs = true);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "IDisplay.h"
 #include <imgui.h>
+#include <string>
 
 namespace SCION_EDITOR {
 
@@ -23,5 +24,14 @@ namespace SCION_EDITOR {
 
 		void Clear();
 		virtual void Draw() override;
+
+	private:
+
+		std::string m_sSearchQuery;
+		bool m_bShowInfo;
+		bool m_bShowWarn;
+		bool m_bShowError;
+		int m_LogIndex;
+
 	};
 }

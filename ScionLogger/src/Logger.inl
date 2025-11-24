@@ -33,7 +33,6 @@ namespace SCION_LOGGER {
 		if (m_bRetainLogs)
 		{
 			m_LogEntries.emplace_back(LogEntry::LogType::INFO, ss.str());
-			m_bLogAdded = true;
 		}
 	}
 
@@ -56,7 +55,6 @@ namespace SCION_LOGGER {
 		if (m_bRetainLogs)
 		{
 			m_LogEntries.emplace_back(LogEntry::LogType::WARN, ss.str());
-			m_bLogAdded = true;
 		}
 	}
 
@@ -81,7 +79,6 @@ namespace SCION_LOGGER {
 		if (m_bRetainLogs)
 		{
 			m_LogEntries.emplace_back(LogEntry::LogType::ERR, ss.str());
-			m_bLogAdded = true;
 		}
 	}
 
