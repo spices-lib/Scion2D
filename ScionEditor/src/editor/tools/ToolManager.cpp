@@ -5,6 +5,8 @@
 #include "RectFillTool.h"
 #include "editor/scene/SceneObject.h"
 #include "editor/tools/gizmos/TranslateGizmo.h"
+#include "editor/tools/gizmos/ScaleGizmo.h"
+#include "editor/tools/gizmos/RotateGizmo.h"
 
 namespace SCION_EDITOR {
 
@@ -14,6 +16,8 @@ namespace SCION_EDITOR {
 		m_mapTools.emplace(EToolType::RECT_FILE_TILE, std::make_unique<RectFillTool>());
 
 		m_mapGizmos.emplace(EGizmoType::TRANSLATE, std::make_unique<TranslateGizmo>());
+		m_mapGizmos.emplace(EGizmoType::SCALE, std::make_unique<TranslateGizmo>());
+		m_mapGizmos.emplace(EGizmoType::ROTATE, std::make_unique<RotateGizmo>());
 
 		SetToolActive(EToolType::CREATE_TILE);
 	}
