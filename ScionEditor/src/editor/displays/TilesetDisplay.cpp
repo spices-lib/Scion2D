@@ -56,11 +56,18 @@ namespace SCION_EDITOR {
 			return;
 		}
 
-		int textureWidth = pTexture.GetWidth();
-		int textureHeight = pTexture.GetHeight();
+		ImGuiIO& io = ImGui::GetIO();
+		bool bMouseHeld{ ImGui::IsMouseDown(ImGuiMouseButton_Left) };
+		bool bMouseReleased{ ImGui::IsMouseReleased(ImGuiMouseButton_Left) };
 
-		int cols = textureWidth / 16;
-		int rows = textureHeight / 16;
+		int tileWidth{ 16 };
+		int tileHeight{ 16 };
+
+		float textureWidth = (float)pTexture.GetWidth();
+		float textureHeight = (float)pTexture.GetHeight();
+
+		int cols = textureWidth / tileWidth;
+		int rows = textureHeight / tileHeight;
 
 		float uv_w = 16 / static_cast<float>(textureWidth);
 		float uv_h = 16 / static_cast<float>(textureHeight);
@@ -82,7 +89,7 @@ namespace SCION_EDITOR {
 				{
 					ImGui::TableSetColumnIndex(j);
 
-					if (m_Selected == id)
+					if (true)
 					{
 						ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::GetColorU32(ImVec4{ 0.0f, 0.9f, 0.0f, 0.3f }));
 
@@ -90,7 +97,6 @@ namespace SCION_EDITOR {
 
 						if (ImGui::ImageButton("##", pTexture.GetID(), ImVec2{16.0f * 1.5, 16.0f * 1.5}, ImVec2{ux, uy}, ImVec2{vx, vy}))
 						{
-							m_Selected = id;
 							auto pActiveTool = SceneManager::GetInstance().GetToolManager().GetActiveTool();
 							if (pActiveTool)
 							{
