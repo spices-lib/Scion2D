@@ -44,4 +44,25 @@ namespace SCION_UTL {
 		map[change] = node;
 		return true;
 	}
+
+	std::string GetSubstring(std::string_view str, std::string_view find)
+	{
+		if (find.empty())
+			return {};
+
+		if (find.size() > 1)
+		{
+			const auto found = str.find(find);
+			if (found == std::string_view::npos)
+				return {};
+
+			return std::string{ str.substr(found) };
+		}
+
+		auto const found = str.find_last_of(find[0]);
+		if (found == std::string_view::npos || found + 1 >= str.size())
+			return{};
+
+		return std::string{ str.substr(found + 1) };
+	}
 }

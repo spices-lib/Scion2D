@@ -14,6 +14,8 @@ namespace SCION_FILESYSTEM {
 		~LuaSerializer() = default;
 
 		void AddComment() {}
+		void AddValue() {}
+		void Finish() {}
 	};
 
 }

@@ -1,6 +1,11 @@
 #pragma once
 #include "IDisplay.h"
 #include <string>
+#include <filesystem>
+
+namespace SCION_FILESYSTEM {
+	class DirectoryWatcher;
+}
 
 namespace SCION_EDITOR {
 
@@ -18,6 +23,7 @@ namespace SCION_EDITOR {
 
 		void GenerateScriptList();
 		void WriteScriptListToFile();
+		void OnFileChanged(const std::filesystem::path& path, bool bModified);
 
 	private:
 
@@ -25,5 +31,10 @@ namespace SCION_EDITOR {
 		std::vector<std::string> m_Scripts;
 		std::string m_sScriptsDirectory;
 		int m_Selected;
+		bool m_bScriptsChanged;
+		bool m_bListScripts;
+
+		std::unique_ptr<SCION_FILESYSTEM::DirectoryWatcher> m_pDirWatcher;
+		std::atomic_bool m_bFilesChanged;
 	};
 }
