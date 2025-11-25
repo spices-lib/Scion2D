@@ -29,4 +29,6 @@ namespace ImGui {
 
 	void ActiveButton(const char* label, ImVec2 size = TOOL_BUTTON_SIZE);
 	void DisabledButton(const char* label, ImVec2 size = TOOL_BUTTON_SIZE, const std::string& disabledMsg = "");
+
+	void InputText(const char* label, std::string& buf, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
 }

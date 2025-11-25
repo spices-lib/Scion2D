@@ -9,6 +9,48 @@ namespace SCION_CORE {
 		std::string sProjectPath{ "" };
 		std::string sProjectFilePath{ "" };
 		std::string sMainLuaScript{ "" };
+		std::string sFileIconPath{ "" };
 	};
 
+	struct GameConfig
+	{
+		std::string sGameName{ "" };
+		std::string sStartupScene{ "" };
+
+		int windowWidth{ 640 };
+		int windowHeight{ 480 };
+		uint32_t windowFlags{ 0 };
+
+		int cameraWidth{ 640 };
+		int cameraHeight{ 480 };
+		float cameraScale{ 1.0f };
+
+		bool bPhysicsEnabled{ false };
+		int32_t positionIterations{ 8 };
+		int32_t velocityIterations{ 8 };
+		float gravity{ 9.8f };
+
+		bool bPackageAssets{ false };
+
+		void Reset()
+		{
+			sGameName.clear();
+			sStartupScene.clear();
+
+			windowWidth = 640;
+			windowHeight = 480;
+			windowFlags = 0;
+
+			cameraWidth = 640;
+			cameraHeight = 480;
+			cameraScale = 1.0f;
+
+			bPhysicsEnabled = false;
+			positionIterations = 8;
+			velocityIterations = 8;
+			gravity = 9.8f;
+
+			bPackageAssets = false;
+		}
+	};
 }

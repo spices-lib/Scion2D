@@ -51,3 +51,8 @@ void ImGui::DisabledButton(const char* label, ImVec2 size, const std::string& di
 
 	}
 }
+
+void ImGui::InputText(const char* label, std::string& buf, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+{
+	ImGui::InputText(label, (char*)&buf, buf.size(), flags, callback, user_data);
+}
