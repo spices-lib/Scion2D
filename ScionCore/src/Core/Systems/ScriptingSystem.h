@@ -2,6 +2,10 @@
 #include "Core/ECS/Registry.h"
 #include <sol/sol.hpp>
 
+namespace SCION_CORE {
+	struct SaveProject;
+}
+
 namespace SCION_CORE::Systems {
 
 	class ScriptingSystem
@@ -17,6 +21,7 @@ namespace SCION_CORE::Systems {
 		~ScriptingSystem() = default;
 
 		bool LoadMainScript(sol::state& lua);
+		bool LoadMainScript(const SCION_CORE::SaveProject& save, sol::state& lua);
 		void Update();
 		void Render();
 

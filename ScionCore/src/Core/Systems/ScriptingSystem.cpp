@@ -21,10 +21,13 @@
 #include "Core/Scripting/ContactListenerBind.h"
 #include "Core/State/StateStack.h"
 #include "Core/State/StateMachine.h"
+#include "Core/CoreUtilities/SaveProject.h"
+#include <filesystem>
 
 namespace SCION_CORE::Systems {
 
 	using namespace SCION_CORE::ECS;
+	namespace fs = std::filesystem;
 
 	ScriptingSystem::ScriptingSystem(SCION_CORE::ECS::Registry& registry)
 		: m_Registry(registry)
@@ -74,6 +77,67 @@ namespace SCION_CORE::Systems {
 
 		m_bMainLoaded = true;
 		return true;
+	}
+
+	bool ScriptingSystem::LoadMainScript(const SCION_CORE::SaveProject& save, sol::state& lua)
+	{
+		std::error_code ec;
+		fs::path mainLuaPath{save.sMainLuaScript};
+
+		if (!fs::exists(mainLuaPath, ec))
+		{
+			SCION_ERROR("");
+			return false;
+		}
+
+		fs::path parentPath = mainLuaPath.parent_path();
+		fs::path scriptListPath = parentPath / "script_list.lua";
+		fs::path contentPath = fs::path{ save.sProjectPath } / "content";
+
+		if (fs::exists(scriptListPath) && fs::exists(contentPath))
+		{
+			try
+			{
+				sol::state scriptLua;
+				auto result = scriptLua.safe_script_file(scriptListPath.string());
+				if (!result.valid())
+				{
+					sol::error err = result;
+					throw err;;
+				}
+
+				sol::optional<sol::table> scriptList = lua["ScriptList"];
+				if (!scriptList)
+				{
+					SCION_ERROR("Failed to load script list.");
+					return false;
+				}
+
+				for (const auto& [_, script] : *scriptList)
+				{
+					try
+					{
+						fs::path scriptPath = contentPath / script.as<std::string>();
+						auto result = lua.safe_script_file(scriptPath.string());
+						if (!result.valid())
+						{
+							sol::error error = result;
+							throw error;
+						}
+					}
+					catch (const sol::error& error)
+					{
+						SCION_ERROR("Failed to load script");
+					}
+				}
+			}
+			catch (const sol::error& error)
+			{
+				return false;
+			}
+		}
+
+		return LoadMainScript(lua);
 	}
 
 	void ScriptingSystem::Update()
