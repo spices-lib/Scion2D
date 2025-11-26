@@ -28,7 +28,7 @@ namespace SCION_EDITOR {
 		bool m_bResizable;
 		bool m_bBorderless;
 		bool m_bFullScreen;
-		bool bTitlebar;
+		bool m_bTitlebar;
 		bool m_bScriptListExists;
 	};
 }
